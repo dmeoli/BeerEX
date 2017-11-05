@@ -1,5 +1,8 @@
+# JetBrains IDE PyCharm Professional
 .idea
+
+# Token to access Telegram Bot API
 token
-BeerEX.wx.py
-Beer Styles.pdf
-Beer and Food Course.pdf
+
+# Craft Beer materials
+CraftBeer

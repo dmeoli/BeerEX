@@ -1,23 +1,37 @@
+#!/usr/bin/env python
 # coding=utf-8
 
-from telegram.ext import Updater, CommandHandler, Filters, MessageHandler
+from telegram import *
+from telegram.ext import *
+import logging
 import clips
+
+# Enable logging
+logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+                    level=logging.INFO)
+
+logger = logging.getLogger(__name__)
 
 
 def start(bot, update):
     """
-    Loads the Beer EXpert system and prints a welcome message.
+    Sends a welcome message when the command /start is issued.
     """
 
-    clips.Load("./clips/beerex.clp")
+    clips.Reset()
+    clips.Run()
 
-    update.message.reply_text('Hello {}!'.format(update.message.from_user.first_name) + ' 🤖 \n' + 'Welcome to the ' +
-                              'Beer EXpert system 🍻' + '\n\n' + '⁉️ All I need is that you answer simple questions ' +
-                              'by choosing one of the responses that are offered to you.' + '\n\n' + 'To start, ' +
-                              'please press the /run button 😄')
+    # Get the initial UI state
+    initial_fact = clips.Eval('(find-fact ((?f UI-state)) (eq ?f:state initial))')
+
+    update.message.reply_text('Hello {}! 🤖 '.format(update.message.from_user.first_name) +
+                              initial_fact[0].Slots['display'])
 
 
-def run(bot, update):
+def new(bot, update):
+    """
+    Starts a new chat with the beer expert when the command /new is issued.
+    """
 
     clips.Reset()
     clips.Run()
@@ -26,35 +40,150 @@ def run(bot, update):
 
 
 def nextUIState(bot, update):
+    """
+    Re-creates the dialog window to match the current state in working memory.
+    """
 
     # Get the state-list
-    factlist = clips.Eval("(find-all-facts ((?f state-list)) TRUE)")
-    if len(factlist) == 0:
+    fact_list = clips.Eval('(find-all-facts ((?f state-list)) TRUE)')
+    if len(fact_list) == 0:
         return
 
-    currentID = factlist[0].Slots["current"]
+    current_id = fact_list[0].Slots['current']
 
     # Get the current UI state
-    factlist = clips.Eval("(find-all-facts ((?f UI-state)) (eq ?f:id %s))" % (currentID))
-    if len(factlist) == 0:
+    fact_list = clips.Eval('(find-all-facts ((?f UI-state)) (eq ?f:id %s))' % current_id)
+    if len(fact_list) == 0:
         return
 
-    # Set up the choices
-    valid_answers = factlist[0].Slots["valid-answers"]
-    selected = factlist[0].Slots["response"]
+    state = fact_list[0].Slots['state']
+
+    if state == 'initial':
+        clips.Assert('(next %s)' % current_id)
+        clips.Run()
+        nextUIState(bot, update)
+
+    elif state == 'final':
+        results = fact_list[0].Slots['display']
+
+        keyboard = [[InlineKeyboardButton(text='🔙', callback_data='🔙')]]
+        reply_markup = InlineKeyboardMarkup(keyboard)
+        update.message.reply_text(text=results,
+                                  parse_mode=ParseMode.MARKDOWN,
+                                  disable_web_page_preview=True,
+                                  reply_markup=reply_markup)
+        update.message.reply_text(text='Press /new to start a new chat with the beer expert',
+                                  reply_markup=ReplyKeyboardRemove())
+
+    else:
+        question = fact_list[0].Slots['display']
+        valid_answers = fact_list[0].Slots['valid-answers']
+        relation_asserted = fact_list[0].Slots['relation-asserted']
+
+        keyboard = []
+        for answer in valid_answers:
+            keyboard.append([KeyboardButton(text=answer)])
+        if relation_asserted != 'food-intolerance':
+            keyboard.append([KeyboardButton(text='previous')])
+        reply_markup = ReplyKeyboardMarkup(keyboard)
+        update.message.reply_text(text=question,
+                                  reply_markup=reply_markup)
+
+        dispatcher.add_handler(MessageHandler(Filters.text, handleEvent))
+
+
+def handleEvent(bot, update):
+    """
+    Triggers the next state in working memory based on which button
+    was pressed and triggers a re-generation of the GUI.
+    """
+
+    # Get the state-list
+    fact_list = clips.Eval('(find-all-facts ((?f state-list)) TRUE)')
+    if len(fact_list) == 0:
+        return
+
+    current_id = fact_list[0].Slots['current']
+
+    # Get the current UI state
+    fact_list = clips.Eval('(find-all-facts ((?f UI-state)) (eq ?f:id %s))' % current_id)
+    if len(fact_list) == 0:
+        return
+
+    valid_answers = fact_list[0].Slots['valid-answers']
+    relation_asserted = fact_list[0].Slots['relation-asserted']
+
+    if update.message.text in valid_answers:
+        clips.Assert('(%s %s)' % (relation_asserted, update.message.text))
+        clips.Run()
+        nextUIState(bot, update)
+
+    elif update.message.text == 'previous':
+        clips.Assert('(prev %s)' % current_id)
+        clips.Run()
+        nextUIState(bot, update)
+
+
+def button(bot, update):
+    """
+    Triggers a re-generation of the GUI when the 🔙 button is pressed.
+    """
+
+    query = update.callback_query
+
+    bot.delete_message(chat_id=query.message.chat_id,
+                       message_id=query.message.message_id)
 
 
 def unknown(bot, update):
-    bot.send_message(update.message.chat_id, "Sorry, I didn't understand that command.")
+    """
+    Sends an error message when an unrecognized command is typed.
+    """
+
+    bot.send_message(chat_id=update.message.chat_id,
+                     text='Unrecognized command. Say what?')
 
 
-file = open("token", "r")
-token = file.read()
-updater = Updater(token)
+def cancel(bot, update):
+    """
+    Ends the chat with the beer expert when the command /cancel is issued.
+    """
+    update.message.reply_text(text='Bye! I hope we can talk again some day. 👋',
+                              reply_markup=ReplyKeyboardRemove())
+    clips.Reset()
 
-updater.dispatcher.add_handler(CommandHandler('start', start))
-updater.dispatcher.add_handler(CommandHandler('run', run))
-updater.dispatcher.add_handler(MessageHandler(Filters.command, unknown))
 
-updater.start_polling()
-updater.idle()
+def error(bot, update, error):
+    """
+    Log errors caused by updates.
+    """
+
+    logger.warning('Update "%s" caused error "%s"', update, error)
+
+
+if __name__ == '__main__':
+
+    # Load the Beer EXpert system
+    clips.Load('./clips/beerex.clp')
+
+    # Create the updater and pass it the bot's token.
+    updater = Updater(open('token', 'r').read())
+
+    # Get the dispatcher to register handlers
+    dispatcher = updater.dispatcher
+    dispatcher.add_handler(CommandHandler('start', start))
+    dispatcher.add_handler(CommandHandler('new', new))
+    dispatcher.add_handler(CommandHandler('cancel', cancel))
+    dispatcher.add_handler(CallbackQueryHandler(handleEvent))
+    dispatcher.add_handler(MessageHandler(Filters.command, unknown))
+
+    # Log all errors
+    dispatcher.add_error_handler(error)
+
+    # Start the bot
+    updater.start_polling()
+
+    # Run the bot until you press Ctrl-C or the process receives SIGINT,
+    # SIGTERM or SIGABRT. This should be used most of the time, since
+    # start_polling() is non-blocking and will stop the bot gracefully.
+    updater.idle()

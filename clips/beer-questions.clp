@@ -2,12 +2,8 @@
 (defrule set-strategy
    (declare (salience 10))
    (or (drink-wine yes)
-       (preferred-flavor sweet)
-       (preferred-flavor bitter)
-       (preferred-flavor roasty)
-       (preferred-flavor fruity)
-       (preferred-flavor spicy)
-       (preferred-flavor sour))
+       (and (preferred-flavor ?flavor)
+            (neq ?flavor clean)))
    =>
    (set-strategy depth))
 
@@ -34,7 +30,7 @@
         (or (food-style omnivorous)
             (food-style vegetarian)))
    =>
-   (assert (UI-state (display "Do you have to eat bittersweet (70% cacao ca.) or unsweetened/bitter (100% cacao)?")
+   (assert (UI-state (display "Do you have to eat bittersweet (70% cacao ca.) or unsweetened/bitter (100% cacao)? 🍫")
                      (relation-asserted chocolate-for-omnivorous-or-vegetarian-yeast-intolerant)
                      (valid-answers bittersweet unsweetened/bitter no))))
 
@@ -43,7 +39,7 @@
    (and (food-intolerance yeast)
         (food-style vegan))
    =>
-   (assert (UI-state (display "Do you have to eat unsweetened/bitter (100% cacao) chocolate?")
+   (assert (UI-state (display "Do you have to eat unsweetened/bitter (100% cacao) chocolate? 🍫")
                      (relation-asserted chocolate-for-vegan-yeast-intolerant-is-unsweetened/bitter)
                      (valid-answers yes no))))
 
@@ -51,7 +47,7 @@
    (declare (salience 10))
    (food-intolerance no)
    =>
-   (assert (UI-state (display "Do you generally prefer to drink low, mild, high or very high alcoholic drinks?")
+   (assert (UI-state (display "Do you generally prefer to drink low, mild, high or very high alcoholic drinks? 🍹")
                      (relation-asserted preferred-alcohol)
                      (valid-answers low mild high "very high" "don't mind"))))
 
@@ -59,7 +55,7 @@
    (declare (salience 10))
    (food-intolerance no)
    =>
-   (assert (UI-state (display "Do you have to drive?")
+   (assert (UI-state (display "Do you have to drive? 🚘")
                      (relation-asserted driver)
                      (valid-answers yes no))))
 
@@ -67,7 +63,7 @@
    (declare (salience 10))
    (food-intolerance no)
    =>
-   (assert (UI-state (display "Do you generally prefer pale, amber, brown or dark beer?")
+   (assert (UI-state (display "Do you generally prefer pale, amber, brown or dark beer? 🍺")
                      (relation-asserted preferred-color)
                      (valid-answers pale amber brown dark "don't mind"))))
 
@@ -75,7 +71,7 @@
    (declare (salience 10))
    (food-intolerance no)
    =>
-   (assert (UI-state (display "Do you generally prefer to drink low, medium or high carbonated drinks?")
+   (assert (UI-state (display "Do you generally prefer to drink low, medium or high carbonated drinks? 🍾")
                      (relation-asserted preferred-carbonation)
                      (valid-answers low medium high "don't mind"))))
 
@@ -83,7 +79,7 @@
    (declare (salience 10))
    (food-intolerance no)
    =>
-   (assert (UI-state (display "Do you smoke cigarettes?")
+   (assert (UI-state (display "Do you smoke cigarettes? 🚬")
                      (relation-asserted smoker)
                      (valid-answers yes no))))
 
@@ -91,21 +87,21 @@
    (declare (salience 10))
    (food-intolerance no)
    =>
-   (assert (UI-state (display "Do you generally eat fermented foods (probiotic yogurt, kefir, kombucha, sauerkraut, miso)?")
+   (assert (UI-state (display "Do you generally eat fermented foods (probiotic yogurt, kefir, kombucha)? 🥛")
                      (relation-asserted fermented-foods-eater)
                      (valid-answers yes no))))
 
 (defrule determine-whether-it-enjoy-drink-wine
    (food-intolerance no)
    =>
-   (assert (UI-state (display "Do you also enjoy drink wine?")
+   (assert (UI-state (display "Do you also enjoy drink wine? 🍷")
                      (relation-asserted drink-wine)
                      (valid-answers yes no))))
 
 (defrule determine-preferred-wine
    (drink-wine yes)
    =>
-   (assert (UI-state (display "What type of wine do you generally prefer to drink?")
+   (assert (UI-state (display "What type of wine do you generally prefer to drink? 🍷")
                      (relation-asserted preferred-wine)
                      (valid-answers Chardonnay "Pinot Noir" "Pinot Gris" "Sauvignon Blanc" "Cabernet Sauvignon" Merlot
                                     Malbec Zinfandels Syrah Chianti Port "don't know"))))
@@ -172,7 +168,7 @@
    =>
    (assert (UI-state (display (str-cat "Is the main component of the meal grain (farro, arborio, wild rice, polenta), "
                                        "legumes (lentils, fava, chickpea, green beans), fish, meat, vegetables, fats, "
-                                       "cheese, dessert or other?"))
+                                       "cheese, dessert or other? 🧀"))
                      (relation-asserted main-meal-omnivorous)
                      (valid-answers grain legumes fish meat vegetables fats cheese dessert other))))
 
@@ -183,7 +179,7 @@
    (assert (UI-state (display (str-cat "Is the main component of the meal grain (farro, arborio, wild rice, polenta), "
                                        "legumes (lentils, fava, chickpea, green beans), vegetables, vegetables fats "
                                        "(avocados, olives or olive oil, peanut butter, nuts and seeds), cheese, dessert "
-                                       "or other?"))
+                                       "or other? 🧀"))
                      (relation-asserted main-meal-vegetarian)
                      (valid-answers grain legumes vegetables "vegetables fats" cheese dessert other))))
 
@@ -194,7 +190,7 @@
    (assert (UI-state (display (str-cat "Is the main component of the meal grain (farro, arborio, wild rice, polenta), "
                                        "legumes (lentils, fava, chickpea, green beans), vegetables, vegetables fats "
                                        "(avocados, olives or olive oil, peanut butter, nuts and seeds), "
-                                       "unsweetened/bitter (100% cacao) chocolate or other?"))
+                                       "unsweetened/bitter (100% cacao) chocolate or other? 🍫"))
                      (relation-asserted main-meal-vegan)
                      (valid-answers grain legumes vegetables "vegetables fats" "unsweetened/bitter chocolate" other))))
 
@@ -212,7 +208,7 @@
    (main-meal-omnivorous fish)
    =>
    (assert (UI-state (display (str-cat "Does the fish is shellfish (clams, scallops, lobster, crab), bluefish (salmon, "
-                                        "trout, tuna) or other?"))
+                                        "trout, tuna) or other? 🦐 🐟"))
                      (relation-asserted which-fish)
                      (valid-answers shellfish bluefish other))))
 
@@ -253,7 +249,7 @@
    (assert (UI-state (display (str-cat "Does the cheese is fresh (Italian-style Mascarpone, Ricotta, soft Chèvre, etc.), "
                                        "semi-soft (Fontina, Havarti, milder blue cheeses, etc.), firm/hard (Cheddars, "
                                        "Swiss, Emmentaler-style cheeses, etc.), blue, natural-rind (Lancashire, Stilton, "
-                                       " Brie, Camembert, etc.) or washed-rind?"))
+                                       " Brie, Camembert, etc.) or washed-rind? 🧀"))
                      (relation-asserted which-cheese)
                      (valid-answers fresh semi-soft firm/hard blue "natural rind" "washed rind" "don't know"))))
 
@@ -262,7 +258,7 @@
        (main-meal-vegetarian dessert))
    =>
    (assert (UI-state (display (str-cat "Does the dessert is creamy (cheesecake, ice cream, creme brûlée, mousse cake), "
-                                       "chocolate or other?"))
+                                       "chocolate or other? 🍫"))
                      (relation-asserted which-dessert)
                      (valid-answers creamy chocolate other))))
 
@@ -270,7 +266,7 @@
    (which-dessert chocolate)
    =>
    (assert (UI-state (display (str-cat "Does the chocolate is white, milk (35% cacao ca.), semisweet (55% cacao ca.), "
-                                       "bittersweet (70% cacao ca.) or unsweetened/bitter (100% cacao)?"))
+                                       "bittersweet (70% cacao ca.) or unsweetened/bitter (100% cacao)? 🍫"))
                      (relation-asserted which-chocolate)
                      (valid-answers white milk semisweet bittersweet unsweetened/bitter "don't know"))))
 

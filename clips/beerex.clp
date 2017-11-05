@@ -4,7 +4,7 @@
 ;;;
 ;;;   This expert system suggests a beer to drink with a meal.
 ;;;
-;;;   For use with BeerEX.wx.py
+;;;   For use with BeerEX.bot.py
 ;;;
 ;;;   CLIPS Version 6.30
 ;;;
@@ -21,8 +21,6 @@
       (default-dynamic (gensym*)))
    (slot display)
    (slot relation-asserted
-      (default none))
-   (slot response
       (default none))
    (multislot valid-answers)
    (slot state
@@ -71,15 +69,16 @@
 (deffacts startup
    (state-list))
 
-(defrule load-files-and-system-banner
+(defrule load-files-and-print-welcome-message
   =>
   (load-facts "./clips/beer-styles.clp")
   (load "./clips/beer-questions.clp")
   (load "./clips/beer-knowledge.clp")
   (load "./clips/gui-interaction.clp")
-  (bind ?stars " *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   * ")
-  (assert (UI-state (display (str-cat ?stars (format nil "   W E L C O M E  to  BeerEX: the Beer EXpert system   ") ?stars
-                                      (format nil "%n%n%n This expert system suggests a beer to drink with a meal. :-)")))
+  (assert (UI-state (display (format nil "%n%s %n%n%s %n%n%s" "Welcome to the Beer EXpert system 🍻️"
+                                         (str-cat "⁉️ All I need is that you answer simple questions by choosing "
+                                                  "one of the responses that are offered to you.")
+                                         "To start, please press the /new button 😄"))
                     (relation-asserted start)
                     (state initial))))
 
@@ -120,19 +119,15 @@
    (UI-state (id ?id))
    (state-list (current ?id))
    =>
-   (bind ?stars " *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   * ")
-   (bind ?results (str-cat ?stars
-                           (format nil "%s" "   S E L E C T E D    B E E R    S T Y L E S   ")
-                           ?stars
-                           (format nil "%n%n")))
+   (bind ?results (format nil "%s %n%n" "*✅ Done. I have selected these beer styles for you.*"))
    (do-for-all-facts ((?a attribute) (?b beer))
                      (and (eq ?a:name beer)
                           (eq ?a:value ?b:name)
                           (not (any-factp ((?a1 attribute)) (and (eq ?a1:name beer)
                                                                  (> ?a1:certainty ?a:certainty)))))
                      (and (retract ?a)
-                          (bind ?results (str-cat ?results (format nil "%-23s %-40s %-12s %s %n" ?b:style ?b:name
-                                                                       (format nil "%-2d%%" ?a:certainty) ?b:link)))))
+                          (bind ?results (str-cat ?results (format nil "🍺 [%s - %s](%s) with certainty %-2d%% %n"
+                                                                        ?b:style ?b:name ?b:link ?a:certainty)))))
    (assert (UI-state (display ?results)
                      (state final))))
 
