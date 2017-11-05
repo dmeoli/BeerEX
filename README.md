@@ -1,4 +1,4 @@
-# BeerEX Telegram Bot :robot: :beer: [![Build Status](https://travis-ci.org/DonatoMeoli/BeerEX.svg?branch=master)](https://travis-ci.org/DonatoMeoli/BeerEX)
+# BeerEX Telegram Bot :robot::beer: [![Build Status](https://travis-ci.org/DonatoMeoli/BeerEX.svg?branch=master)](https://travis-ci.org/DonatoMeoli/BeerEX)
 
 *"Beer is proof that God loves us and want us to be happy."* (Benjamin Franklin)
 
