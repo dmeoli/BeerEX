@@ -69,9 +69,9 @@ def nextUIState(bot, update):
     elif state == 'final':
         results = fact_list[0].Slots['display']
 
-        keyboard = [[KeyboardButton(text=emojize(":back:", use_aliases=True))],
-                    [KeyboardButton(text=emojize(":repeat:", use_aliases=True))],
-                    [KeyboardButton(text=emojize(":end:", use_aliases=True))]]
+        keyboard = [[KeyboardButton(text=emojize(":back: Previous", use_aliases=True))],
+                    [KeyboardButton(text=emojize(":repeat: Restart", use_aliases=True))],
+                    [KeyboardButton(text=emojize(":x: Cancel", use_aliases=True))]]
         reply_markup = ReplyKeyboardMarkup(keyboard)
         update.message.reply_text(text=results,
                                   parse_mode=ParseMode.MARKDOWN,
@@ -85,8 +85,8 @@ def nextUIState(bot, update):
         keyboard = []
         for answer in valid_answers:
             keyboard.append([KeyboardButton(text=answer)])
-        keyboard.append([KeyboardButton(text=emojize(":back:", use_aliases=True))])
-        keyboard.append([KeyboardButton(text=emojize(":end:", use_aliases=True))])
+        keyboard.append([KeyboardButton(text=emojize(":back: Previous", use_aliases=True))])
+        keyboard.append([KeyboardButton(text=emojize(":x: Cancel", use_aliases=True))])
         reply_markup = ReplyKeyboardMarkup(keyboard)
         update.message.reply_text(text=question,
                                   reply_markup=reply_markup)
@@ -120,15 +120,15 @@ def handleEvent(bot, update):
         clips.Run()
         nextUIState(bot, update)
 
-    elif update.message.text == emojize(":back:", use_aliases=True):
+    elif update.message.text == emojize(":back: Previous", use_aliases=True):
         clips.Assert('(prev %s)' % current_id)
         clips.Run()
         nextUIState(bot, update)
 
-    elif update.message.text == emojize(":repeat:", use_aliases=True):
+    elif update.message.text == emojize(":repeat: Restart", use_aliases=True):
         new(bot, update)
 
-    elif update.message.text == emojize(":end:", use_aliases=True):
+    elif update.message.text == emojize(":x: Cancel", use_aliases=True):
         cancel(bot, update)
 
 
