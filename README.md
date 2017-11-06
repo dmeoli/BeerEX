@@ -2,7 +2,7 @@
 
 *"Beer is proof that God loves us and want us to be happy."* (Benjamin Franklin)
 
-BeerEX is a [Telegram bot](t.me/BeerEXpertBot) which embeds a [CLIPS Expert System](http://www.clipsrules.net/) 
+BeerEX is a [Telegram bot](https://t.me/BeerEXpertBot) which embeds a [CLIPS Expert System](http://www.clipsrules.net/) 
 that suggests a beer to drink with a meal. This code was developed during the Knowledge Engineering course @ 
 [Department of Computer Science](http://www.uniba.it/ricerca/dipartimenti/informatica) 
 @ [University of Bari "Aldo Moro"](http://www.uniba.it/).
