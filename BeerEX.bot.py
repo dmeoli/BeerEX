@@ -1,12 +1,11 @@
 #!/usr/bin/env python
 # coding=utf-8
 
-import logging
-from telegram import *
-from telegram.ext import *
+from telegram import ReplyKeyboardRemove, KeyboardButton, ReplyKeyboardMarkup, ParseMode
+from telegram.ext import MessageHandler, Filters, Updater, CommandHandler
 from emoji import emojize
+import logging
 import clips
-
 
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -139,6 +138,7 @@ def cancel(bot, update):
 
     update.message.reply_text(text='Bye! I hope we can talk again some day. 👋',
                               reply_markup=ReplyKeyboardRemove())
+    clips.Reset()
 
 
 def unknown(bot, update):
