@@ -67,7 +67,7 @@ def nextUIState(bot, update):
 
     elif state == 'final':
         results = fact_list[0].Slots['display']
-
+        clips.SaveFacts("facts")
         keyboard = [[KeyboardButton(text=emojize(":back: Previous", use_aliases=True))],
                     [KeyboardButton(text=emojize(":repeat: Restart", use_aliases=True))],
                     [KeyboardButton(text=emojize(":x: Cancel", use_aliases=True))]]
@@ -95,9 +95,9 @@ def nextUIState(bot, update):
 
 def handleEvent(bot, update):
     """
-    Triggers the next state in working memory based on which button
-    was pressed and triggers a re-generation of the GUI.
+    Triggers the next state in working memory based on which button was pressed.
     """
+    # and triggers a re-generation of the GUI.
 
     # Get the state-list
     fact_list = clips.Eval('(find-all-facts ((?f state-list)) TRUE)')
@@ -136,7 +136,7 @@ def cancel(bot, update):
     Ends the chat with the beer expert when the command /cancel is issued.
     """
 
-    update.message.reply_text(text='Bye! I hope we can talk again some day. 👋',
+    update.message.reply_text(text='Bye! I hope we can talk again some day. 👋🏻',
                               reply_markup=ReplyKeyboardRemove())
     clips.Reset()
 
@@ -168,6 +168,7 @@ if __name__ == '__main__':
 
     # Get the dispatcher to register handlers
     dispatcher = updater.dispatcher
+
     dispatcher.add_handler(CommandHandler('start', start))
     dispatcher.add_handler(CommandHandler('new', new))
     dispatcher.add_handler(CommandHandler('cancel', cancel))
