@@ -1,10 +1,12 @@
 #!/usr/bin/env python
 # coding=utf-8
 
+import logging
 from telegram import *
 from telegram.ext import *
-import logging
+from emoji import emojize
 import clips
+
 
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -67,14 +69,14 @@ def nextUIState(bot, update):
     elif state == 'final':
         results = fact_list[0].Slots['display']
 
-        keyboard = [[InlineKeyboardButton(text='🔙', callback_data='🔙')]]
-        reply_markup = InlineKeyboardMarkup(keyboard)
+        keyboard = [[KeyboardButton(text=emojize(":back:", use_aliases=True))],
+                    [KeyboardButton(text=emojize(":repeat:", use_aliases=True))],
+                    [KeyboardButton(text=emojize(":end:", use_aliases=True))]]
+        reply_markup = ReplyKeyboardMarkup(keyboard)
         update.message.reply_text(text=results,
                                   parse_mode=ParseMode.MARKDOWN,
                                   disable_web_page_preview=True,
                                   reply_markup=reply_markup)
-        update.message.reply_text(text='Press /new to start a new chat with the beer expert',
-                                  reply_markup=ReplyKeyboardRemove())
 
     else:
         question = fact_list[0].Slots['display']
@@ -83,7 +85,8 @@ def nextUIState(bot, update):
         keyboard = []
         for answer in valid_answers:
             keyboard.append([KeyboardButton(text=answer)])
-        keyboard.append([KeyboardButton(text='previous')])
+        keyboard.append([KeyboardButton(text=emojize(":back:", use_aliases=True))])
+        keyboard.append([KeyboardButton(text=emojize(":end:", use_aliases=True))])
         reply_markup = ReplyKeyboardMarkup(keyboard)
         update.message.reply_text(text=question,
                                   reply_markup=reply_markup)
@@ -117,30 +120,25 @@ def handleEvent(bot, update):
         clips.Run()
         nextUIState(bot, update)
 
-    elif update.message.text == 'previous':
+    elif update.message.text == emojize(":back:", use_aliases=True):
         clips.Assert('(prev %s)' % current_id)
         clips.Run()
         nextUIState(bot, update)
 
+    elif update.message.text == emojize(":repeat:", use_aliases=True):
+        new(bot, update)
 
-def button(bot, update):
-    """
-    Triggers a re-generation of the GUI when the 🔙 button is pressed.
-    """
-
-    query = update.callback_query
-
-    bot.delete_message(chat_id=query.message.chat_id,
-                       message_id=query.message.message_id)
+    elif update.message.text == emojize(":end:", use_aliases=True):
+        cancel(bot, update)
 
 
 def cancel(bot, update):
     """
     Ends the chat with the beer expert when the command /cancel is issued.
     """
+
     update.message.reply_text(text='Bye! I hope we can talk again some day. 👋',
                               reply_markup=ReplyKeyboardRemove())
-    clips.Reset()
 
 
 def unknown(bot, update):
@@ -173,7 +171,6 @@ if __name__ == '__main__':
     dispatcher.add_handler(CommandHandler('start', start))
     dispatcher.add_handler(CommandHandler('new', new))
     dispatcher.add_handler(CommandHandler('cancel', cancel))
-    dispatcher.add_handler(CallbackQueryHandler(handleEvent))
     dispatcher.add_handler(MessageHandler(Filters.command, unknown))
 
     # Log all errors

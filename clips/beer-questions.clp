@@ -69,7 +69,8 @@
 
 (defrule determine-preferred-carbonation
    (declare (salience 10))
-   (food-intolerance no)
+   (and (food-intolerance no)
+        (driver no))
    =>
    (assert (UI-state (display "Do you generally prefer to drink low, medium or high carbonated drinks? 🍾")
                      (relation-asserted preferred-carbonation)

@@ -45,7 +45,9 @@
    (declare (salience 10))
    ?fact1 <- (prev ?id)
    ?fact2 <- (state-list (sequence $?b ?id ?p $?e))
+   (UI-state (id ?p) (relation-asserted ?relation))
    =>
    (retract ?fact1)
+   (find-fact ((?f ?relation)) (retract ?f))
    (modify ?fact2 (current ?p))
    (halt))
