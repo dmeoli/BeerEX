@@ -67,7 +67,7 @@ def nextUIState(bot, update):
 
     elif state == 'final':
         results = fact_list[0].Slots['display']
-        clips.SaveFacts("facts")
+
         keyboard = [[KeyboardButton(text=emojize(":back: Previous", use_aliases=True))],
                     [KeyboardButton(text=emojize(":repeat: Restart", use_aliases=True))],
                     [KeyboardButton(text=emojize(":x: Cancel", use_aliases=True))]]
@@ -97,7 +97,7 @@ def handleEvent(bot, update):
     """
     Triggers the next state in working memory based on which button was pressed.
     """
-    # and triggers a re-generation of the GUI.
+    # and triggers a re-generation of the GUI (?)
 
     # Get the state-list
     fact_list = clips.Eval('(find-all-facts ((?f state-list)) TRUE)')
