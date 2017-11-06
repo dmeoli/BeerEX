@@ -24,8 +24,9 @@ def start(bot, update):
     # Get the initial UI state
     initial_fact = clips.Eval('(find-fact ((?f UI-state)) (eq ?f:state initial))')
 
-    update.message.reply_text('Hello {}! 🤖 '.format(update.message.from_user.first_name) +
-                              initial_fact[0].Slots['display'])
+    update.message.reply_text(text='Hello {}! 🤖 '.format(update.message.from_user.first_name),
+                              reply_markup=ReplyKeyboardRemove())
+    update.message.reply_text(initial_fact[0].Slots['display'])
 
 
 def new(bot, update):
@@ -78,13 +79,11 @@ def nextUIState(bot, update):
     else:
         question = fact_list[0].Slots['display']
         valid_answers = fact_list[0].Slots['valid-answers']
-        relation_asserted = fact_list[0].Slots['relation-asserted']
 
         keyboard = []
         for answer in valid_answers:
             keyboard.append([KeyboardButton(text=answer)])
-        if relation_asserted != 'food-intolerance':
-            keyboard.append([KeyboardButton(text='previous')])
+        keyboard.append([KeyboardButton(text='previous')])
         reply_markup = ReplyKeyboardMarkup(keyboard)
         update.message.reply_text(text=question,
                                   reply_markup=reply_markup)
@@ -135,15 +134,6 @@ def button(bot, update):
                        message_id=query.message.message_id)
 
 
-def unknown(bot, update):
-    """
-    Sends an error message when an unrecognized command is typed.
-    """
-
-    bot.send_message(chat_id=update.message.chat_id,
-                     text='Unrecognized command. Say what?')
-
-
 def cancel(bot, update):
     """
     Ends the chat with the beer expert when the command /cancel is issued.
@@ -151,6 +141,15 @@ def cancel(bot, update):
     update.message.reply_text(text='Bye! I hope we can talk again some day. 👋',
                               reply_markup=ReplyKeyboardRemove())
     clips.Reset()
+
+
+def unknown(bot, update):
+    """
+    Sends an error message when an unrecognized command is typed.
+    """
+
+    bot.send_message(chat_id=update.message.chat_id,
+                     text='Unrecognized command. Say what?')
 
 
 def error(bot, update, error):
