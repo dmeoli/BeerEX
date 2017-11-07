@@ -168,7 +168,7 @@ if __name__ == '__main__':
     # Get the dispatcher to register handlers
     dispatcher = updater.dispatcher
 
-    # Add command and message handlers
+    # Add handlers
     dispatcher.add_handler(CommandHandler('start', start))
     dispatcher.add_handler(CommandHandler('new', new))
     dispatcher.add_handler(CommandHandler('cancel', cancel))
