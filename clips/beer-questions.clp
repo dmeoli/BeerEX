@@ -26,9 +26,9 @@
 
 (defrule determine-which-chocolate-for-omnivorous-or-vegetarian-yeast-intolerant
    (declare (salience 10))
-   (and (food-intolerance yeast)
-        (or (food-style omnivorous)
-            (food-style vegetarian)))
+   (food-intolerance yeast)
+   (or (food-style omnivorous)
+       (food-style vegetarian))
    =>
    (assert (UI-state (display "Do you have to eat bittersweet (70% cacao ca.) or unsweetened/bitter (100% cacao)? 🍫")
                      (relation-asserted chocolate-for-omnivorous-or-vegetarian-yeast-intolerant)
@@ -36,8 +36,8 @@
 
 (defrule determine-if-chocolate-for-vegan-yeast-intolerant-is-unsweetened/bitter
    (declare (salience 10))
-   (and (food-intolerance yeast)
-        (food-style vegan))
+   (food-intolerance yeast)
+   (food-style vegan)
    =>
    (assert (UI-state (display "Do you have to eat unsweetened/bitter (100% cacao) chocolate? 🍫")
                      (relation-asserted chocolate-for-vegan-yeast-intolerant-is-unsweetened/bitter)
@@ -69,8 +69,8 @@
 
 (defrule determine-preferred-carbonation
    (declare (salience 10))
-   (and (food-intolerance no)
-        (driver no))
+   (food-intolerance no)
+   (driver no)
    =>
    (assert (UI-state (display "Do you generally prefer to drink low, medium or high carbonated drinks? 🍾")
                      (relation-asserted preferred-carbonation)
@@ -164,8 +164,8 @@
 ; Questions for meal recognition
 
 (defrule determine-main-meal-omnivorous
-   (and (food-intolerance no)
-        (food-style omnivorous))
+   (food-intolerance no)
+   (food-style omnivorous)
    =>
    (assert (UI-state (display (str-cat "Is the main component of the meal grain (farro, arborio, wild rice, polenta), "
                                        "legumes (lentils, fava, chickpea, green beans), fish, meat, vegetables, fats, "
@@ -174,8 +174,8 @@
                      (valid-answers grain legumes fish meat vegetables fats cheese dessert other))))
 
 (defrule determine-main-meal-vegetarian
-   (and (food-intolerance no)
-        (food-style vegetarian))
+   (food-intolerance no)
+   (food-style vegetarian)
    =>
    (assert (UI-state (display (str-cat "Is the main component of the meal grain (farro, arborio, wild rice, polenta), "
                                        "legumes (lentils, fava, chickpea, green beans), vegetables, vegetables fats "
@@ -185,8 +185,8 @@
                      (valid-answers grain legumes vegetables "vegetables fats" cheese dessert other))))
 
 (defrule determine-main-meal-vegan
-   (and (food-intolerance no)
-        (food-style vegan))
+   (food-intolerance no)
+   (food-style vegan)
    =>
    (assert (UI-state (display (str-cat "Is the main component of the meal grain (farro, arborio, wild rice, polenta), "
                                        "legumes (lentils, fava, chickpea, green beans), vegetables, vegetables fats "

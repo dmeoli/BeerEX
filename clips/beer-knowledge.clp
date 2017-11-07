@@ -463,10 +463,10 @@
    (assert (attribute (name best-carbonation) (value high) (certainty 60))))
 
 (defrule main-meal-is-fats-and-predominant-dish-taste-is-sweet
-   (and (or (main-meal-omnivorous fats)
-            (main-meal-vegetarian "vegetable fats")
-            (main-meal-vegan "vegetable fats"))
-        (predominant-dish-taste sweet))
+   (or (main-meal-omnivorous fats)
+       (main-meal-vegetarian "vegetable fats")
+       (main-meal-vegan "vegetable fats"))
+   (predominant-dish-taste sweet)
    =>
    (assert (attribute (name best-alcohol) (value harsh) (certainty 30)))
    (assert (attribute (name best-alcohol) (value noticeable) (certainty 15))))
