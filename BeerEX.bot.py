@@ -183,7 +183,7 @@ if __name__ == '__main__':
     updater.bot.set_webhook("https://beerex-telegram-bot.herokuapp.com/" + token)
 
     # Start the bot
-    # updater.start_polling()
+    updater.start_polling()
 
     # Run the bot until you press Ctrl-C or the process receives SIGINT,
     # SIGTERM or SIGABRT. This should be used most of the time, since
