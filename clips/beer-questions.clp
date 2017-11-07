@@ -37,19 +37,11 @@
 (defrule determine-if-chocolate-for-vegan-yeast-intolerant-is-unsweetened/bitter
    (declare (salience 10))
    (food-intolerance yeast)
-   (food-style vegan)
+   (food-style vegan))
    =>
    (assert (UI-state (display "Do you have to eat unsweetened/bitter (100% cacao) chocolate? 🍫")
                      (relation-asserted chocolate-for-vegan-yeast-intolerant-is-unsweetened/bitter)
                      (valid-answers yes no))))
-
-(defrule determine-preferred-alcohol
-   (declare (salience 10))
-   (food-intolerance no)
-   =>
-   (assert (UI-state (display "Do you generally prefer to drink low, mild, high or very high alcoholic drinks? 🍹")
-                     (relation-asserted preferred-alcohol)
-                     (valid-answers low mild high "very high" "don't mind"))))
 
 (defrule determine-whether-he-is-a-driver
    (declare (salience 10))
@@ -58,6 +50,14 @@
    (assert (UI-state (display "Do you have to drive? 🚘")
                      (relation-asserted driver)
                      (valid-answers yes no))))
+
+(defrule determine-preferred-alcohol
+   (declare (salience 10))
+   (driver no)
+   =>
+   (assert (UI-state (display "Do you generally prefer to drink low, mild, high or very high alcoholic drinks? 🍹")
+                     (relation-asserted preferred-alcohol)
+                     (valid-answers low mild high "very high" "don't mind"))))
 
 (defrule determine-preferred-color
    (declare (salience 10))
@@ -70,7 +70,6 @@
 (defrule determine-preferred-carbonation
    (declare (salience 10))
    (food-intolerance no)
-   (driver no)
    =>
    (assert (UI-state (display "Do you generally prefer to drink low, medium or high carbonated drinks? 🍾")
                      (relation-asserted preferred-carbonation)
