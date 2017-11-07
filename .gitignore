@@ -1,8 +1,5 @@
 # JetBrains IDE PyCharm Professional
 .idea
 
-# Token to access Telegram Bot API
-token
-
 # Craft Beer materials
 CraftBeer

@@ -160,10 +160,8 @@ if __name__ == '__main__':
     # Load the Beer EXpert system
     clips.Load('./clips/beerex.clp')
 
-    # token = open('token', 'r').read()
-    token = os.environ.get('TOKEN')
-
     # Create the updater and pass it the bot's token.
+    token = os.environ.get('TOKEN')
     updater = Updater(token)
 
     # Get the dispatcher to register handlers
@@ -178,13 +176,12 @@ if __name__ == '__main__':
     # Log all errors
     dispatcher.add_error_handler(error)
 
+    # Start the bot
     updater.start_webhook(listen="0.0.0.0",
                           port=int(os.environ.get('PORT', '5000')),
-                          url_path=token)
+                          url_path=os.environ.get('TOKEN'))
     updater.bot.set_webhook("https://beerex-telegram-bot.herokuapp.com/" + token)
-
-    # Start the bot
-    updater.start_polling()
+    # updater.start_polling()
 
     # Run the bot until you press Ctrl-C or the process receives SIGINT,
     # SIGTERM or SIGABRT. This should be used most of the time, since
