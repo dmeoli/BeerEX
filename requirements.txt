@@ -1,0 +1,2 @@
+pyclips==1.0.7.343
+python-telegram-bot==8.1.1

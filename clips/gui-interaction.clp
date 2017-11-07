@@ -58,7 +58,7 @@
 
 (defrule handle-add-response
    (declare (salience 10))
-   (logical (UI-state (id ?id) (relation-asserted ?relation)))
+   (UI-state (id ?id) (relation-asserted ?relation))
    ?fact <- (add-response ?id ?response)
    =>
    (str-assert (str-cat "(" ?relation " " ?response ")"))
@@ -66,7 +66,7 @@
 
 (defrule handle-add-response-none
    (declare (salience 10))
-   (logical (UI-state (id ?id) (relation-asserted ?relation)))
+   (UI-state (id ?id) (relation-asserted ?relation))
    ?fact <- (add-response ?id)
    =>
    (str-assert (str-cat "(" ?relation ")"))

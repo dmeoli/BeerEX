@@ -6,6 +6,7 @@ from telegram.ext import MessageHandler, Filters, Updater, CommandHandler
 from emoji import emojize
 import logging
 import clips
+import os
 
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -87,8 +88,7 @@ def nextUIState(bot, update):
         keyboard.append([KeyboardButton(text=emojize(':back: Previous', use_aliases=True))])
         keyboard.append([KeyboardButton(text=emojize(':x: Cancel', use_aliases=True))])
         reply_markup = ReplyKeyboardMarkup(keyboard)
-        update.message.reply_text(text=question,
-                                  reply_markup=reply_markup)
+        update.message.reply_text(text=question, reply_markup=reply_markup)
 
         dispatcher.add_handler(MessageHandler(Filters.text, handleEvent))
 
@@ -144,8 +144,7 @@ def unknown(bot, update):
     Sends an error message when an unrecognized command is typed.
     """
 
-    bot.send_message(chat_id=update.message.chat_id,
-                     text='Unrecognized command. Say what?')
+    bot.send_message(chat_id=update.message.chat_id, text='Unrecognized command. Say what?')
 
 
 def error(bot, update, error):
@@ -161,12 +160,15 @@ if __name__ == '__main__':
     # Load the Beer EXpert system
     clips.Load('./clips/beerex.clp')
 
+    token = open('token', 'r').read()
+
     # Create the updater and pass it the bot's token.
-    updater = Updater(open('token', 'r').read())
+    updater = Updater(token)
 
     # Get the dispatcher to register handlers
     dispatcher = updater.dispatcher
 
+    # Add command and message handlers
     dispatcher.add_handler(CommandHandler('start', start))
     dispatcher.add_handler(CommandHandler('new', new))
     dispatcher.add_handler(CommandHandler('cancel', cancel))
@@ -175,8 +177,13 @@ if __name__ == '__main__':
     # Log all errors
     dispatcher.add_error_handler(error)
 
+    updater.start_webhook(listen="0.0.0.0",
+                          port=int(os.environ.get('PORT', '5000')),
+                          url_path=token)
+    updater.bot.set_webhook("https://beerex-telegram-bot.herokuapp.com/" + token)
+
     # Start the bot
-    updater.start_polling()
+    # updater.start_polling()
 
     # Run the bot until you press Ctrl-C or the process receives SIGINT,
     # SIGTERM or SIGABRT. This should be used most of the time, since
