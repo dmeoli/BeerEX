@@ -76,7 +76,12 @@
    (declare (salience 10))
    ?fact1 <- (prev ?id)
    ?fact2 <- (state-list (sequence $?b ?id ?p $?e))
+   (UI-state (id ?p) (relation-asserted ?relation))
+   (UI-state (id ?id) (state ?state))
    =>
    (retract ?fact1)
    (modify ?fact2 (current ?p))
+   (do-for-fact ((?f ?relation)) (neq ?relation start) (retract ?f))
+   (if (eq ?state final)
+    then (do-for-all-facts ((?a attribute)) (retract ?a)))
    (halt))

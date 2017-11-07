@@ -1,19 +1,10 @@
 
-(defrule set-strategy
-   (declare (salience 10))
-   (or (drink-wine yes)
-       (and (preferred-flavor ?flavor)
-            (neq ?flavor clean)))
-   =>
-   (set-strategy depth))
-
 (defrule determine-food-intolerance
    (start)
    =>
    (assert (UI-state (display "Are you intolerant to gluten or yeast?")
                      (relation-asserted food-intolerance)
-                     (valid-answers gluten yeast no)))
-   (set-strategy random))
+                     (valid-answers gluten yeast no))))
 
 (defrule determine-food-style
    (declare (salience 10))
@@ -37,7 +28,7 @@
 (defrule determine-if-chocolate-for-vegan-yeast-intolerant-is-unsweetened/bitter
    (declare (salience 10))
    (food-intolerance yeast)
-   (food-style vegan))
+   (food-style vegan)
    =>
    (assert (UI-state (display "Do you have to eat unsweetened/bitter (100% cacao) chocolate? 🍫")
                      (relation-asserted chocolate-for-vegan-yeast-intolerant-is-unsweetened/bitter)
@@ -160,7 +151,12 @@
                      (relation-asserted preferred-aroma-for-sour-flavor)
                      (valid-answers light medium strong "don't mind"))))
 
-; Questions for meal recognition
+(defrule determine-predominant-dish-taste
+   (food-intolerance no)
+   =>
+   (assert (UI-state (display "Which is the predominant taste of the dish?")
+                     (relation-asserted predominant-dish-taste)
+                     (valid-answers sweet acid spice umami "not tasted yet"))))
 
 (defrule determine-main-meal-omnivorous
    (food-intolerance no)
@@ -269,13 +265,6 @@
                                        "bittersweet (70% cacao ca.) or unsweetened/bitter (100% cacao)? 🍫"))
                      (relation-asserted which-chocolate)
                      (valid-answers white milk semisweet bittersweet unsweetened/bitter "don't know"))))
-
-(defrule determine-predominant-dish-taste
-   (food-intolerance no)
-   =>
-   (assert (UI-state (display "Which is the predominant taste of the dish?")
-                     (relation-asserted predominant-dish-taste)
-                     (valid-answers sweet acid spice umami "not tasted yet"))))
 
 (defrule determine-dish-cooking-method
    (food-intolerance no)
