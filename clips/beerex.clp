@@ -6,7 +6,7 @@
 ;;;
 ;;;   For use with BeerEX.bot.py
 ;;;
-;;;   CLIPS Version 6.30
+;;;   CLIPS 6.30
 ;;;
 ;;;   Author: Donato Meoli
 ;;;===========================================================
@@ -71,7 +71,7 @@
 (deffacts startup
    (state-list))
 
-(defrule system-banner
+(defrule print-welcome-message
   =>
   (load-facts "./clips/beer-styles.clp")
   (load "./clips/beer-questions.clp")
