@@ -160,6 +160,7 @@ if __name__ == '__main__':
     # Load the Beer EXpert system
     clips.Load('./clips/beerex.clp')
 
+    # token = open('token', 'r').read()
     token = os.environ.get('TOKEN')
 
     # Create the updater and pass it the bot's token.
