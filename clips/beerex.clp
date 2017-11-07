@@ -22,6 +22,8 @@
    (slot display)
    (slot relation-asserted
       (default none))
+   (slot response
+      (default none))
    (multislot valid-answers)
    (slot state
       (default middle)))

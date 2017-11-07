@@ -68,9 +68,9 @@ def nextUIState(bot, update):
     elif state == 'final':
         results = fact_list[0].Slots['display']
 
-        keyboard = [[KeyboardButton(text=emojize(":back: Previous", use_aliases=True))],
-                    [KeyboardButton(text=emojize(":repeat: Restart", use_aliases=True))],
-                    [KeyboardButton(text=emojize(":x: Cancel", use_aliases=True))]]
+        keyboard = [[KeyboardButton(text=emojize(':back: Previous', use_aliases=True))],
+                    [KeyboardButton(text=emojize(':repeat: Restart', use_aliases=True))],
+                    [KeyboardButton(text=emojize(':x: Cancel', use_aliases=True))]]
         reply_markup = ReplyKeyboardMarkup(keyboard)
         update.message.reply_text(text=results,
                                   parse_mode=ParseMode.MARKDOWN,
@@ -84,8 +84,8 @@ def nextUIState(bot, update):
         keyboard = []
         for answer in valid_answers:
             keyboard.append([KeyboardButton(text=answer)])
-        keyboard.append([KeyboardButton(text=emojize(":back: Previous", use_aliases=True))])
-        keyboard.append([KeyboardButton(text=emojize(":x: Cancel", use_aliases=True))])
+        keyboard.append([KeyboardButton(text=emojize(':back: Previous', use_aliases=True))])
+        keyboard.append([KeyboardButton(text=emojize(':x: Cancel', use_aliases=True))])
         reply_markup = ReplyKeyboardMarkup(keyboard)
         update.message.reply_text(text=question,
                                   reply_markup=reply_markup)
@@ -97,7 +97,6 @@ def handleEvent(bot, update):
     """
     Triggers the next state in working memory based on which button was pressed.
     """
-    # and triggers a re-generation of the GUI (?)
 
     # Get the state-list
     fact_list = clips.Eval('(find-all-facts ((?f state-list)) TRUE)')
@@ -112,22 +111,21 @@ def handleEvent(bot, update):
         return
 
     valid_answers = fact_list[0].Slots['valid-answers']
-    relation_asserted = fact_list[0].Slots['relation-asserted']
 
     if update.message.text in valid_answers:
-        clips.Assert('(%s %s)' % (relation_asserted, update.message.text))
+        clips.Assert('(next %s %s)' % (current_id, update.message.text))
         clips.Run()
         nextUIState(bot, update)
 
-    elif update.message.text == emojize(":back: Previous", use_aliases=True):
+    elif update.message.text == emojize(':back: Previous', use_aliases=True):
         clips.Assert('(prev %s)' % current_id)
         clips.Run()
         nextUIState(bot, update)
 
-    elif update.message.text == emojize(":repeat: Restart", use_aliases=True):
+    elif update.message.text == emojize(':repeat: Restart', use_aliases=True):
         new(bot, update)
 
-    elif update.message.text == emojize(":x: Cancel", use_aliases=True):
+    elif update.message.text == emojize(':x: Cancel', use_aliases=True):
         cancel(bot, update)
 
 
@@ -155,7 +153,7 @@ def error(bot, update, error):
     Log errors caused by updates.
     """
 
-    logger.warning('Update "%s" caused error "%s"', update, error)
+    logger.warning('Update %s caused error %s' % (update, error))
 
 
 if __name__ == '__main__':
