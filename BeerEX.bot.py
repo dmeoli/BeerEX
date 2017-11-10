@@ -8,6 +8,12 @@ import logging
 import clips
 import os
 
+# Enable logging
+logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+                    level=logging.INFO)
+
+logger = logging.getLogger(__name__)
+
 
 def start(bot, update):
     """
@@ -128,12 +134,6 @@ def error(bot, update, error):
 
 
 if __name__ == '__main__':
-
-    # Enable logging
-    logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-                        level=logging.INFO)
-
-    logger = logging.getLogger(__name__)
 
     # Load the Beer EXpert system
     clips.Load('./clips/beerex.clp')

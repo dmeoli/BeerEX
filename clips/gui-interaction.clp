@@ -77,13 +77,10 @@
 (defrule handle-prev
    (declare (salience ?*high-priority*))
    ?fact1 <- (prev ?id)
-   ?fact2 <- (UI-state (id ?id))
-   ?fact3 <- (UI-state (id ?pid) (relation-asserted ?relation))
-   ?fact4 <- (state-list (current ?id) (sequence ?id ?pid $?e))
+   ?fact2 <- (state-list (sequence $?b ?id ?pid $?e))
+   (UI-state (id ?pid) (relation-asserted ?relation))
    =>
    (retract ?fact1)
-   (retract ?fact2)
-   (modify ?fact3 (response none))
-   (modify ?fact4 (current ?pid) (sequence ?pid ?e))
+   (modify ?fact2 (current ?pid))
    (do-for-fact ((?f ?relation)) (neq ?relation start) (retract ?f))
    (halt))
