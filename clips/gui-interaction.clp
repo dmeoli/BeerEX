@@ -83,4 +83,5 @@
    (retract ?fact1)
    (modify ?fact2 (current ?pid))
    (do-for-fact ((?f ?relation)) (neq ?relation start) (retract ?f))
+   (do-for-all-facts ((?u UI-state) (?s state-list)) (not (member$ ?u:id ?s:sequence)) (retract ?u))
    (halt))
