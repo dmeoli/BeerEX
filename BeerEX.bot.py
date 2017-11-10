@@ -22,7 +22,7 @@ def start(bot, update):
 
     clips.Reset()
     clips.Run()
-    update.message.reply_text(text='Hello {}! 🤖 '.format(update.message.from_user.first_name),
+    update.message.reply_text(text='Hello {}!  '.format(update.message.from_user.first_name),
                               reply_markup=ReplyKeyboardRemove())
     update.message.reply_text(clips.Eval('(find-fact ((?f UI-state)) (eq ?f:state initial))')[0].Slots['display'])
 
@@ -112,7 +112,7 @@ def cancel(bot, update):
     """
 
     clips.Reset()
-    update.message.reply_text(text='Bye! I hope we can talk again some day. 👋🏻',
+    update.message.reply_text(text='Bye! I hope we can talk again some day. ',
                               reply_markup=ReplyKeyboardRemove())
 
 
@@ -152,11 +152,11 @@ if __name__ == '__main__':
     updater.dispatcher.add_error_handler(error)
 
     # Start the bot
-    # updater.start_webhook(listen='0.0.0.0',
-    #                      port=int(os.environ.get('PORT', '5000')),
-    #                      url_path=token)
-    # updater.bot.set_webhook('https://beerex-telegram-bot.herokuapp.com/' + token)
-    updater.start_polling()
+    updater.start_webhook(listen='0.0.0.0',
+                          port=int(os.environ.get('PORT', '5000')),
+                          url_path=token)
+    updater.bot.set_webhook('https://beerex-telegram-bot.herokuapp.com/' + token)
+    # updater.start_polling()
 
     # Run the bot until you press Ctrl-C or the process receives SIGINT,
     # SIGTERM or SIGABRT. This should be used most of the time, since
