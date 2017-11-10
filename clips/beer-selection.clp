@@ -46,9 +46,7 @@
                                                  "percentage of pleasure for each of them.*")))
    (do-for-all-facts ((?a attribute) (?b beer))
                      (and (eq ?a:name beer)
-                          (eq ?a:value ?b:name)
-                          (not (any-factp ((?a1 attribute)) (and (eq ?a1:name beer)
-                                                                 (> ?a1:certainty ?a:certainty)))))
+                          (eq ?a:value ?b:name))
                      (and (retract ?a)
                           (bind ?results (str-cat ?results (format nil "🍺 [%s - %s](%s) with certainty %-2d%% %n"
                                                                         ?b:style ?b:name ?b:link ?a:certainty)))))
