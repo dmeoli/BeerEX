@@ -1,13 +1,16 @@
 
+; random questions for user type recognition
+
 (defrule determine-food-intolerance
    (start)
    =>
    (assert (UI-state (display "Are you intolerant to gluten or yeast?")
                      (relation-asserted food-intolerance)
-                     (valid-answers gluten yeast no))))
+                     (valid-answers gluten yeast no)))
+   (set-strategy random))
 
 (defrule determine-food-style
-   (declare (salience 10))
+   (declare (salience ?*very-high-priority*))
    (or (food-intolerance no)
        (food-intolerance yeast))
    =>
@@ -16,7 +19,7 @@
                      (valid-answers vegetarian vegan omnivorous))))
 
 (defrule determine-which-chocolate-for-omnivorous-or-vegetarian-yeast-intolerant
-   (declare (salience 10))
+   (declare (salience ?*very-high-priority*))
    (food-intolerance yeast)
    (or (food-style omnivorous)
        (food-style vegetarian))
@@ -26,7 +29,7 @@
                      (valid-answers bittersweet unsweetened/bitter no))))
 
 (defrule determine-if-chocolate-for-vegan-yeast-intolerant-is-unsweetened/bitter
-   (declare (salience 10))
+   (declare (salience ?*very-high-priority*))
    (food-intolerance yeast)
    (food-style vegan)
    =>
@@ -35,7 +38,7 @@
                      (valid-answers yes no))))
 
 (defrule determine-whether-he-is-a-driver
-   (declare (salience 10))
+   (declare (salience ?*very-high-priority*))
    (food-intolerance no)
    =>
    (assert (UI-state (display "Do you have to drive? 🚘")
@@ -43,7 +46,7 @@
                      (valid-answers yes no))))
 
 (defrule determine-preferred-alcohol
-   (declare (salience 10))
+   (declare (salience ?*very-high-priority*))
    (driver no)
    =>
    (assert (UI-state (display "Do you generally prefer to drink low, mild, high or very high alcoholic drinks? 🍹")
@@ -51,7 +54,7 @@
                      (valid-answers low mild high "very high" "don't mind"))))
 
 (defrule determine-preferred-color
-   (declare (salience 10))
+   (declare (salience ?*very-high-priority*))
    (food-intolerance no)
    =>
    (assert (UI-state (display "Do you generally prefer pale, amber, brown or dark beer? 🍺")
@@ -59,7 +62,7 @@
                      (valid-answers pale amber brown dark "don't mind"))))
 
 (defrule determine-preferred-carbonation
-   (declare (salience 10))
+   (declare (salience ?*very-high-priority*))
    (food-intolerance no)
    =>
    (assert (UI-state (display "Do you generally prefer to drink low, medium or high carbonated drinks? 🍾")
@@ -67,7 +70,7 @@
                      (valid-answers low medium high "don't mind"))))
 
 (defrule determine-whether-he-is-a-smoker
-   (declare (salience 10))
+   (declare (salience ?*very-high-priority*))
    (food-intolerance no)
    =>
    (assert (UI-state (display "Do you smoke cigarettes? 🚬")
@@ -75,21 +78,26 @@
                      (valid-answers yes no))))
 
 (defrule determine-whether-he-eats-fermented-foods
-   (declare (salience 10))
+   (declare (salience ?*very-high-priority*))
    (food-intolerance no)
    =>
    (assert (UI-state (display "Do you generally eat fermented foods (probiotic yogurt, kefir, kombucha)? 🥛")
                      (relation-asserted fermented-foods-eater)
                      (valid-answers yes no))))
 
+; random questions for user type recognition which switch strategy into depth
+
 (defrule determine-whether-it-enjoy-drink-wine
+   (declare (salience ?*high-priority*))
    (food-intolerance no)
    =>
    (assert (UI-state (display "Do you also enjoy drink wine? 🍷")
                      (relation-asserted drink-wine)
-                     (valid-answers yes no))))
+                     (valid-answers yes no)))
+   (set-strategy depth))
 
 (defrule determine-preferred-wine
+   (declare (salience ?*high-priority*))
    (drink-wine yes)
    =>
    (assert (UI-state (display "What type of wine do you generally prefer to drink? 🍷")
@@ -98,13 +106,16 @@
                                     Malbec Zinfandels Syrah Chianti Port "don't know"))))
 
 (defrule determine-preferred-flavor
+   (declare (salience ?*high-priority*))
    (food-intolerance no)
    =>
    (assert (UI-state (display "What kind of flavor do you generally prefer?")
                      (relation-asserted preferred-flavor)
-                     (valid-answers clean sweet bitter roasty fruity spicy sour "don't mind"))))
+                     (valid-answers clean sweet bitter roasty fruity spicy sour "don't mind")))
+   (set-strategy depth))
 
 (defrule determine-preferred-aroma-for-sweet-flavor
+   (declare (salience ?*high-priority*))
    (preferred-flavor sweet)
    =>
    (assert (UI-state (display "What kind of sweet aroma do you generally prefer?")
@@ -112,6 +123,7 @@
                      (valid-answers toasty caramelly "don't mind"))))
 
 (defrule determine-preferred-aroma-for-bitter-flavor
+   (declare (salience ?*high-priority*))
    (preferred-flavor bitter)
    =>
    (assert (UI-state (display (str-cat "Do you generally prefer an earthy (herbal deep bittering notes), malt-forward "
@@ -120,6 +132,7 @@
                      (valid-answers earthy malt-forward strong-hop "don't mind"))))
 
 (defrule determine-preferred-aroma-for-roasty-flavor
+   (declare (salience ?*high-priority*))
    (preferred-flavor roasty)
    =>
    (assert (UI-state (display (str-cat "Do you generally prefer a malty (milk chocolate, raw tree nuts, coffee with "
@@ -128,6 +141,7 @@
                      (valid-answers malty dry "don't mind"))))
 
 (defrule determine-preferred-aroma-for-fruity-flavor
+   (declare (salience ?*high-priority*))
    (preferred-flavor fruity)
    =>
    (assert (UI-state (display (str-cat "Do you generally prefer brighter (apple, pear, peach, orange, lemon, apricot) "
@@ -137,6 +151,7 @@
                      (valid-answers brighter darker "don't mind"))))
 
 (defrule determine-preferred-aroma-for-spicy-flavor
+   (declare (salience ?*high-priority*))
    (preferred-flavor spicy)
    =>
    (assert (UI-state (display (str-cat "Do you generally prefer brighter (vanilla, coriander, bay leaf) or darker "
@@ -145,18 +160,14 @@
                      (valid-answers brighter darker "don't mind"))))
 
 (defrule determine-preferred-aroma-for-sour-flavor
+   (declare (salience ?*high-priority*))
    (preferred-flavor sour)
    =>
    (assert (UI-state (display "Do you generally prefer light, medium or strong aroma for sour flavor?")
                      (relation-asserted preferred-aroma-for-sour-flavor)
                      (valid-answers light medium strong "don't mind"))))
 
-(defrule determine-predominant-dish-taste
-   (food-intolerance no)
-   =>
-   (assert (UI-state (display "Which is the predominant taste of the dish?")
-                     (relation-asserted predominant-dish-taste)
-                     (valid-answers sweet acid spice umami "not tasted yet"))))
+; depth questions for meal type recognition
 
 (defrule determine-main-meal-omnivorous
    (food-intolerance no)
@@ -266,11 +277,18 @@
                      (relation-asserted which-chocolate)
                      (valid-answers white milk semisweet bittersweet unsweetened/bitter "don't know"))))
 
-(defrule determine-dish-cooking-method
-   (food-intolerance no)
-   =>
-   (assert (UI-state (display (str-cat "Does the dish cooking method is dry-heat (broiling, grilling, roasting, baking, "
-                                       "sautéing, pan-frying, deep-frying), moist-heat (poaching, simmering, boiling, "
-                                       "steaming) or it is a combination of both (braising, stewing)?"))
-                     (relation-asserted dish-cooking-method)
-                     (valid-answers dry-heat moist-heat combination "don't know"))))
+;(defrule determine-predominant-dish-taste
+;   (food-intolerance no)
+;   =>
+;   (assert (UI-state (display "Which is the predominant taste of the dish?")
+;                     (relation-asserted predominant-dish-taste)
+;                     (valid-answers sweet acid spice umami "not tasted yet"))))
+
+;(defrule determine-dish-cooking-method
+;   (food-intolerance no)
+;   =>
+;   (assert (UI-state (display (str-cat "Does the dish cooking method is dry-heat (broiling, grilling, roasting, baking, "
+;                                       "sautéing, pan-frying, deep-frying), moist-heat (poaching, simmering, boiling, "
+;                                       "steaming) or it is a combination of both (braising, stewing)?"))
+;                     (relation-asserted dish-cooking-method)
+;                     (valid-answers dry-heat moist-heat combination "don't know"))))

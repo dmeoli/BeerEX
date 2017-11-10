@@ -12,9 +12,17 @@
 ;;;===========================================================
 
 
-;;; ****************
-;;; * DEFTEMPLATES *
-;;; ****************
+;;; ****************************
+;;; * DEFGLOBALS & DEFTEMPLATES *
+;;; ****************************
+
+(defglobal
+   ?*very-high-priority* = 10000
+   ?*high-priority* = 1000
+   ?*medium-high-priority* = 100
+   ?*medium-low-priority* = -100
+   ?*low-priority* = -1000
+   ?*very-low-priority* = -10000)
 
 (deftemplate UI-state
    (slot id
@@ -22,9 +30,9 @@
    (slot display)
    (slot relation-asserted
       (default none))
+   (multislot valid-answers)
    (slot response
       (default none))
-   (multislot valid-answers)
    (slot state
       (default middle)))
 
@@ -64,21 +72,20 @@
    (slot link
       (type STRING)))
 
-;;***************************
-;;* DEFFACTS & STARTUP RULE *
-;;***************************
+;;****************************
+;;* DEFFACTS & INITIAL STATE *
+;;****************************
 
 (deffacts startup
    (state-list))
 
 (defrule print-welcome-message
   =>
-  (load-facts "./clips/beer-styles.clp")
-  (load "./clips/beer-questions.clp")
-  (load "./clips/beer-knowledge.clp")
-  (load "./clips/beer-selection.clp")
-  (load "./clips/gui-interaction.clp")
-  (set-strategy random)
+  (load-facts ./clips/beer-styles.clp)
+  (load ./clips/beer-questions.clp)
+  (load ./clips/beer-knowledge.clp)
+  (load ./clips/beer-selection.clp)
+  (load ./clips/gui-interaction.clp)
   (assert (UI-state (display (format nil "%n%s %n%n%s %n%n%s" "Welcome to the Beer EXpert system 🍻️"
                                          (str-cat "⁉️ All I need is that you answer simple questions by choosing "
                                                   "one of the responses that are offered to you.")

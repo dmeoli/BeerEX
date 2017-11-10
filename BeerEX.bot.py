@@ -8,12 +8,6 @@ import logging
 import clips
 import os
 
-# Enable logging
-logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-                    level=logging.INFO)
-
-logger = logging.getLogger(__name__)
-
 
 def start(bot, update):
     """
@@ -22,13 +16,9 @@ def start(bot, update):
 
     clips.Reset()
     clips.Run()
-
-    # Get the initial UI state
-    initial_fact = clips.Eval('(find-fact ((?f UI-state)) (eq ?f:state initial))')
-
     update.message.reply_text(text='Hello {}! 🤖 '.format(update.message.from_user.first_name),
                               reply_markup=ReplyKeyboardRemove())
-    update.message.reply_text(initial_fact[0].Slots['display'])
+    update.message.reply_text(clips.Eval('(find-fact ((?f UI-state)) (eq ?f:state initial))')[0].Slots['display'])
 
 
 def new(bot, update):
@@ -38,7 +28,6 @@ def new(bot, update):
 
     clips.Reset()
     clips.Run()
-
     nextUIState(bot, update)
 
 
@@ -47,50 +36,36 @@ def nextUIState(bot, update):
     Re-creates the dialog window to match the current state in working memory.
     """
 
-    # Get the state-list
-    fact_list = clips.Eval('(find-all-facts ((?f state-list)) TRUE)')
-    if len(fact_list) == 0:
-        return
+    current_id = clips.Eval('(find-fact ((?f state-list)) TRUE)')[0].Slots['current']
+    current_ui = clips.Eval('(find-fact ((?f UI-state)) (eq ?f:id %s))' % current_id)
 
-    current_id = fact_list[0].Slots['current']
-
-    # Get the current UI state
-    fact_list = clips.Eval('(find-all-facts ((?f UI-state)) (eq ?f:id %s))' % current_id)
-    if len(fact_list) == 0:
-        return
-
-    state = fact_list[0].Slots['state']
-
+    state = current_ui[0].Slots['state']
     if state == 'initial':
         clips.Assert('(next %s)' % current_id)
         clips.Run()
         nextUIState(bot, update)
 
     elif state == 'final':
-        results = fact_list[0].Slots['display']
-
         keyboard = [[KeyboardButton(text=emojize(':back: Previous', use_aliases=True))],
                     [KeyboardButton(text=emojize(':repeat: Restart', use_aliases=True))],
                     [KeyboardButton(text=emojize(':x: Cancel', use_aliases=True))]]
         reply_markup = ReplyKeyboardMarkup(keyboard)
-        update.message.reply_text(text=results,
+        update.message.reply_text(text=current_ui[0].Slots['display'],
                                   parse_mode=ParseMode.MARKDOWN,
                                   disable_web_page_preview=True,
                                   reply_markup=reply_markup)
 
     else:
-        question = fact_list[0].Slots['display']
-        valid_answers = fact_list[0].Slots['valid-answers']
-
         keyboard = []
-        for answer in valid_answers:
+        for answer in current_ui[0].Slots['valid-answers']:
             keyboard.append([KeyboardButton(text=answer)])
-        keyboard.append([KeyboardButton(text=emojize(':back: Previous', use_aliases=True))])
+        if len(clips.Eval('(find-fact ((?f state-list)) TRUE)')[0].Slots['sequence']) > 2:
+            keyboard.append([KeyboardButton(text=emojize(':back: Previous', use_aliases=True))])
         keyboard.append([KeyboardButton(text=emojize(':x: Cancel', use_aliases=True))])
         reply_markup = ReplyKeyboardMarkup(keyboard)
-        update.message.reply_text(text=question, reply_markup=reply_markup)
-
-        dispatcher.add_handler(MessageHandler(Filters.text, handleEvent))
+        update.message.reply_text(text=current_ui[0].Slots['display'],
+                                  reply_markup=reply_markup)
+        updater.dispatcher.add_handler(MessageHandler(Filters.text, handleEvent))
 
 
 def handleEvent(bot, update):
@@ -98,27 +73,23 @@ def handleEvent(bot, update):
     Triggers the next state in working memory based on which button was pressed.
     """
 
-    # Get the state-list
-    fact_list = clips.Eval('(find-all-facts ((?f state-list)) TRUE)')
-    if len(fact_list) == 0:
-        return
+    current_id = clips.Eval('(find-fact ((?f state-list)) TRUE)')[0].Slots['current']
+    current_ui = clips.Eval('(find-fact ((?f UI-state)) (eq ?f:id %s))' % current_id)
 
-    current_id = fact_list[0].Slots['current']
-
-    # Get the current UI state
-    fact_list = clips.Eval('(find-all-facts ((?f UI-state)) (eq ?f:id %s))' % current_id)
-    if len(fact_list) == 0:
-        return
-
-    valid_answers = fact_list[0].Slots['valid-answers']
-
-    if update.message.text in valid_answers:
-        clips.Assert('(next %s %s)' % (current_id, update.message.text))
+    if update.message.text in current_ui[0].Slots['valid-answers']:
+        if len(update.message.text.split(" ")) >= 2:
+            clips.Assert('(next %s "%s")' % (current_id, update.message.text))
+        else:
+            clips.Assert('(next %s %s)' % (current_id, update.message.text))
         clips.Run()
         nextUIState(bot, update)
 
     elif update.message.text == emojize(':back: Previous', use_aliases=True):
         clips.Assert('(prev %s)' % current_id)
+        if current_ui[0].Slots['state'] == 'final':
+            for rule in clips.RuleList():
+                if rule.startswith('MAIN::determine-best-attributes'):
+                    clips.FindRule(rule).Refresh()
         clips.Run()
         nextUIState(bot, update)
 
@@ -134,9 +105,9 @@ def cancel(bot, update):
     Ends the chat with the beer expert when the command /cancel is issued.
     """
 
+    clips.Reset()
     update.message.reply_text(text='Bye! I hope we can talk again some day. 👋🏻',
                               reply_markup=ReplyKeyboardRemove())
-    clips.Reset()
 
 
 def unknown(bot, update):
@@ -144,7 +115,8 @@ def unknown(bot, update):
     Sends an error message when an unrecognized command is typed.
     """
 
-    bot.send_message(chat_id=update.message.chat_id, text='Unrecognized command. Say what?')
+    bot.send_message(chat_id=update.message.chat_id,
+                     text='Unrecognized command. Say what?')
 
 
 def error(bot, update, error):
@@ -157,31 +129,34 @@ def error(bot, update, error):
 
 if __name__ == '__main__':
 
+    # Enable logging
+    logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+                        level=logging.INFO)
+
+    logger = logging.getLogger(__name__)
+
     # Load the Beer EXpert system
     clips.Load('./clips/beerex.clp')
 
-    # Create the updater and pass it the bot's token.
+    # Create the updater and pass it the bot's token
     token = os.environ.get('TOKEN')
     updater = Updater(token)
 
-    # Get the dispatcher to register handlers
-    dispatcher = updater.dispatcher
-
-    # Add handlers
-    dispatcher.add_handler(CommandHandler('start', start))
-    dispatcher.add_handler(CommandHandler('new', new))
-    dispatcher.add_handler(CommandHandler('cancel', cancel))
-    dispatcher.add_handler(MessageHandler(Filters.command, unknown))
+    # Handlers register
+    updater.dispatcher.add_handler(CommandHandler('start', start))
+    updater.dispatcher.add_handler(CommandHandler('new', new))
+    updater.dispatcher.add_handler(CommandHandler('cancel', cancel))
+    updater.dispatcher.add_handler(MessageHandler(Filters.command, unknown))
 
     # Log all errors
-    dispatcher.add_error_handler(error)
+    updater.dispatcher.add_error_handler(error)
 
     # Start the bot
-    updater.start_webhook(listen="0.0.0.0",
+    updater.start_webhook(listen='0.0.0.0',
                           port=int(os.environ.get('PORT', '5000')),
                           url_path=token)
-    updater.bot.set_webhook("https://beerex-telegram-bot.herokuapp.com/" + token)
-    updater.start_polling()
+    updater.bot.set_webhook('https://beerex-telegram-bot.herokuapp.com/' + token)
+    # updater.start_polling()
 
     # Run the bot until you press Ctrl-C or the process receives SIGINT,
     # SIGTERM or SIGABRT. This should be used most of the time, since
