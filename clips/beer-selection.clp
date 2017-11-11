@@ -42,13 +42,16 @@
    (UI-state (id ?id))
    (state-list (current ?id))
    =>
-   (bind ?results (format nil "%s %n%n" (str-cat "*✅ Done. I have selected these beer styles for you with a "
-                                                 "percentage of pleasure for each of them.*")))
+   (bind ?beers "")
    (do-for-all-facts ((?a attribute) (?b beer))
                      (and (eq ?a:name beer)
                           (eq ?a:value ?b:name))
                      (and (retract ?a)
-                          (bind ?results (str-cat ?results (format nil "🍺 [%s - %s](%s) with certainty %-2d%% %n"
-                                                                        ?b:style ?b:name ?b:link ?a:certainty)))))
+                          (bind ?beers (str-cat ?beers (format nil "🍺 [%s - %s](%s) with certainty %-2d%% %n"
+                                                                   ?b:style ?b:name ?b:link ?a:certainty)))))
+   (if (neq ?beers "")
+    then (bind ?results (str-cat (format nil "%s %n%n" "*✅ Done. I have selected these beer styles for you.*") ?beers))
+    else (bind ?results (format nil "%s %n%n%s" "*🚫 Sorry! I could not select any beer style for you. 😞"
+                                               "Please, try again! 💪🏻*")))
    (assert (UI-state (display ?results)
                      (state final))))

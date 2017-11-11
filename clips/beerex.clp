@@ -81,11 +81,11 @@
 
 (defrule print-welcome-message
   =>
-  (load-facts ./clips/beer-styles.clp)
-  (load ./clips/beer-questions.clp)
-  (load ./clips/beer-knowledge.clp)
-  (load ./clips/beer-selection.clp)
-  (load ./clips/gui-interaction.clp)
+  (load-facts clips/beer-styles.fct)
+  (load clips/beer-questions.clp)
+  (load clips/beer-knowledge.clp)
+  (load clips/beer-selection.clp)
+  (load clips/gui-interaction.clp)
   (assert (UI-state (display (format nil "%n%s %n%n%s %n%n%s" "Welcome to the Beer EXpert system 🍻️"
                                          (str-cat "⁉️ All I need is that you answer simple questions by choosing "
                                                   "one of the responses that are offered to you.")

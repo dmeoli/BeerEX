@@ -94,7 +94,7 @@ def handleEvent(bot, update):
         clips.Assert('(prev %s)' % current_id)
         if current_ui[0].Slots['state'] == 'final':
             for rule in clips.RuleList():
-                if rule.startswith('MAIN::determine-best-attributes'):
+                if rule.startswith('MAIN::determine-best-beer-attributes'):
                     clips.FindRule(rule).Refresh()
         clips.Run()
         nextUIState(bot, update)
@@ -136,7 +136,7 @@ def error(bot, update, error):
 if __name__ == '__main__':
 
     # Load the Beer EXpert system
-    clips.Load('./clips/beerex.clp')
+    clips.Load('clips/beerex.clp')
 
     # Create the updater and pass it the bot's token
     token = os.environ.get('TOKEN')
