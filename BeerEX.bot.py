@@ -24,7 +24,7 @@ def start(bot, update):
     clips.Run()
     update.message.reply_text(text='Hello {}! 🤖'.format(update.message.from_user.first_name),
                               reply_markup=ReplyKeyboardRemove())
-    update.message.reply_text(clips.Eval('(find-fact ((?f UI-state)) (eq ?f:state initial))')[0].Slots['display'])
+    update.message.reply_text(clips.Eval('(find-fact ((?u UI-state)) (eq ?u:state initial))')[0].Slots['display'])
 
 
 def new(bot, update):
@@ -42,8 +42,8 @@ def nextUIState(bot, update):
     Re-creates the dialog window to match the current state in working memory.
     """
 
-    current_id = clips.Eval('(find-fact ((?f state-list)) TRUE)')[0].Slots['current']
-    current_ui = clips.Eval('(find-fact ((?f UI-state)) (eq ?f:id %s))' % current_id)
+    current_id = clips.Eval('(find-fact ((?s state-list)) TRUE)')[0].Slots['current']
+    current_ui = clips.Eval('(find-fact ((?u UI-state)) (eq ?u:id %s))' % current_id)
 
     state = current_ui[0].Slots['state']
     if state == 'initial':
@@ -65,7 +65,7 @@ def nextUIState(bot, update):
         keyboard = []
         for answer in current_ui[0].Slots['valid-answers']:
             keyboard.append([KeyboardButton(text=answer)])
-        if len(clips.Eval('(find-fact ((?f state-list)) TRUE)')[0].Slots['sequence']) > 2:
+        if len(clips.Eval('(find-fact ((?s state-list)) TRUE)')[0].Slots['sequence']) > 2:
             keyboard.append([KeyboardButton(text=emojize(':back: Previous', use_aliases=True))])
         keyboard.append([KeyboardButton(text=emojize(':x: Cancel', use_aliases=True))])
         reply_markup = ReplyKeyboardMarkup(keyboard)
@@ -79,11 +79,11 @@ def handleEvent(bot, update):
     Triggers the next state in working memory based on which button was pressed.
     """
 
-    current_id = clips.Eval('(find-fact ((?f state-list)) TRUE)')[0].Slots['current']
-    current_ui = clips.Eval('(find-fact ((?f UI-state)) (eq ?f:id %s))' % current_id)
+    current_id = clips.Eval('(find-fact ((?s state-list)) TRUE)')[0].Slots['current']
+    current_ui = clips.Eval('(find-fact ((?u UI-state)) (eq ?u:id %s))' % current_id)
 
     if update.message.text in current_ui[0].Slots['valid-answers']:
-        if len(update.message.text.split(" ")) > 1:
+        if len(update.message.text.split(' ')) > 1:
             clips.Assert('(next %s "%s")' % (current_id, update.message.text))
         else:
             clips.Assert('(next %s %s)' % (current_id, update.message.text))

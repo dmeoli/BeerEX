@@ -6,7 +6,7 @@
 ;;;
 ;;;   For use with BeerEX.bot.py
 ;;;
-;;;   CLIPS 6.30
+;;;   CLIPS Version 6.30
 ;;;
 ;;;   Author: Donato Meoli
 ;;;===========================================================
@@ -80,8 +80,8 @@
 ;;* DEFFUNCTIONS *
 ;;****************
 
-(deffunction certainty-sort (?f1 ?f2)
-   (< (fact-slot-value ?f1 certainty) (fact-slot-value ?f2 certainty)))
+(deffunction sort-certainties (?a1 ?a2)
+   (< (fact-slot-value ?a1 certainty) (fact-slot-value ?a2 certainty)))
 
 ;;************
 ;;* DEFFACTS *
@@ -170,14 +170,14 @@
    (UI-state (id ?id))
    (state-list (current ?id))
    =>
-   (do-for-all-facts ((?f attribute)) (neq ?f:name beer) (retract ?f))
+   (do-for-all-facts ((?a attribute)) (neq ?a:name beer) (retract ?a))
    (bind ?beers "")
-   (bind ?facts (find-all-facts ((?f attribute)) (eq ?f:name beer)))
-   (bind ?facts (sort certainty-sort ?facts))
-   (progn$ (?f ?facts) (bind ?beers
-                             (str-cat ?beers (format nil "%s with certainty %-2d%% %n"
-                                                         (fact-slot-value ?f value) (fact-slot-value ?f certainty)))))
-   (progn$ (?f ?facts) (retract ?f))
+   (bind ?attributes (find-all-facts ((?a attribute)) (eq ?a:name beer)))
+   (bind ?attributes (sort sort-certainties ?attributes))
+   (progn$ (?a ?attributes)
+           (bind ?beers (str-cat ?beers (format nil "%s with certainty %-2d%% %n"
+                                                    (fact-slot-value ?a value) (fact-slot-value ?a certainty))))
+           (retract ?a))
    (if (neq ?beers "")
     then (bind ?results (str-cat (format nil "%s %n%n" "*✅ Done. I have selected these beer styles for you.*") ?beers))
     else (bind ?results (format nil "%s %n%n%s" "*🚫 Sorry! I could not select any beer style for you. 😞"
@@ -273,14 +273,10 @@
    =>
    (retract ?f1)
    (modify ?f2 (current ?pid))
+   (do-for-fact ((?r ?relation)) (neq ?relation start) (retract ?r))
+   (do-for-all-facts ((?u UI-state) (?s state-list)) (not (member$ ?u:id ?s:sequence)) (retract ?u))
    (if (eq ?state final)
     then (progn$ (?rule (get-defrule-list))
                  (if (neq (str-index "determine-best-beer-attributes" ?rule) FALSE)
                   then (refresh ?rule))))
-   (do-for-fact ((?r ?relation))
-                (neq ?relation start)
-                (retract ?r))
-   (do-for-all-facts ((?u UI-state) (?s state-list))
-                     (not (member$ ?u:id ?s:sequence))
-                     (retract ?u))
    (halt))
