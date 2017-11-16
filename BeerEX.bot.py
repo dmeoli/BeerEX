@@ -22,7 +22,7 @@ def start(bot, update):
 
     clips.Reset()
     clips.Run()
-    update.message.reply_text(text='Hello {}!  '.format(update.message.from_user.first_name),
+    update.message.reply_text(text='Hello {}! 🤖'.format(update.message.from_user.first_name),
                               reply_markup=ReplyKeyboardRemove())
     update.message.reply_text(clips.Eval('(find-fact ((?f UI-state)) (eq ?f:state initial))')[0].Slots['display'])
 
@@ -83,7 +83,7 @@ def handleEvent(bot, update):
     current_ui = clips.Eval('(find-fact ((?f UI-state)) (eq ?f:id %s))' % current_id)
 
     if update.message.text in current_ui[0].Slots['valid-answers']:
-        if len(update.message.text.split(" ")) >= 2:
+        if len(update.message.text.split(" ")) > 1:
             clips.Assert('(next %s "%s")' % (current_id, update.message.text))
         else:
             clips.Assert('(next %s %s)' % (current_id, update.message.text))
@@ -92,10 +92,6 @@ def handleEvent(bot, update):
 
     elif update.message.text == emojize(':back: Previous', use_aliases=True):
         clips.Assert('(prev %s)' % current_id)
-        if current_ui[0].Slots['state'] == 'final':
-            for rule in clips.RuleList():
-                if rule.startswith('MAIN::determine-best-beer-attributes'):
-                    clips.FindRule(rule).Refresh()
         clips.Run()
         nextUIState(bot, update)
 
@@ -103,17 +99,9 @@ def handleEvent(bot, update):
         new(bot, update)
 
     elif update.message.text == emojize(':x: Cancel', use_aliases=True):
-        cancel(bot, update)
-
-
-def cancel(bot, update):
-    """
-    Ends the chat with the beer expert when the command /cancel is issued.
-    """
-
-    clips.Reset()
-    update.message.reply_text(text='Bye! I hope we can talk again some day. ',
-                              reply_markup=ReplyKeyboardRemove())
+        clips.Reset()
+        update.message.reply_text(text='Bye! I hope we can talk again some day. 👋🏻',
+                                  reply_markup=ReplyKeyboardRemove())
 
 
 def unknown(bot, update):
@@ -145,7 +133,6 @@ if __name__ == '__main__':
     # Handlers register
     updater.dispatcher.add_handler(CommandHandler('start', start))
     updater.dispatcher.add_handler(CommandHandler('new', new))
-    updater.dispatcher.add_handler(CommandHandler('cancel', cancel))
     updater.dispatcher.add_handler(MessageHandler(Filters.command, unknown))
 
     # Log all errors

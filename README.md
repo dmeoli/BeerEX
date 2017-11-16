@@ -7,9 +7,9 @@ that suggests a beer to drink with a meal. This code was developed during the Kn
 [Department of Computer Science](http://www.uniba.it/ricerca/dipartimenti/informatica) 
 @ [University of Bari "Aldo Moro"](http://www.uniba.it/).
 
-[CraftBeer](https://www.craftbeer.com), published by the [Brewers Association (BA)](https://www.brewersassociation.org/),
+[CraftBeer.com](https://www.craftbeer.com), published by the [Brewers Association](https://www.brewersassociation.org/),
 helps with the filling of the beers database and system knowledge through the information contained into the
-[Beer Styles Study Guide](https://www.craftbeer.com/wp-content/uploads/2014/12/craftbeerdotcom-beer-styles.pdf) and 
+[2017 Beer Styles Guide](https://www.craftbeer.com/wp-content/uploads/2014/12/craftbeerdotcom-beer-styles.pdf) and 
 [Beer & Food Course](http://www.craftbeer.com/wp-content/uploads/CB_Food_Course/BeerAndFoodCourse.pdf) material.
 
 

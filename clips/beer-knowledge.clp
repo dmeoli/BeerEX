@@ -1,4 +1,8 @@
 
+;;************************
+;;* BEER KNOWLEDGE RULES *
+;;************************
+
 ; determine best beer attributes for user type recognized
 
 (defrule determine-best-beer-attributes-if-food-intolerance-is-gluten

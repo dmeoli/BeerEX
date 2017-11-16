@@ -1,4 +1,8 @@
 
+;;********************
+;;* BEER STYLES LIST *
+;;********************
+
 ; Pale Ales
 
 (beer (style "Pale Ale")

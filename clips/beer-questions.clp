@@ -1,4 +1,8 @@
 
+;;***********************
+;;* BEER QUESTION RULES *
+;;***********************
+
 ; random questions for user type recognition
 
 (defrule determine-food-intolerance
@@ -185,7 +189,7 @@
    =>
    (assert (UI-state (display (str-cat "Is the main component of the meal grain (farro, arborio, wild rice, polenta), "
                                        "legumes (lentils, fava, chickpea, green beans), vegetables, vegetables fats "
-                                       "(avocados, olives or olive oil, peanut butter, nuts and seeds), cheese, dessert "
+                                       "(avocados, olive oil, peanut butter, nuts and seeds), cheese, dessert "
                                        "or other? 🧀"))
                      (relation-asserted main-meal-vegetarian)
                      (valid-answers grain legumes vegetables "vegetables fats" cheese dessert other))))
@@ -196,7 +200,7 @@
    =>
    (assert (UI-state (display (str-cat "Is the main component of the meal grain (farro, arborio, wild rice, polenta), "
                                        "legumes (lentils, fava, chickpea, green beans), vegetables, vegetables fats "
-                                       "(avocados, olives or olive oil, peanut butter, nuts and seeds), "
+                                       "(avocados, olive oil, peanut butter, nuts and seeds), "
                                        "unsweetened/bitter (100% cacao) chocolate or other? 🍫"))
                      (relation-asserted main-meal-vegan)
                      (valid-answers grain legumes vegetables "vegetables fats" "unsweetened/bitter chocolate" other))))
@@ -222,7 +226,7 @@
 (defrule determine-which-fats
    (main-meal-omnivorous fats)
    =>
-   (assert (UI-state (display (str-cat "Does the fats are vegetable (avocados, olives or olive oil, peanut butter, nuts "
+   (assert (UI-state (display (str-cat "Does the fats are vegetable (avocados, olive oil, peanut butter, nuts "
                                        "and seeds) or animal (duck/pork fat, dairy)?"))
                      (relation-asserted which-fats)
                      (valid-answers vegetable animal other))))
@@ -249,16 +253,17 @@
                      (relation-asserted which-sausage)
                      (valid-answers capocollo soppressata "salame piccante" other))))
 
-(defrule determine-which-cheese
+(defrule determine-which-cheese-style
    (or (main-meal-omnivorous cheese)
        (main-meal-vegetarian cheese))
    =>
-   (assert (UI-state (display (str-cat "Does the cheese is fresh (Italian-style Mascarpone, Ricotta, soft Chèvre, etc.), "
-                                       "semi-soft (Fontina, Havarti, milder blue cheeses, etc.), firm/hard (Cheddars, "
-                                       "Swiss, Emmentaler-style cheeses, etc.), blue, natural-rind (Lancashire, Stilton, "
-                                       " Brie, Camembert, etc.) or washed-rind? 🧀"))
-                     (relation-asserted which-cheese)
-                     (valid-answers fresh semi-soft firm/hard blue "natural rind" "washed rind" "don't know"))))
+   (assert (UI-state (display (str-cat "Does the cheese style is fresh (Mascarpone, Ricotta, Chèvre, Feta, Cream Cheese, "
+                                       "Quark, Cottage), soft-ripened (Brie, Camembert, Triple Crème), semi-soft "
+                                       "(Colby, Fontina, Havarti, Monterey Jack), firm/hard (Gouda, Cheddar, "
+                                       "Emmenthaler, Gruyère, Parmesan), blue (Roquefort, Gorgonzola), natural-rind "
+                                       "(Mimolette, Stilton, Lancashire) or washed-rind (Epoisses, Livarot, Taleggio)? 🧀"))
+                     (relation-asserted which-cheese-style)
+                     (valid-answers fresh soft-ripened semi-soft firm/hard blue "natural rind" "washed rind" "don't know"))))
 
 (defrule determine-which-dessert
    (or (main-meal-omnivorous dessert)
