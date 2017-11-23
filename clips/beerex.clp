@@ -123,8 +123,8 @@
    =>
    (load clips/beer-knowledge.clp))
 
-;;************************
-;;* BEER SELECTION RULES *
+;;********************************
+;;* BEER SELECTION & PRINT RULES *
 ;;************************
 
 (defrule combine-certainties
@@ -156,12 +156,8 @@
                       (value (format nil "🍺 [%s - %s](%s)" ?beer-style ?beer-name ?link))
                       (certainty ?certainty))))
 
-;;*****************************
-;;* PRINT SELECTED BEER RULES *
-;;*****************************
-
 (defrule remove-poor-beer-choices
-   ?f <- (attribute (name beer) (certainty ?certainty&:(< ?certainty 49)))
+   ?f <- (attribute (name beer) (certainty ?certainty&:(< ?certainty 59)))
    =>
    (retract ?f))
 
