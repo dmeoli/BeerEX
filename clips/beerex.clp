@@ -271,7 +271,7 @@
    (retract ?f1)
    (modify ?f2 (current ?pid))
    (do-for-fact ((?r ?relation)) (neq ?relation start) (retract ?r))
-   (do-for-all-facts ((?u UI-state) (?s state-list)) (not (member$ ?u:id ?s:sequence)) (retract ?u))
+   ; (do-for-all-facts ((?u UI-state) (?s state-list)) (not (member$ ?u:id ?s:sequence)) (retract ?u))
    (if (eq ?state final)
     then (progn$ (?rule (get-defrule-list))
                  (if (neq (str-index "determine-best-beer-attributes" ?rule) FALSE)

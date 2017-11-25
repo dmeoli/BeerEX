@@ -30,7 +30,6 @@
                      (ask-question ?display (insert$ ?valid-answers (+ (length$ ?valid-answers) 1) help why cancel)))))
    (if (eq ?state final)
     then (bind ?answer (ask-question ?display (create$ prev restart cancel))))
-
    (if (member$ ?answer ?valid-answers)
     then (assert (next ?current-id ?answer))
          (run)
@@ -45,8 +44,12 @@
     then (assert (prev ?current-id))
          (run)
          (next-UI-state))
+   (if (eq ?answer restart)
+    then (reset)
+         (run)
+         (next-UI-state))
    (if (eq ?answer cancel)
-    then (reset)))
+    then (exit)))
 
 (reset)
 (run)

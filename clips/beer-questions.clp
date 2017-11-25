@@ -10,6 +10,8 @@
    (start)
    =>
    (assert (UI-state (display "Do you generally prefer to drink low, medium or high carbonated drinks? 🍾")
+                     (help "help")
+                     (why "why")
                      (relation-asserted preferred-carbonation)
                      (valid-answers low medium high))))
 
