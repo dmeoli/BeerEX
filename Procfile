@@ -1,1 +1,1 @@
-web: python BeerEX.bot.py
+web: python BeerEX.py
