@@ -4,7 +4,7 @@
 (deffunction ask-question (?display ?allowed-values)
    (bind ?answer "")
    (while (not (member ?answer ?allowed-values))
-      (printout t ?display " " ?allowed-values " ")
+      (printout t " "?display " " ?allowed-values " ")
       (bind ?answer (readline))
       (if (eq (str-index " " ?answer) FALSE)
        then (bind ?answer (nth$ 1 (explode$ ?answer)))))

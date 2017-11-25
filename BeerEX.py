@@ -65,9 +65,9 @@ def nextUIState(bot, update):
         keyboard = []
         for answer in current_ui[0].Slots['valid-answers']:
             keyboard.append([KeyboardButton(text=answer)])
-        if not current_ui[0].Slots['help']:
+        if current_ui[0].Slots['help']:
             keyboard.append([KeyboardButton(text=emojize(':sos: Help', use_aliases=True))])
-        if not current_ui[0].Slots['why']:
+        if current_ui[0].Slots['why']:
             keyboard.append([KeyboardButton(text=emojize(':interrobang: Why', use_aliases=True))])
         if len(clips.Eval('(find-fact ((?s state-list)) TRUE)')[0].Slots['sequence']) > 2:
             keyboard.append([KeyboardButton(text=emojize(':back: Previous', use_aliases=True))])
@@ -146,11 +146,11 @@ if __name__ == '__main__':
     updater.dispatcher.add_error_handler(error)
 
     # Start the bot
-    updater.start_webhook(listen='0.0.0.0',
-                          port=int(os.environ.get('PORT', '5000')),
-                          url_path=token)
-    updater.bot.set_webhook('https://beerex-telegram-bot.herokuapp.com/' + token)
-    # updater.start_polling()
+    # updater.start_webhook(listen='0.0.0.0',
+    #                       port=int(os.environ.get('PORT', '5000')),
+    #                       url_path=token)
+    # updater.bot.set_webhook('https://beerex-telegram-bot.herokuapp.com/' + token)
+    updater.start_polling()
 
     # Run the bot until you press Ctrl-C or the process receives SIGINT,
     # SIGTERM or SIGABRT. This should be used most of the time, since
