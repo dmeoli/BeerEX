@@ -3,19 +3,11 @@
 ;;* BEER QUESTION RULES *
 ;;***********************
 
-; random questions for user type recognition
-
-(defrule determine-food-intolerance
-   (start)
-   =>
-   (assert (UI-state (display "Are you intolerant to gluten or yeast?")
-                     (relation-asserted food-intolerance)
-                     (valid-answers gluten yeast neither)))
-   (set-strategy random))
+; random questions for user type and scenario recognition
 
 (defrule determine-preferred-carbonation
    (declare (salience ?*very-high-priority*))
-   (food-intolerance neither)
+   (start)
    =>
    (assert (UI-state (display "Do you generally prefer to drink low, medium or high carbonated drinks? 🍾")
                      (relation-asserted preferred-carbonation)
@@ -23,7 +15,7 @@
 
 (defrule determine-whether-he-is-a-regular-beer-drinker
    (declare (salience ?*very-high-priority*))
-   (food-intolerance neither)
+   (start)
    =>
    (assert (UI-state (display "Are you a regular beer drinker? 🍺")
                      (relation-asserted regular-beer-drinker)
@@ -47,7 +39,7 @@
 
 (defrule determine-whether-he-eats-fermented-foods
    (declare (salience ?*very-high-priority*))
-   (food-intolerance neither)
+   (start)
    =>
    (assert (UI-state (display "Do you generally eat fermented foods (probiotic yogurt, kefir, kombucha)? 🥛")
                      (relation-asserted fermented-foods-eater)
@@ -55,7 +47,7 @@
 
 (defrule determine-whether-he-should-drive
    (declare (salience ?*very-high-priority*))
-   (food-intolerance neither)
+   (start)
    =>
    (assert (UI-state (display "Do you have to drive? 🚘")
                      (relation-asserted driver)
@@ -69,95 +61,31 @@
                      (relation-asserted preferred-alcohol)
                      (valid-answers low mild high "very high"))))
 
-; random questions for user type recognition which switch strategy into depth
-
 (defrule determine-whether-he-should-smoke-a-cigar
-   (declare (salience ?*high-priority*))
-   (food-intolerance neither)
+   (declare (salience ?*very-high-priority*))
+   (start)
    =>
-   (assert (UI-state (display "Do you have to smoke a cigar? 🚬")
-                     (relation-asserted smoke-a-cigar)
-                     (valid-answers yes no)))
-   (set-strategy depth))
-
-(defrule determine-which-cigar-he-should-smoke
-   (declare (salience ?*high-priority*))
-   (smoke-a-cigar yes)
-   =>
-   (assert (UI-state (display "Is the cigar claro, maduro or oscuro? 🚬")
+   (assert (UI-state (display "Do you have to smoke a cigar? If yes, is the cigar claro, maduro or oscuro? 🚬")
                      (relation-asserted which-cigar)
-                     (valid-answers claro maduro oscuro other))))
+                     (valid-answers claro maduro oscuro no))))
 
 (defrule determine-preferred-flavor
-   (declare (salience ?*high-priority*))
-   (food-intolerance neither)
+   (declare (salience ?*very-high-priority*))
+   (start)
    =>
    (assert (UI-state (display "What kind of flavor do you generally prefer?")
                      (relation-asserted preferred-flavor)
-                     (valid-answers clean sweet bitter roasty fruity spicy sour "don't know")))
-   (set-strategy depth))
-
-(defrule determine-preferred-aroma-for-sweet-flavor
-   (declare (salience ?*high-priority*))
-   (preferred-flavor sweet)
-   =>
-   (assert (UI-state (display "What kind of sweet aroma do you generally prefer?")
-                     (relation-asserted preferred-aroma-for-sweet-flavor)
-                     (valid-answers toasty caramelly "don't know"))))
-
-(defrule determine-preferred-aroma-for-bitter-flavor
-   (declare (salience ?*high-priority*))
-   (preferred-flavor bitter)
-   =>
-   (assert (UI-state (display (str-cat "Do you generally prefer an earthy (herbal deep bittering notes), malt-forward "
-                                       "(caramel) or strong-hop (citrus, resin, tropical fruit) aroma for bitter flavor?"))
-                     (relation-asserted preferred-aroma-for-bitter-flavor)
-                     (valid-answers earthy malt-forward strong-hop "don't know"))))
-
-(defrule determine-preferred-aroma-for-roasty-flavor
-   (declare (salience ?*high-priority*))
-   (preferred-flavor roasty)
-   =>
-   (assert (UI-state (display (str-cat "Do you generally prefer a malty (milk chocolate, raw tree nuts, coffee with "
-                                        "cream) or dry (burnt grain, dark chocolate, espresso) aroma for roasty flavor?"))
-                     (relation-asserted preferred-aroma-for-roasty-flavor)
-                     (valid-answers malty dry "don't know"))))
-
-(defrule determine-preferred-aroma-for-fruity-flavor
-   (declare (salience ?*high-priority*))
-   (preferred-flavor fruity)
-   =>
-   (assert (UI-state (display (str-cat "Do you generally prefer brighter (apple, pear, peach, orange, lemon, apricot) "
-                                       "or darker (fig, raspberry, prune, raisin, cherry, plum, strawberry) fruit "
-                                       "aroma for fruity flavor?"))
-                     (relation-asserted preferred-aroma-for-fruity-flavor)
-                     (valid-answers brighter darker "don't know"))))
-
-(defrule determine-preferred-aroma-for-spicy-flavor
-   (declare (salience ?*high-priority*))
-   (preferred-flavor spicy)
-   =>
-   (assert (UI-state (display (str-cat "Do you generally prefer brighter (vanilla, coriander, bay leaf) or darker "
-                                       "(clove, pepper, nutmeg) spice aroma for spicy flavor?"))
-                     (relation-asserted preferred-aroma-for-spicy-flavor)
-                     (valid-answers brighter darker "don't know"))))
-
-(defrule determine-preferred-aroma-for-sour-flavor
-   (declare (salience ?*high-priority*))
-   (preferred-flavor sour)
-   =>
-   (assert (UI-state (display "Do you generally prefer light, medium or strong aroma for sour flavor?")
-                     (relation-asserted preferred-aroma-for-sour-flavor)
-                     (valid-answers light medium strong "don't know"))))
+                     (valid-answers clean sweet bitter roasty fruity spicy sour "don't know"))))
 
 ; depth questions for meal type recognition
 
 (defrule determine-whether-he-needs-to-pair-beer-with-a-meal
-   (food-intolerance neither)
+   (start)
    =>
    (assert (UI-state (display "Do you need to pair beer with a meal?")
                      (relation-asserted pair-beer-with-a-meal)
-                     (valid-answers yes no))))
+                     (valid-answers yes no)))
+   (set-strategy depth))
 
 (defrule determine-food-style
    (pair-beer-with-a-meal yes)
@@ -274,7 +202,7 @@
    (food-style omnivorous)
    (main-meal-for-omnivorous-or-vegetarian entree)
    =>
-   (assert (UI-state (display (str-cat "Is the main component of the meal grain (farro, arborio, wild rice, polenta), "
+   (assert (UI-state (display (str-cat "Is the main component of the entree grain (farro, arborio, wild rice, polenta), "
                                        "legumes (lentils, fava, chickpea, green beans), fish, meat, vegetables, fats "
                                        "or other?"))
                      (relation-asserted which-entree-omnivorous)
@@ -284,7 +212,7 @@
    (food-style vegetarian)
    (main-meal-for-omnivorous-or-vegetarian entree)
    =>
-   (assert (UI-state (display (str-cat "Is the main component of the meal grain (farro, arborio, wild rice, polenta), "
+   (assert (UI-state (display (str-cat "Is the main component of the entree grain (farro, arborio, wild rice, polenta), "
                                        "legumes (lentils, fava, chickpea, green beans), vegetables, vegetables fats "
                                        "(avocados, olive oil, peanut butter, nuts and seeds) or other?"))
                      (relation-asserted which-entree-vegetarian)
@@ -293,7 +221,7 @@
 (defrule determine-which-entree-vegan
    (main-meal-for-vegan entree)
    =>
-   (assert (UI-state (display (str-cat "Is the main component of the meal grain (farro, arborio, wild rice, polenta), "
+   (assert (UI-state (display (str-cat "Is the main component of the entree grain (farro, arborio, wild rice, polenta), "
                                        "legumes (lentils, fava, chickpea, green beans), vegetables, vegetables fats "
                                        "(avocados, olive oil, peanut butter, nuts and seeds), or other?"))
                      (relation-asserted which-entree-vegan)
@@ -367,14 +295,14 @@
 
 
 ;(defrule determine-predominant-dish-taste
-;   (food-intolerance neither)
+;   (start)
 ;   =>
 ;   (assert (UI-state (display "Which is the predominant taste of the dish?")
 ;                     (relation-asserted predominant-dish-taste)
 ;                     (valid-answers sweet acid spice umami "not tasted yet"))))
 
 ;(defrule determine-dish-cooking-method
-;   (food-intolerance neither)
+;   (start)
 ;   =>
 ;   (assert (UI-state (display (str-cat "Does the dish cooking method is dry-heat (broiling, grilling, roasting, baking, "
 ;                                       "sautéing, pan-frying, deep-frying), moist-heat (poaching, simmering, boiling, "

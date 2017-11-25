@@ -4,8 +4,6 @@
 ;;;
 ;;;   This expert system suggests a beer to drink with a meal.
 ;;;
-;;;   For use with BeerEX.bot.py
-;;;
 ;;;   CLIPS Version 6.30
 ;;;
 ;;;   Author: Donato Meoli
@@ -32,6 +30,8 @@
    (slot id
       (default-dynamic (gensym*)))
    (slot display)
+   (slot help)
+   (slot why)
    (slot relation-asserted
       (default none))
    (multislot valid-answers)
@@ -76,13 +76,6 @@
    (slot link
       (type STRING)))
 
-;;****************
-;;* DEFFUNCTIONS *
-;;****************
-
-(deffunction sort-certainties (?a1 ?a2)
-   (< (fact-slot-value ?a1 certainty) (fact-slot-value ?a2 certainty)))
-
 ;;************
 ;;* DEFFACTS *
 ;;************
@@ -94,12 +87,20 @@
   =>
   (load-facts clips/beer-styles.fct))
 
+;;****************
+;;* DEFFUNCTIONS *
+;;****************
+
+(deffunction sort-certainties (?a1 ?a2)
+   (< (fact-slot-value ?a1 certainty) (fact-slot-value ?a2 certainty)))
+
 ;;*****************
 ;;* INITIAL STATE *
 ;;*****************
 
 (defrule start
   =>
+  (set-strategy random)
   (assert (UI-state (display (format nil "%n%s %n%n%s %n%n%s" "Welcome to the Beer EXpert system 🍻️"
                                          (str-cat "⁉️ All I need is that you answer simple questions by choosing "
                                                   "one of the responses that are offered to you.")
@@ -157,7 +158,7 @@
                       (certainty ?certainty))))
 
 (defrule remove-poor-beer-choices
-   ?f <- (attribute (name beer) (certainty ?certainty&:(< ?certainty 59)))
+   ?f <- (attribute (name beer) (certainty ?certainty&:(< ?certainty 49)))
    =>
    (retract ?f))
 

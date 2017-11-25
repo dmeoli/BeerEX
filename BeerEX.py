@@ -65,6 +65,10 @@ def nextUIState(bot, update):
         keyboard = []
         for answer in current_ui[0].Slots['valid-answers']:
             keyboard.append([KeyboardButton(text=answer)])
+        if not current_ui[0].Slots['help']:
+            keyboard.append([KeyboardButton(text=emojize(':sos: Help', use_aliases=True))])
+        if not current_ui[0].Slots['why']:
+            keyboard.append([KeyboardButton(text=emojize(':interrobang: Why', use_aliases=True))])
         if len(clips.Eval('(find-fact ((?s state-list)) TRUE)')[0].Slots['sequence']) > 2:
             keyboard.append([KeyboardButton(text=emojize(':back: Previous', use_aliases=True))])
         keyboard.append([KeyboardButton(text=emojize(':x: Cancel', use_aliases=True))])
@@ -89,15 +93,18 @@ def handleEvent(bot, update):
             clips.Assert('(next %s %s)' % (current_id, update.message.text))
         clips.Run()
         nextUIState(bot, update)
-
+    elif update.message.text == emojize(':sos: Help', use_aliases=True):
+        update.message.reply_text(current_ui[0].Slots['help'])
+        nextUIState(bot, update)
+    elif update.message.text == emojize(':interrobang: Why', use_aliases=True):
+        update.message.reply_text(current_ui[0].Slots['why'])
+        nextUIState(bot, update)
     elif update.message.text == emojize(':back: Previous', use_aliases=True):
         clips.Assert('(prev %s)' % current_id)
         clips.Run()
         nextUIState(bot, update)
-
     elif update.message.text == emojize(':repeat: Restart', use_aliases=True):
         new(bot, update)
-
     elif update.message.text == emojize(':x: Cancel', use_aliases=True):
         clips.Reset()
         update.message.reply_text(text='Bye! I hope we can talk again some day. 👋🏻',

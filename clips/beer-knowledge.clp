@@ -3,20 +3,7 @@
 ;;* BEER KNOWLEDGE RULES *
 ;;************************
 
-; determine best beer attributes for user type recognized
-
-(defrule determine-best-beer-attributes-if-food-intolerance-is-gluten
-   (declare (salience ?*medium-low-priority*))
-   (food-intolerance gluten)
-   =>
-   (assert (attribute (name best-name) (value "Gluten Free") (certainty 60))))
-
-(defrule determine-best-beer-attributes-if-food-intolerance-is-yeast
-   (declare (salience ?*medium-low-priority*))
-   (food-intolerance yeast)
-   =>
-   (assert (attribute (name best-name) (value "Belgian-Style Fruit Lambic") (certainty 60)))
-   (assert (attribute (name best-name) (value "Belgian-Style Lambic/Gueuze") (certainty 60))))
+; determine best beer attributes for user type and scenario recognized
 
 (defrule determine-best-beer-attributes-if-preferred-carbonation-is-any
    (declare (salience ?*medium-low-priority*))
