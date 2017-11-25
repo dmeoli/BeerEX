@@ -4,7 +4,7 @@
 ;;;
 ;;;   This expert system suggests a beer to drink with a meal.
 ;;;
-;;;   CLIPS Version 6.30
+;;;   CLIPS 6.30
 ;;;
 ;;;   Author: Donato Meoli
 ;;;===========================================================
