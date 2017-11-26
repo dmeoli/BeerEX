@@ -2,6 +2,9 @@
 (load clips/beerex.clp)
 
 (undefrule load-beer-knowledge-rules)
+(undefrule load-beer-question-rules)
+
+(load clips/beer-questions.clp)
 (load clips/beer-knowledge.clp)
 
 (deffunction ask-question (?display ?allowed-values)

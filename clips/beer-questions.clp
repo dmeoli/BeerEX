@@ -79,23 +79,14 @@
 
 ; depth questions for meal type recognition
 
-(defrule determine-whether-he-needs-to-pair-beer-with-a-meal
-   (start)
-   =>
-   (assert (UI-state (display "Do you need to pair beer with a meal?")
-                     (relation-asserted pair-beer-with-a-meal)
-                     (valid-answers yes no)))
-   (set-strategy depth))
-
 (defrule determine-food-style
-   (pair-beer-with-a-meal yes)
+   (start)
    =>
    (assert (UI-state (display "Are you vegetarian, vegan or omnivorous?")
                      (relation-asserted food-style)
                      (valid-answers vegetarian vegan omnivorous))))
 
 (defrule determine-main-meal-for-omnivorous-or-vegetarian
-   (pair-beer-with-a-meal yes)
    (or (food-style omnivorous)
        (food-style vegetarian))
    =>
@@ -104,7 +95,6 @@
                      (valid-answers pizza entree cheese dessert other))))
 
 (defrule determine-main-meal-for-vegan
-   (pair-beer-with-a-meal yes)
    (food-style vegan)
    =>
    (assert (UI-state (display "Is the main meal pizza, entree or dessert?")
