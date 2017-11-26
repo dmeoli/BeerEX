@@ -1,13 +1,19 @@
 
 (load clips/beerex.clp)
 
+(undefrule load-beer-knowledge-rules)
+(load clips/beer-knowledge.clp)
+
 (deffunction ask-question (?display ?allowed-values)
    (bind ?answer "")
+   (if (or (not (member$ prev ?allowed-values))
+           (member$ restart ?allowed-values))
+    then (printout t crlf))
    (while (not (member ?answer ?allowed-values))
-      (if (not (member$ prev ?allowed-values))
-       then (printout t crlf))
       (printout t " " ?display " " ?allowed-values " ")
       (bind ?answer (readline))
+      (if (member$ restart ?allowed-values)
+       then (printout t crlf))
       (if (eq (str-index " " ?answer) FALSE)
        then (bind ?answer (nth$ 1 (explode$ ?answer)))))
    ?answer)

@@ -387,6 +387,25 @@
    =>
    (assert (attribute (name best-name) (value "Bohemian-Style Pilsener") (certainty 90))))
 
+(defrule determine-best-beer-attributes-if-which-firm/hard-cheese-is-Emmental
+   (declare (salience ?*medium-low-priority*))
+   (which-firm/hard-cheese Emmental)
+   =>
+   (assert (attribute (name best-name) (value "German-Style Brown/Altbier") (certainty 90))))
+
+(defrule determine-best-beer-attributes-if-which-firm/hard-cheese-is-Gruyère
+   (declare (salience ?*medium-low-priority*))
+   (which-firm/hard-cheese Gruyère)
+   =>
+   (assert (attribute (name best-name) (value "English-Style Brown Porter") (certainty 90)))
+   (assert (attribute (name best-name) (value "Robust Porter") (certainty 90))))
+
+(defrule determine-best-beer-attributes-if-which-firm/hard-cheese-is-Parmesan
+   (declare (salience ?*medium-low-priority*))
+   (which-firm/hard-cheese Parmesan)
+   =>
+   (assert (attribute (name best-name) (value "Smoke Beer") (certainty 90))))
+
 (defrule determine-best-beer-attributes-if-which-cheese-style-is-is-blue
    (declare (salience ?*medium-low-priority*))
    (which-cheese-style blue)

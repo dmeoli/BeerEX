@@ -118,7 +118,7 @@
    =>
    (assert (UI-state (display (str-cat "Is the cheese style fresh (Mascarpone, Ricotta, Chèvre, Feta, Cream Cheese, "
                                        "Quark, Cottage), semi-soft (Colby, Fontina, Havarti, Monterey Jack), firm/hard "
-                                       "(Gouda, Cheddar, Emmenthaler, Gruyère, Parmesan), blue (Roquefort, Gorgonzola), "
+                                       "(Gouda, Cheddar, Emmental, Gruyère, Parmesan), blue (Roquefort, Gorgonzola), "
                                        "natural-rind (Brie, Camembert, Triple Crème, Mimolette, Stilton, Lancashire) "
                                        "or washed-rind (Epoisses, Livarot, Taleggio)? 🧀"))
                      (relation-asserted which-cheese-style)
@@ -148,9 +148,9 @@
 (defrule determine-which-firm/hard-cheese
    (which-cheese-style firm/hard)
    =>
-   (assert (UI-state (display "Is the firm/hard cheese Gouda, Cheddar, Emmenthaler, Gruyère, Parmesan or other? 🧀")
+   (assert (UI-state (display "Is the firm/hard cheese Gouda, Cheddar, Emmental, Gruyère, Parmesan or other? 🧀")
                      (relation-asserted which-firm/hard-cheese)
-                     (valid-answers Gouda Cheddar Emmenthaler Gruyère Parmesan other))))
+                     (valid-answers Gouda Cheddar Emmental Gruyère Parmesan other))))
 
 (defrule determine-which-type-of-Gouda
    (which-firm/hard-cheese Gouda)
