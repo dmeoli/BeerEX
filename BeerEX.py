@@ -73,7 +73,7 @@ def nextUIState(bot, update):
         if current_ui[0].Slots['help']:
             keyboard.append([KeyboardButton(text=emojize(':sos: Help', use_aliases=True))])
         if current_ui[0].Slots['why']:
-            keyboard.append([KeyboardButton(text=emojize(':question: Why', use_aliases=True))])
+            keyboard.append([KeyboardButton(text=emojize(':grey_question: Why', use_aliases=True))])
         if len(clips.Eval('(find-fact ((?s state-list)) TRUE)')[0].Slots['sequence']) > 2:
             keyboard.append([KeyboardButton(text=emojize(':back: Previous', use_aliases=True))])
         keyboard.append([KeyboardButton(text=emojize(':x: Cancel', use_aliases=True))])
@@ -101,7 +101,7 @@ def handleEvent(bot, update):
         update.message.reply_text(text=current_ui[0].Slots['help'],
                                   parse_mode=ParseMode.MARKDOWN)
         nextUIState(bot, update)
-    elif response == emojize(':question: Why', use_aliases=True):
+    elif response == emojize(':grey_question: Why', use_aliases=True):
         update.message.reply_text(current_ui[0].Slots['why'],
                                   parse_mode=ParseMode.MARKDOWN)
         nextUIState(bot, update)
