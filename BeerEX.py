@@ -1,11 +1,19 @@
 #!/usr/bin/env python
-# coding=utf-8
+# -*- coding: utf-8 -*-
+
+"""
+BeerEX: the Beer EXpert system Bot.
+This expert system suggests a beer to drink with a meal.
+
+Author: Donato Meoli
+"""
 
 from telegram import ReplyKeyboardRemove, KeyboardButton, ReplyKeyboardMarkup, ParseMode
 from telegram.ext import MessageHandler, Filters, Updater, CommandHandler
 from emoji import emojize
 import logging
 import clips
+import sys
 import os
 
 # Enable logging
@@ -44,13 +52,11 @@ def nextUIState(bot, update):
 
     current_id = clips.Eval('(find-fact ((?s state-list)) TRUE)')[0].Slots['current']
     current_ui = clips.Eval('(find-fact ((?u UI-state)) (eq ?u:id %s))' % current_id)
-
     state = current_ui[0].Slots['state']
     if state == 'initial':
         clips.Assert('(next %s)' % current_id)
         clips.Run()
         nextUIState(bot, update)
-
     elif state == 'final':
         keyboard = [[KeyboardButton(text=emojize(':back: Previous', use_aliases=True))],
                     [KeyboardButton(text=emojize(':repeat: Restart', use_aliases=True))],
@@ -60,7 +66,6 @@ def nextUIState(bot, update):
                                   parse_mode=ParseMode.MARKDOWN,
                                   disable_web_page_preview=True,
                                   reply_markup=reply_markup)
-
     else:
         keyboard = []
         for answer in current_ui[0].Slots['valid-answers']:
@@ -75,7 +80,6 @@ def nextUIState(bot, update):
         reply_markup = ReplyKeyboardMarkup(keyboard)
         update.message.reply_text(text=current_ui[0].Slots['display'],
                                   reply_markup=reply_markup)
-        updater.dispatcher.add_handler(MessageHandler(Filters.text, handleEvent))
 
 
 def handleEvent(bot, update):
@@ -85,27 +89,29 @@ def handleEvent(bot, update):
 
     current_id = clips.Eval('(find-fact ((?s state-list)) TRUE)')[0].Slots['current']
     current_ui = clips.Eval('(find-fact ((?u UI-state)) (eq ?u:id %s))' % current_id)
-
-    if update.message.text in current_ui[0].Slots['valid-answers']:
-        if len(update.message.text.split(' ')) > 1:
-            clips.Assert('(next %s "%s")' % (current_id, update.message.text))
+    response = update.message.text
+    if response in current_ui[0].Slots['valid-answers']:
+        if len(response.split(' ')) > 1:
+            clips.Assert('(next %s "%s")' % (current_id, response))
         else:
-            clips.Assert('(next %s %s)' % (current_id, update.message.text))
+            clips.Assert('(next %s %s)' % (current_id, response))
         clips.Run()
         nextUIState(bot, update)
-    elif update.message.text == emojize(':sos: Help', use_aliases=True):
-        update.message.reply_text(current_ui[0].Slots['help'])
+    elif response == emojize(':sos: Help', use_aliases=True):
+        update.message.reply_text(text=current_ui[0].Slots['help'],
+                                  parse_mode=ParseMode.MARKDOWN)
         nextUIState(bot, update)
-    elif update.message.text == emojize(':interrobang: Why', use_aliases=True):
-        update.message.reply_text(current_ui[0].Slots['why'])
+    elif response == emojize(':interrobang: Why', use_aliases=True):
+        update.message.reply_text(current_ui[0].Slots['why'],
+                                  parse_mode=ParseMode.MARKDOWN)
         nextUIState(bot, update)
-    elif update.message.text == emojize(':back: Previous', use_aliases=True):
+    elif response == emojize(':back: Previous', use_aliases=True):
         clips.Assert('(prev %s)' % current_id)
         clips.Run()
         nextUIState(bot, update)
-    elif update.message.text == emojize(':repeat: Restart', use_aliases=True):
+    elif response == emojize(':repeat: Restart', use_aliases=True):
         new(bot, update)
-    elif update.message.text == emojize(':x: Cancel', use_aliases=True):
+    elif response == emojize(':x: Cancel', use_aliases=True):
         clips.Reset()
         update.message.reply_text(text='Bye! I hope we can talk again some day. 👋🏻',
                                   reply_markup=ReplyKeyboardRemove())
@@ -128,22 +134,39 @@ def error(bot, update, error):
     logger.warning('Update %s caused error %s' % (update, error))
 
 
-if __name__ == '__main__':
+def main():
+    """"
+    Run bot.
+    """
+
+    # Set default encoding to utf-8
+    reload(sys)
+    sys.setdefaultencoding('utf-8')
 
     # Load the Beer EXpert system
     clips.Load('clips/beerex.clp')
 
-    # Create the updater and pass it the bot's token
+    # Get the Telegram Bot Authorization Token
     token = os.environ.get('TOKEN')
+
+    # Create the updater and pass it the bot's token
     updater = Updater(token)
 
-    # Handlers register
-    updater.dispatcher.add_handler(CommandHandler('start', start))
-    updater.dispatcher.add_handler(CommandHandler('new', new))
-    updater.dispatcher.add_handler(MessageHandler(Filters.command, unknown))
+    # Get the dispatcher to register handlers...
+    dispatcher = updater.dispatcher
+
+    # ... on different commands - answer in Telegram
+    dispatcher.add_handler(CommandHandler('start', start))
+    dispatcher.add_handler(CommandHandler('new', new))
+
+    # ... on noncommand i.e. message - echo the message on Telegram
+    dispatcher.add_handler(MessageHandler(Filters.text, handleEvent))
+
+    # ... on unrecognized commands in Telegram
+    dispatcher.add_handler(MessageHandler(Filters.command, unknown))
 
     # Log all errors
-    updater.dispatcher.add_error_handler(error)
+    dispatcher.add_error_handler(error)
 
     # Start the bot
     updater.start_webhook(listen='0.0.0.0',
@@ -156,3 +179,7 @@ if __name__ == '__main__':
     # SIGTERM or SIGABRT. This should be used most of the time, since
     # start_polling() is non-blocking and will stop the bot gracefully.
     updater.idle()
+
+
+if __name__ == '__main__':
+    main()
