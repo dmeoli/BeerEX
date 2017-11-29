@@ -41,7 +41,7 @@
    (declare (salience ?*very-high-priority*))
    (start)
    =>
-   (assert (UI-state (display "Do you generally eat fermented foods (probiotic yogurt, kefir, kombucha)? 🥛")
+   (assert (UI-state (display "Do you generally eat fermented foods (probiotic yogurt, kefir, kombucha)? 🍶")
                      (relation-asserted fermented-foods-eater)
                      (valid-answers yes no))))
 
@@ -131,22 +131,21 @@
                                                 "are added, nor is washing used to create the exterior rinds, and those "
                                                 "that do exhibit molds and microflora in their rinds get them naturally "
                                                 "from the environment.")
-                                       (str-cat "🧀 [Washed rind](goo.gl/Kh3BwD) is used to describe those cheeses that "
-                                                "are surface-ripened by washing the cheese throughout the ripening/aging "
-                                                "process with brine, beer, wine, brandy, or a mixture of ingredients, "
-                                                "which encourages the growth of bacteria. The exterior rind of washed "
-                                                "rind cheeses may vary from bright orange to brown, with flavor and "
-                                                "aroma profiles that are quite pungent, yet the interior of these "
-                                                "cheeses is most often semi-soft and, sometimes, very creamy.")))
+                                       (str-cat "🧀 [Washed rind](goo.gl/Kh3BwD) cheeses are surface-ripened by washing "
+                                                "the cheese throughout the ripening/aging process with brine, beer, "
+                                                "wine, brandy, or a mixture of ingredients, which encourages the growth "
+                                                "of bacteria. The exterior rind of washed rind cheeses may vary from "
+                                                "bright orange to brown, with flavor and aroma profiles that are quite "
+                                                "pungent, yet the interior of these cheeses is most often semi-soft "
+                                                "and, sometimes, very creamy.")))
                      (why (format nil "%s %n%s %n%s %n%s %n%s %n%s"
                                       (str-cat "🧀 Fresh cheeses are light cheeses which pair excellently with the "
                                                "softer flavors of Wheat and Lambic beers.")
-                                      (str-cat "🧀 The vast variety of [semi-soft](goo.gl/izu1Bw) can be paired with "
-                                               "many different craft beers, such as German Kölsch or Bock and Pale Ale "
-                                               "beers.")
-                                      (str-cat "🧀 Because of their variety, [firm/hard](goo.gl/yrfoJK) are easily "
-                                               "paried with an equally broad range of craft beer styles, such as "
-                                               "Pilsner, Bock, Brown Ale and Imperial Stout.")
+                                      (str-cat "🧀 [Semi-soft](goo.gl/izu1Bw) cheeses can be paired with many different "
+                                               "craft beers, such as German Kölsch or Bock and Pale Ale beers.")
+                                      (str-cat "🧀 [Firm/hard](goo.gl/yrfoJK) cheeses are easily paried with an equally "
+                                               "broad range of craft beer styles, such as Pilsner, Bock, Brown Ale and "
+                                               "Imperial Stout.")
                                       (str-cat "🧀 [Blue](goo.gl/9KkNww) are stronger-flavored cheeses which are most "
                                                "successfully balanced with stonger-flavored bolder beers like IPAs or "
                                                "Imperial IPAs.")
