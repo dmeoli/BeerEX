@@ -139,22 +139,24 @@
                                                 "aroma profiles that are quite pungent, yet the interior of these "
                                                 "cheeses is most often semi-soft and, sometimes, very creamy.")))
                      (why (format nil "%s %n%s %n%s %n%s %n%s %n%s"
-                                      (str-cat "🧀 _Fresh cheeses_ are light cheeses which pair excellently with the "
+                                      (str-cat "🧀 Fresh cheeses are light cheeses which pair excellently with the "
                                                "softer flavors of Wheat and Lambic beers.")
-                                      (str-cat "🧀 The vast variety of _semi-soft cheeses_ can be paired with many "
-                                               "different craft beers, such as German Kölsch or Bock and Pale Ale beers.")
-                                      (str-cat "🧀 Because of their variety, _hard cheeses_ are easily paried with an "
-                                               "equally broad range of craft beer styles, such as Pilsner, Bock, Brown "
-                                               "Ale and Imperial Stout.")
-                                      (str-cat "🧀 _Blue cheeses_ are stronger-flavored cheeses which are most "
+                                      (str-cat "🧀 The vast variety of [semi-soft](goo.gl/izu1Bw) can be paired with "
+                                               "many different craft beers, such as German Kölsch or Bock and Pale Ale "
+                                               "beers.")
+                                      (str-cat "🧀 Because of their variety, [firm/hard](goo.gl/yrfoJK) are easily "
+                                               "paried with an equally broad range of craft beer styles, such as "
+                                               "Pilsner, Bock, Brown Ale and Imperial Stout.")
+                                      (str-cat "🧀 [Blue](goo.gl/9KkNww) are stronger-flavored cheeses which are most "
                                                "successfully balanced with stonger-flavored bolder beers like IPAs or "
                                                "Imperial IPAs.")
-                                      (str-cat "🧀 _Natural rind_ cheeses include Tomme de Savoie styles which pair well "
-                                               "with Golden Ales or Blondes. Traditional British-style ales work well "
-                                               "with English-style natural rind cheeses, such as Lancashire and Stilton.")
-                                      (str-cat "🧀 _Natural rind_ cheese itself, while potentially pungent, is often "
-                                               "creamy. Pair Belgian-styles ales, like Triples and Golden Strong ales "
-                                               "with these varieties.")))
+                                      (str-cat "🧀 [Natural rind](goo.gl/ys8pkz) cheeses include Tomme de Savoie styles "
+                                               "which pair well with Golden Ales or Blondes. Traditional British-style "
+                                               "ales work well with English-style natural rind cheeses, such as "
+                                               "Lancashire and Stilton.")
+                                      (str-cat "🧀 [Washed rind](goo.gl/Kh3BwD) itself, while potentially pungent, is "
+                                               "often creamy. Pair Belgian-styles ales, like Triples and Golden Strong "
+                                               "ales with these varieties.")))
                      (relation-asserted which-cheese-style)
                      (valid-answers fresh semi-soft firm/hard blue "natural rind" "washed rind" "don't know"))))
 

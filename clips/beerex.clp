@@ -154,7 +154,7 @@
             (attribute (name best-carbonation) (value ?carbonation) (certainty ?certainty))))
    =>
    (assert (attribute (name beer)
-                      (value (format nil "🍺 [%s - %s](%s)" ?beer-style ?beer-name ?link))
+                      (value (format nil "🍺 %s - [%s](%s)" ?beer-style ?beer-name ?link))
                       (certainty ?certainty))))
 
 (defrule remove-poor-beer-choices

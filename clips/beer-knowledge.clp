@@ -531,8 +531,6 @@
    (assert (attribute (name best-name) (value "Belgian-Style Fruit Lambic") (certainty 90)))
    (assert (attribute (name best-name) (value "American Sour") (certainty 90))))
 
-
-
 ;(defrule determine-best-beer-attributes-if-predominant-dish-taste-is-sweet
 ;   (declare (salience ?*medium-low-priority*))
 ;   (predominant-dish-taste sweet)
