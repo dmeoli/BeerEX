@@ -109,37 +109,35 @@
    (assert (UI-state (display (str-cat "Is the cheese style fresh (Mascarpone, Ricotta, Chèvre, Feta, Cream Cheese, "
                                        "Quark, Cottage), semi-soft (Colby, Fontina, Havarti, Monterey Jack), firm/hard "
                                        "(Gouda, Cheddar, Swiss, Parmesan), blue (Roquefort, Gorgonzola, Danish), "
-                                       "natural-rind (Brie, Camembert, Triple Crème, Mimolette, Stilton, Lancashire, "
-                                       "Tomme de Savoie) or washed-rind (Epoisses, Livarot, Taleggio)? 🧀"))
+                                       "natural rind (Brie, Camembert, Triple Crème, Mimolette, Stilton, Lancashire, "
+                                       "Tomme de Savoie) or washed rind (Epoisses, Livarot, Taleggio)? 🧀"))
                      (help (format nil "%s %n%s %n%s %n%s %n%s %n%s"
-                                       (str-cat "🧀 \""Fresh"\" cheeses have not been aged, or are very slightly cured. "
-                                                "These cheeses have a high moisture content and are usually mild and "
-                                                "have a very creamy taste and soft texture.")
-                                       (str-cat "🧀 [\""Semi-soft"\"](goo.gl/izu1Bw) cheeses have a smooth, generally, "
-                                                "creamy interior with little or no rind. These cheeses are generally "
-                                                "high in moisture content and range from very mild in flavor to very "
-                                                "pungent.")
-                                       (str-cat "🧀 [\""Firm/hard"\"](goo.gl/yrfoJK) cheeses have a taste profiles range "
-                                                "from very mild to sharp and pungent. They generally have a texture "
-                                                "profile that ranges from elastic, at room temperature, to the hard "
-                                                "cheeses that can be grated.")
-                                       (str-cat "🧀 [\""Blue"\"](goo.gl/9KkNww) cheeses have a distinctive blue/green "
-                                                "veining, created when the penicillium roqueforti mold, added during "
-                                                "the make process, is exposed to air. This mold provides a distinct "
-                                                "flavor to the cheese, which ranges from fairly mild to assertive and "
-                                                "pungent.")
-                                       (str-cat "🧀 [\""Natural"\ rind""\"](goo.gl/ys8pkz) cheeses have rinds that are "
+                                       (str-cat "🧀 Fresh cheeses have not been aged, or are very slightly cured. These "
+                                                "cheeses have a high moisture content and are usually mild and have a "
+                                                "very creamy taste and soft texture.")
+                                       (str-cat "🧀 [Semi-soft](goo.gl/izu1Bw) cheeses have a smooth, generally, creamy "
+                                                "interior with little or no rind. These cheeses are generally high in "
+                                                "moisture content and range from very mild in flavor to very pungent.")
+                                       (str-cat "🧀 [Firm/hard](goo.gl/yrfoJK) cheeses have a taste profiles range from "
+                                                "very mild to sharp and pungent. They generally have a texture profile "
+                                                "that ranges from elastic, at room temperature, to the hard cheeses that "
+                                                "can be grated.")
+                                       (str-cat "🧀 [Blue](goo.gl/9KkNww) cheeses have a distinctive blue/green veining, "
+                                                "created when the penicillium roqueforti mold, added during the make "
+                                                "process, is exposed to air. This mold provides a distinct flavor to the "
+                                                "cheese, which ranges from fairly mild to assertive and pungent.")
+                                       (str-cat "🧀 [Natural rind](goo.gl/ys8pkz) cheeses have rinds that are "
                                                 "self-formed during the aging process. Generally, no molds or microflora "
                                                 "are added, nor is washing used to create the exterior rinds, and those "
                                                 "that do exhibit molds and microflora in their rinds get them naturally "
                                                 "from the environment.")
-                                       (str-cat "🧀 [\""Washed"\ rind""\"](goo.gl/Kh3BwD) is used to describe those "
-                                                "cheeses that are surface-ripened by washing the cheese throughout the "
-                                                "ripening/aging process with brine, beer, wine, brandy, or a mixture of "
-                                                "ingredients, which encourages the growth of bacteria. The exterior rind "
-                                                "of washed rind cheeses may vary from bright orange to brown, with "
-                                                "flavor and aroma profiles that are quite pungent, yet the interior of "
-                                                "these cheeses is most often semi-soft and, sometimes, very creamy.")))
+                                       (str-cat "🧀 [Washed rind](goo.gl/Kh3BwD) is used to describe those cheeses that "
+                                                "are surface-ripened by washing the cheese throughout the ripening/aging "
+                                                "process with brine, beer, wine, brandy, or a mixture of ingredients, "
+                                                "which encourages the growth of bacteria. The exterior rind of washed "
+                                                "rind cheeses may vary from bright orange to brown, with flavor and "
+                                                "aroma profiles that are quite pungent, yet the interior of these "
+                                                "cheeses is most often semi-soft and, sometimes, very creamy.")))
                      (why (format nil "%s %n%s %n%s %n%s %n%s %n%s"
                                       (str-cat "🧀 _Fresh cheeses_ are light cheeses which pair excellently with the "
                                                "softer flavors of Wheat and Lambic beers.")
