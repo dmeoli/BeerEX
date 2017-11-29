@@ -99,11 +99,13 @@ def handleEvent(bot, update):
         nextUIState(bot, update)
     elif response == emojize(':sos: Help', use_aliases=True):
         update.message.reply_text(text=current_ui[0].Slots['help'],
-                                  parse_mode=ParseMode.MARKDOWN)
+                                  parse_mode=ParseMode.MARKDOWN,
+                                  disable_web_page_preview=True)
         nextUIState(bot, update)
     elif response == emojize(':question: Why', use_aliases=True):
         update.message.reply_text(current_ui[0].Slots['why'],
-                                  parse_mode=ParseMode.MARKDOWN)
+                                  parse_mode=ParseMode.MARKDOWN,
+                                  disable_web_page_preview=True)
         nextUIState(bot, update)
     elif response == emojize(':back: Previous', use_aliases=True):
         clips.Assert('(prev %s)' % current_id)
@@ -169,11 +171,11 @@ def main():
     dispatcher.add_error_handler(error)
 
     # Start the bot
-    updater.start_webhook(listen='0.0.0.0',
-                          port=int(os.environ.get('PORT', '5000')),
-                          url_path=token)
-    updater.bot.set_webhook('https://beerex-telegram-bot.herokuapp.com/' + token)
-    # updater.start_polling()
+    #updater.start_webhook(listen='0.0.0.0',
+    #                      port=int(os.environ.get('PORT', '5000')),
+    #                      url_path=token)
+    #updater.bot.set_webhook('https://beerex-telegram-bot.herokuapp.com/' + token)
+    updater.start_polling()
 
     # Run the bot until you press Ctrl-C or the process receives SIGINT,
     # SIGTERM or SIGABRT. This should be used most of the time, since
