@@ -182,6 +182,13 @@
    (assert (attribute (name best-name) (value "German-Style Bock") (certainty 80)))
    (assert (attribute (name best-name) (value "German-Style Kölsch") (certainty 80))))
 
+(defrule determine-best-beer-attributes-if-which-semi-soft-cheese-is-Mozzarella
+   (declare (salience ?*medium-low-priority*))
+   (which-semi-soft-cheese Mozzarella)
+   =>
+   (assert (attribute (name best-name) (value "American Imperial Red Ale") (certainty 90)))
+   (assert (attribute (name best-flavor) (value crisp-clean) (certainty 50))))
+
 (defrule determine-best-beer-attributes-if-which-semi-soft-cheese-is-Colby
    (declare (salience ?*medium-low-priority*))
    (which-semi-soft-cheese Colby)
@@ -210,11 +217,18 @@
    (assert (attribute (name best-name) (value "German-Style Pilsener") (certainty 80)))
    (assert (attribute (name best-name) (value "American Imperial Stout") (certainty 80))))
 
+(defrule determine-best-beer-attributes-if-which-firm/hard-cheese-is-Swiss
+   (declare (salience ?*medium-low-priority*))
+   (which-firm/hard-cheese Swiss)
+   =>
+   (assert (attribute (name best-name) (value "German-Style Maibock") (certainty 90))))
+
 (defrule determine-best-beer-attributes-if-which-firm/hard-cheese-is-Gouda
    (declare (salience ?*medium-low-priority*))
    (which-firm/hard-cheese Gouda)
    =>
-   (assert (attribute (name best-name) (value "German-Style Dunkelweizen") (certainty 90))))
+   (assert (attribute (name best-name) (value "German-Style Dunkelweizen") (certainty 90)))
+   (assert (attribute (name best-flavor) (value malty-sweet) (certainty 50))))
 
 (defrule determine-best-beer-attributes-if-which-type-of-Gouda-is-aged
    (declare (salience ?*medium-low-priority*))
@@ -264,7 +278,8 @@
    (which-Cheddar-seasoning aged)
    =>
    (assert (attribute (name best-name) (value "English-Style IPA") (certainty 90)))
-   (assert (attribute (name best-name) (value "English-Style Oatmeal Stout") (certainty 90))))
+   (assert (attribute (name best-name) (value "English-Style Oatmeal Stout") (certainty 90)))
+   (assert (attribute (name best-flavor) (value hoppy-bitter) (certainty 50))))
 
 (defrule determine-best-beer-attributes-if-Cheddar-is-sharp
    (declare (salience ?*medium-low-priority*))
@@ -292,6 +307,12 @@
    (assert (attribute (name best-name) (value "English-Style Brown Porter") (certainty 90)))
    (assert (attribute (name best-name) (value "Robust Porter") (certainty 90))))
 
+(defrule determine-best-beer-attributes-if-Swiss-is-aged
+   (declare (salience ?*medium-low-priority*))
+   (Swiss-is-aged yes)
+   =>
+   (assert (attribute (name best-name) (value "German-Style Bock") (certainty 90))))
+
 (defrule determine-best-beer-attributes-if-which-firm/hard-cheese-is-Parmesan
    (declare (salience ?*medium-low-priority*))
    (which-firm/hard-cheese Parmesan)
@@ -303,7 +324,8 @@
    (which-cheese-style blue)
    =>
    (assert (attribute (name best-style) (value "India Pale Ale") (certainty 80)))
-   (assert (attribute (name best-name) (value "American Black Ale") (certainty 80))))
+   (assert (attribute (name best-name) (value "American Black Ale") (certainty 80)))
+   (assert (attribute (name best-flavor) (value dark-roasty) (certainty 80))))
 
 (defrule determine-best-beer-attributes-if-which-blue-or-natural-rind-cheese-is-Stilton
    (declare (salience ?*medium-low-priority*))
@@ -328,7 +350,8 @@
    (which-natural-rind-cheese Brie)
    =>
    (assert (attribute (name best-name) (value "Belgian-Style Blonde Ale") (certainty 90)))
-   (assert (attribute (name best-name) (value "Belgian-Style Saison") (certainty 90))))
+   (assert (attribute (name best-name) (value "Belgian-Style Saison") (certainty 90)))
+   (assert (attribute (name best-flavor) (value fruity-spicy) (certainty 50))))
 
 (defrule determine-best-beer-attributes-if-which-natural-rind-cheese-is-Camembert
    (declare (salience ?*medium-low-priority*))
@@ -355,7 +378,9 @@
    =>
    (assert (attribute (name best-name) (value "Belgian-Style Blonde Ale") (certainty 80)))
    (assert (attribute (name best-name) (value "Belgian-Style Golden Strong Ale") (certainty 80)))
-   (assert (attribute (name best-name) (value "Belgian-Style Pale Ale") (certainty 80))))
+   (assert (attribute (name best-name) (value "Belgian-Style Pale Ale") (certainty 80)))
+   (assert (attribute (name best-name) (value "Belgian-Style Dubbel") (certainty 80)))
+   (assert (attribute (name best-name) (value "French-Style Biére de Garde") (certainty 80))))
 
 (defrule determine-best-beer-attributes-if-which-washed-rind-cheese-is-Taleggio
    (declare (salience ?*medium-low-priority*))
@@ -371,7 +396,7 @@
        (which-entrée-vegetarian grain)
        (which-entrée-vegan grain))
    =>
-   (assert (attribute (name best-flavor) (value crisp-clean) (certainty 40))))
+   (assert (attribute (name best-flavor) (value crisp-clean) (certainty 50))))
 
 (defrule determine-best-beer-attributes-if-which-entrée-is-legumes
    (declare (salience ?*medium-low-priority*))
@@ -379,7 +404,7 @@
        (which-entrée-vegetarian legumes)
        (which-entrée-vegan legumes))
    =>
-   (assert (attribute (name best-flavor) (value malty-sweet) (certainty 40))))
+   (assert (attribute (name best-flavor) (value malty-sweet) (certainty 50))))
 
 (defrule determine-best-beer-attributes-if-which-entrée-is-fats
    (declare (salience ?*medium-low-priority*))
@@ -387,8 +412,8 @@
        (which-entrée-vegetarian "vegetable fats")
        (which-entrée-vegan "vegetable fats"))
    =>
-   (assert (attribute (name best-flavor) (value hoppy-bitter) (certainty 80)))
-   (assert (attribute (name best-flavor) (value dark-roasty) (certainty 40))))
+   (assert (attribute (name best-flavor) (value hoppy-bitter) (certainty 50)))
+   (assert (attribute (name best-flavor) (value dark-roasty) (certainty 50))))
 
 (defrule determine-best-beer-attributes-if-which-fish-is-shellfish
    (declare (salience ?*medium-low-priority*))

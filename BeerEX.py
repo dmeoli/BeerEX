@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-BeerEX: the Beer EXpert system Bot.
+BeerEX: the Beer EXpert system bot.
 This expert system suggests a beer to drink with a meal.
 
 Author: Donato Meoli

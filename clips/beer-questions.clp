@@ -107,10 +107,10 @@
    (main-meal-for-omnivorous-or-vegetarian cheese)
    =>
    (assert (UI-state (display (str-cat "Is the cheese style fresh (Mascarpone, Ricotta, Chèvre, Feta, Cream Cheese, "
-                                       "Quark, Cottage), semi-soft (Colby, Fontina, Havarti, Monterey Jack), firm/hard "
-                                       "(Gouda, Cheddar, Swiss, Parmesan), blue (Roquefort, Gorgonzola, Danish), "
-                                       "natural rind (Brie, Camembert, Triple Crème, Mimolette, Stilton, Lancashire, "
-                                       "Tomme de Savoie) or washed rind (Epoisses, Livarot, Taleggio)? 🧀"))
+                                       "Quark, Cottage), semi-soft (Mozzarella, Colby, Fontina, Havarti, Monterey Jack), "
+                                       "firm/hard (Gouda, Cheddar, Swiss, Parmesan), blue (Roquefort, Gorgonzola, "
+                                       "Danish), natural rind (Brie, Camembert, Triple Crème, Mimolette, Stilton, "
+                                       "Lancashire, Tomme de Savoie) or washed rind (Epoisses, Livarot, Taleggio)? 🧀"))
                      (help (format nil "%s %n%s %n%s %n%s %n%s %n%s"
                                        (str-cat "🧀 Fresh cheeses have not been aged, or are very slightly cured. These "
                                                 "cheeses have a high moisture content and are usually mild and have a "
@@ -146,16 +146,14 @@
                                       (str-cat "🧀 [Firm/hard](goo.gl/yrfoJK) cheeses are easily paried with an equally "
                                                "broad range of craft beer styles, such as Pilsner, Bock, Brown Ale and "
                                                "Imperial Stout.")
-                                      (str-cat "🧀 [Blue](goo.gl/9KkNww) are stronger-flavored cheeses which are most "
-                                               "successfully balanced with stonger-flavored bolder beers like IPAs or "
-                                               "Imperial IPAs.")
-                                      (str-cat "🧀 [Natural rind](goo.gl/ys8pkz) cheeses include Tomme de Savoie styles "
-                                               "which pair well with Golden Ales or Blondes. Traditional British-style "
-                                               "ales work well with English-style natural rind cheeses, such as "
-                                               "Lancashire and Stilton.")
-                                      (str-cat "🧀 [Washed rind](goo.gl/Kh3BwD) itself, while potentially pungent, is "
-                                               "often creamy. Pair Belgian-styles ales, like Triples and Golden Strong "
-                                               "ales with these varieties.")))
+                                      (str-cat "🧀 [Blue](goo.gl/9KkNww) cheeses are stronger-flavored cheeses which "
+                                               "are most successfully balanced with stonger-flavored bolder beers like "
+                                               "IPAs or Imperial IPAs.")
+                                      (str-cat "🧀 [Natural rind](goo.gl/ys8pkz) cheeses pair well with Golden, Blonde "
+                                               "and traditional British-style ales.")
+                                      (str-cat "🧀 [Washed rind](goo.gl/Kh3BwD) cheeses, while potentially pungent, are "
+                                               "often creamy and can be paired with Belgian-styles ales, like Triples "
+                                               "and Golden Strong ales with these varieties.")))
                      (relation-asserted which-cheese-style)
                      (valid-answers fresh semi-soft firm/hard blue "natural rind" "washed rind" "don't know"))))
 
@@ -178,12 +176,12 @@
 (defrule determine-which-semi-soft-cheese
    (which-cheese-style semi-soft)
    =>
-   (assert (UI-state (display "Is the semi-soft cheese Colby, Havarti, Monterey Jack or other? 🧀")
+   (assert (UI-state (display "Is the semi-soft cheese Mozzarella, Colby, Havarti, Monterey Jack or other? 🧀")
                      (why (str-cat "🧀 Fontina, Havarti and milder blue cheeses can be enhanced by the carbonation of "
                                    "Kölsch style ales. The gentle notes of grass in the cheese can be brought out by "
                                    "using the malt of a Bock or the hops of a Pale Ale."))
                      (relation-asserted which-semi-soft-cheese)
-                     (valid-answers Colby Havarti "Monterey Jack" other))))
+                     (valid-answers Mozzarella Colby Havarti "Monterey Jack" other))))
 
 (defrule determine-which-firm/hard-cheese
    (which-cheese-style firm/hard)
@@ -232,6 +230,13 @@
                                    "style, such as a Brown Ale."))
                      (relation-asserted which-type-of-Swiss)
                      (valid-answers Emmental Gruyère other))))
+
+(defrule determine-if-Swiss-is-aged
+   (which-type-of-Swiss other)
+   =>
+   (assert (UI-state (display "Is the Swiss aged? 🧀")
+                     (relation-asserted Swiss-is-aged)
+                     (valid-answers yes no "don't know"))))
 
 (defrule determine-which-blue-cheese
    (which-cheese-style blue)
