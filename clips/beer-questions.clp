@@ -115,45 +115,46 @@
                                        (str-cat "🧀 Fresh cheeses have not been aged, or are very slightly cured. These "
                                                 "cheeses have a high moisture content and are usually mild and have a "
                                                 "very creamy taste and soft texture.")
-                                       (str-cat "🧀 [Semi-soft](goo.gl/izu1Bw) cheeses have a smooth, generally, creamy "
-                                                "interior with little or no rind. These cheeses are generally high in "
-                                                "moisture content and range from very mild in flavor to very pungent.")
-                                       (str-cat "🧀 [Firm/hard](goo.gl/yrfoJK) cheeses have a taste profiles range from "
-                                                "very mild to sharp and pungent. They generally have a texture profile "
-                                                "that ranges from elastic, at room temperature, to the hard cheeses that "
-                                                "can be grated.")
-                                       (str-cat "🧀 [Blue](goo.gl/9KkNww) cheeses have a distinctive blue/green veining, "
-                                                "created when the penicillium roqueforti mold, added during the make "
-                                                "process, is exposed to air. This mold provides a distinct flavor to the "
-                                                "cheese, which ranges from fairly mild to assertive and pungent.")
-                                       (str-cat "🧀 [Natural rind](goo.gl/ys8pkz) cheeses have rinds that are "
+                                       (str-cat "🧀 [Semi-soft](www.goo.gl/izu1Bw) cheeses have a smooth, generally, "
+                                                "creamy interior with little or no rind. These cheeses are generally "
+                                                "high in moisture content and range from very mild in flavor to very "
+                                                "pungent.")
+                                       (str-cat "🧀 [Firm/hard](www.goo.gl/yrfoJK) cheeses have a taste profiles range "
+                                                "from very mild to sharp and pungent. They generally have a texture "
+                                                "profile that ranges from elastic, at room temperature, to the hard "
+                                                "cheeses that can be grated.")
+                                       (str-cat "🧀 [Blue](www.goo.gl/9KkNww) cheeses have a distinctive blue/green "
+                                                "veining, created when the penicillium roqueforti mold, added during the "
+                                                "make process, is exposed to air. This mold provides a distinct flavor "
+                                                "to the cheese, which ranges from fairly mild to assertive and pungent.")
+                                       (str-cat "🧀 [Natural rind](www.goo.gl/ys8pkz) cheeses have rinds that are "
                                                 "self-formed during the aging process. Generally, no molds or microflora "
                                                 "are added, nor is washing used to create the exterior rinds, and those "
                                                 "that do exhibit molds and microflora in their rinds get them naturally "
                                                 "from the environment.")
-                                       (str-cat "🧀 [Washed rind](goo.gl/Kh3BwD) cheeses are surface-ripened by washing "
-                                                "the cheese throughout the ripening/aging process with brine, beer, "
-                                                "wine, brandy, or a mixture of ingredients, which encourages the growth "
-                                                "of bacteria. The exterior rind of washed rind cheeses may vary from "
-                                                "bright orange to brown, with flavor and aroma profiles that are quite "
-                                                "pungent, yet the interior of these cheeses is most often semi-soft "
-                                                "and, sometimes, very creamy.")))
+                                       (str-cat "🧀 [Washed rind](www.goo.gl/Kh3BwD) cheeses are surface-ripened by "
+                                                "washing the cheese throughout the ripening/aging process with brine, "
+                                                "beer, wine, brandy, or a mixture of ingredients, which encourages the "
+                                                "growth of bacteria. The exterior rind of washed rind cheeses may vary "
+                                                "from bright orange to brown, with flavor and aroma profiles that are "
+                                                "quite pungent, yet the interior of these cheeses is most often "
+                                                "semi-soft and, sometimes, very creamy.")))
                      (why (format nil "%s %n%s %n%s %n%s %n%s %n%s"
                                       (str-cat "🧀 Fresh cheeses are light cheeses which pair excellently with the "
                                                "softer flavors of Wheat and Lambic beers.")
-                                      (str-cat "🧀 [Semi-soft](goo.gl/izu1Bw) cheeses can be paired with many different "
-                                               "craft beers, such as German Kölsch or Bock and Pale Ale beers.")
-                                      (str-cat "🧀 [Firm/hard](goo.gl/yrfoJK) cheeses are easily paried with an equally "
-                                               "broad range of craft beer styles, such as Pilsner, Bock, Brown Ale and "
-                                               "Imperial Stout.")
-                                      (str-cat "🧀 [Blue](goo.gl/9KkNww) cheeses are stronger-flavored cheeses which "
+                                      (str-cat "🧀 [Semi-soft](www.goo.gl/izu1Bw) cheeses can be paired with many "
+                                               "different craft beers, such as German Kölsch or Bock and Pale Ale beers.")
+                                      (str-cat "🧀 [Firm/hard](www.goo.gl/yrfoJK) cheeses are easily paried with an "
+                                               "equally broad range of craft beer styles, such as Pilsner, Bock, Brown "
+                                               "Ale and Imperial Stout.")
+                                      (str-cat "🧀 [Blue](www.goo.gl/9KkNww) cheeses are stronger-flavored cheeses which "
                                                "are most successfully balanced with stonger-flavored bolder beers like "
                                                "IPAs or Imperial IPAs.")
-                                      (str-cat "🧀 [Natural rind](goo.gl/ys8pkz) cheeses pair well with Golden, Blonde "
-                                               "and traditional British-style ales.")
-                                      (str-cat "🧀 [Washed rind](goo.gl/Kh3BwD) cheeses, while potentially pungent, are "
-                                               "often creamy and can be paired with Belgian-styles ales, like Triples "
-                                               "and Golden Strong ales with these varieties.")))
+                                      (str-cat "🧀 [Natural rind](www.goo.gl/ys8pkz) cheeses pair well with Golden, "
+                                               "Blonde and traditional British-style ales.")
+                                      (str-cat "🧀 [Washed rind](www.goo.gl/Kh3BwD) cheeses, while potentially pungent, "
+                                               "are often creamy and can be paired with Belgian-styles ales, like "
+                                               "Triples and Golden Strong ales with these varieties.")))
                      (relation-asserted which-cheese-style)
                      (valid-answers fresh semi-soft firm/hard blue "natural rind" "washed rind" "don't know"))))
 
@@ -170,7 +171,7 @@
    (which-fresh-cheese Mascarpone)
    =>
    (assert (UI-state (display "Do you have to eat Mascarpone with fruit?")
-                     (relation-asserted mascarpone-with-fruit)
+                     (relation-asserted Mascarpone-with-fruit)
                      (valid-answers yes no))))
 
 (defrule determine-which-semi-soft-cheese
@@ -297,59 +298,103 @@
                      (relation-asserted which-entrée-vegan)
                      (valid-answers grain legumes vegetables "vegetables fats" other))))
 
-(defrule determine-which-vegetables
-   (or (which-entrée-omnivorous vegetables)
-       (which-entrée-vegetarian vegetables)
-       (which-entrée-vegan vegetables))
-   =>
-   (assert (UI-state (display (str-cat "Does the vegetables are root (parsnips, carrots), grilled (peppers, onions, "
-                                       "mushrooms) or other?"))
-                     (relation-asserted which-vegetables)
-                     (valid-answers root grilled other))))
-
 (defrule determine-which-fish
    (which-entrée-omnivorous fish)
    =>
-   (assert (UI-state (display (str-cat "Does the fish is shellfish (clams, scallops, lobster, crab), bluefish (salmon, "
-                                        "trout, tuna) or other? 🦐 🐟"))
+   (assert (UI-state (display (str-cat "Is the fish shellfish (clams, scallops, lobster, crab), bluefish (salmon, trout, "
+                                       "tuna) or other? 🦑🐙🦐🐟"))
                      (relation-asserted which-fish)
                      (valid-answers shellfish bluefish other))))
 
-(defrule determine-which-fats
-   (which-entrée-omnivorous fats)
+(defrule determine-if-shellfish-is-mild
+   (which-fish shellfish)
    =>
-   (assert (UI-state (display (str-cat "Does the fats are vegetable (avocados, olive oil, peanut butter, nuts "
-                                       "and seeds) or animal (duck/pork fat, dairy)?"))
-                     (relation-asserted which-fats)
-                     (valid-answers vegetable animal other))))
+   (assert (UI-state (display "Is the shellfish mild (squid, cuttlefish, octopus)? 🦑🐙")
+                     (relation-asserted shellfish-is-mild)
+                     (valid-answers yes no))))
+
+(defrule determine-if-shellfish-are-mussels
+   (shellfish-is-mild no)
+   =>
+   (assert (UI-state (display "Are the shellfish mussels?")
+                     (relation-asserted shellfish-is-mussels)
+                     (valid-answers yes no))))
 
 (defrule determine-which-meat
    (which-entrée-omnivorous meat)
    =>
-   (assert (UI-state (display (str-cat "Does the meat is rich meats (beef strip loin, lamb), game birds (duck, quail, "
-                                       "quinoa), braised meats (beef short-rib, pork shoulder), pork or other?"))
+   (assert (UI-state (display "Is the meat rich (beef strip loin, lamb), poultry, game, pork or other?")
                      (relation-asserted which-meat)
-                     (valid-answers "rich meats" "game birds" "braised meats" pork other))))
+                     (valid-answers rich poultry game pork other))))
+
+(defrule determine-which-meat-cooking-method
+   (which-entrée-omnivorous meat)
+   =>
+   (assert (UI-state (display (str-cat "Is the meat cooking method barbecue, braised, grilled, roasted or other?"))
+                     (relation-asserted meat-cooking-method)
+                     (valid-answers barbecue braised grilled roasted other))))
+
+(defrule determine-which-rich
+   (which-meat rich)
+   =>
+   (assert (UI-state (display "Is the rich meat lamb or other?")
+                     (relation-asserted which-rich)
+                     (valid-answers lamb other))))
+
+(defrule determine-which-poultry
+   (which-meat poultry)
+   =>
+   (assert (UI-state (display "Is the poultry chicken or turkey?")
+                     (relation-asserted which-poultry)
+                     (valid-answers chicken turkey))))
+
+(defrule determine-which-game
+   (which-meat game)
+   =>
+   (assert (UI-state (display "Is the game wild or birds (duck, quail, quinoa)?")
+                     (relation-asserted which-game)
+                     (valid-answers wild birds))))
 
 (defrule determine-which-pork
    (which-meat pork)
    =>
-   (assert (UI-state (display "Does the pork is prosciutto, speck, mortadella, sausage or other?")
+   (assert (UI-state (display "Is the pork prosciutto, speck, mortadella, sausage or other?")
                      (relation-asserted which-pork)
                      (valid-answers prosciutto speck mortadella sausage other))))
 
 (defrule determine-which-sausage
    (which-pork sausage)
    =>
-   (assert (UI-state (display "Does the sausage is capocollo, soppressata, salame piccante or other?")
+   (assert (UI-state (display "Is the sausage capocollo, soppressata, salame piccante or other?")
                      (relation-asserted which-sausage)
                      (valid-answers capocollo soppressata "salame piccante" other))))
+
+(defrule determine-which-vegetables
+   (or (which-entrée-omnivorous vegetables)
+       (which-entrée-vegetarian vegetables)
+       (which-entrée-vegan vegetables))
+   =>
+   (assert (UI-state (display (str-cat "Is the vegetables root (parsnips, carrots), grilled (peppers, onions, mushrooms) "
+                                       "or other?"))
+                     (relation-asserted which-vegetables)
+                     (valid-answers root grilled other))))
+
+(defrule determine-which-fats
+   (which-entrée-omnivorous fats)
+   =>
+   (assert (UI-state (display (str-cat "Is the fats vegetable (avocados, olive oil, peanut butter, nuts and seeds) or "
+                                       "animal (duck/pork fat, dairy)?"))
+                     (why "Carbonation is an effective tool to cleanse non-animal fats.")
+                     (relation-asserted which-fats)
+                     (valid-answers vegetable animal other))))
+
+   ; ... if main meal is dessert
 
 (defrule determine-which-dessert
    (or (which-entrée-omnivorous dessert)
        (which-entrée-vegetarian dessert))
    =>
-   (assert (UI-state (display (str-cat "Does the dessert is creamy (cheesecake, ice cream, creme brûlée, mousse cake), "
+   (assert (UI-state (display (str-cat "Is the dessert creamy (cheesecake, ice cream, creme brûlée, mousse cake), "
                                        "chocolate or other? 🍫"))
                      (relation-asserted which-dessert)
                      (valid-answers creamy chocolate other))))
@@ -357,7 +402,7 @@
 (defrule determine-which-chocolate
    (which-dessert chocolate)
    =>
-   (assert (UI-state (display (str-cat "Does the chocolate is white, milk (35% cacao ca.), semisweet (55% cacao ca.), "
+   (assert (UI-state (display (str-cat "Is the chocolate white, milk (35% cacao ca.), semisweet (55% cacao ca.), "
                                        "bittersweet (70% cacao ca.) or unsweetened/bitter (100% cacao)? 🍫"))
                      (relation-asserted which-chocolate)
                      (valid-answers white milk semisweet bittersweet unsweetened/bitter "don't know"))))
@@ -374,7 +419,7 @@
 ;(defrule determine-dish-cooking-method
 ;   (start)
 ;   =>
-;   (assert (UI-state (display (str-cat "Does the dish cooking method is dry-heat (broiling, grilling, roasting, baking, "
+;   (assert (UI-state (display (str-cat "Is the dish cooking method dry-heat (broiling, grilling, roasting, baking, "
 ;                                       "sautéing, pan-frying, deep-frying), moist-heat (poaching, simmering, boiling, "
 ;                                       "steaming) or it is a combination of both (braising, stewing)?"))
 ;                     (relation-asserted dish-cooking-method)
