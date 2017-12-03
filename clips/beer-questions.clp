@@ -320,13 +320,6 @@
                      (relation-asserted shellfish-is-mussels)
                      (valid-answers yes no))))
 
-(defrule determine-which-meat
-   (which-entrée-omnivorous meat)
-   =>
-   (assert (UI-state (display "Is the meat rich (beef strip loin, lamb), poultry, game, pork or other?")
-                     (relation-asserted which-meat)
-                     (valid-answers rich poultry game pork other))))
-
 (defrule determine-which-meat-cooking-method
    (which-entrée-omnivorous meat)
    =>
@@ -334,12 +327,40 @@
                      (relation-asserted meat-cooking-method)
                      (valid-answers barbecue braised grilled roasted other))))
 
+(defrule determine-which-meat
+   (which-entrée-omnivorous meat)
+   =>
+   (assert (UI-state (display "Is the meat rich (beef, lamb, pork), poultry, game or other?")
+                     (relation-asserted which-meat)
+                     (valid-answers rich poultry game other))))
+
 (defrule determine-which-rich
    (which-meat rich)
    =>
-   (assert (UI-state (display "Is the rich meat lamb or other?")
+   (assert (UI-state (display "Is the rich meat beef, lamb, pork or other?")
                      (relation-asserted which-rich)
-                     (valid-answers lamb other))))
+                     (valid-answers beef lamb pork other))))
+
+(defrule determine-which-beef
+   (which-rich beef)
+   =>
+   (assert (UI-state (display "Is the beef bresaola or other?")
+                     (relation-asserted which-beef)
+                     (valid-answers bresaola other))))
+
+(defrule determine-which-pork
+   (which-rich pork)
+   =>
+   (assert (UI-state (display "Is the pork prosciutto, speck, mortadella, sausage or other?")
+                     (relation-asserted which-pork)
+                     (valid-answers prosciutto speck mortadella sausage other))))
+
+(defrule determine-which-sausage
+   (which-pork sausage)
+   =>
+   (assert (UI-state (display "Is the sausage capocollo, soppressata, salame piccante or other?")
+                     (relation-asserted which-sausage)
+                     (valid-answers capocollo soppressata "salame piccante" other))))
 
 (defrule determine-which-poultry
    (which-meat poultry)
@@ -354,20 +375,6 @@
    (assert (UI-state (display "Is the game wild or birds (duck, quail, quinoa)?")
                      (relation-asserted which-game)
                      (valid-answers wild birds))))
-
-(defrule determine-which-pork
-   (which-meat pork)
-   =>
-   (assert (UI-state (display "Is the pork prosciutto, speck, mortadella, sausage or other?")
-                     (relation-asserted which-pork)
-                     (valid-answers prosciutto speck mortadella sausage other))))
-
-(defrule determine-which-sausage
-   (which-pork sausage)
-   =>
-   (assert (UI-state (display "Is the sausage capocollo, soppressata, salame piccante or other?")
-                     (relation-asserted which-sausage)
-                     (valid-answers capocollo soppressata "salame piccante" other))))
 
 (defrule determine-which-vegetables
    (or (which-entrée-omnivorous vegetables)
