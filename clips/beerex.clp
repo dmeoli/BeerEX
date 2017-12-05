@@ -158,7 +158,7 @@
                       (certainty ?certainty))))
 
 (defrule remove-poor-beer-choices
-   ?f <- (attribute (name beer) (certainty ?certainty&:(< ?certainty 50)))
+   ?f <- (attribute (name beer) (certainty ?certainty&:(< ?certainty 60)))
    =>
    (retract ?f))
 

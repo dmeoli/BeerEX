@@ -5,6 +5,30 @@
 
 ; random questions for user type and scenario recognition
 
+(defrule determine-which-sex
+   (declare (salience ?*very-high-priority*))
+   (start)
+   =>
+   (assert (UI-state (display "Are you male or female?")
+                     (relation-asserted which-sex)
+                     (valid-answers male female))))
+
+(defrule determine-which-age
+   (declare (salience ?*very-high-priority*))
+   (start)
+   =>
+   (assert (UI-state (display "How old are you?")
+                     (relation-asserted which-age)
+                     (valid-answers <=18 18-22 22-25 25-30 30-40 >=40))))
+
+(defrule determine-which-season
+   (declare (salience ?*very-high-priority*))
+   (start)
+   =>
+   (assert (UI-state (display "It is autumn, spring, summer or winter?")
+                     (relation-asserted which-season)
+                     (valid-answers autumn spring summer winter))))
+
 (defrule determine-preferred-carbonation
    (declare (salience ?*very-high-priority*))
    (start)
@@ -21,27 +45,11 @@
                      (relation-asserted regular-beer-drinker)
                      (valid-answers yes no))))
 
-(defrule determine-preferred-color
-   (declare (salience ?*very-high-priority*))
-   (regular-beer-drinker yes)
-   =>
-   (assert (UI-state (display "Do you generally prefer pale, amber, brown or dark beer? 🍺")
-                     (relation-asserted preferred-color)
-                     (valid-answers pale amber brown dark))))
-
-(defrule determine-preferred-fermentation
-   (declare (salience ?*very-high-priority*))
-   (regular-beer-drinker yes)
-   =>
-   (assert (UI-state (display "Do you generally prefer to drink top, bottom or wild fermented beer?")
-                     (relation-asserted preferred-fermentation)
-                     (valid-answers top bottom wild))))
-
 (defrule determine-whether-he-eats-fermented-foods
    (declare (salience ?*very-high-priority*))
    (start)
    =>
-   (assert (UI-state (display "Do you generally eat fermented foods (probiotic yogurt, kefir, kombucha)? 🍶")
+   (assert (UI-state (display "Do you generally eat fermented foods (probiotic yogurt, kefir, kombucha, etc.)? 🍶")
                      (relation-asserted fermented-foods-eater)
                      (valid-answers yes no))))
 
@@ -52,22 +60,6 @@
    (assert (UI-state (display "Do you have to drive? 🚘")
                      (relation-asserted driver)
                      (valid-answers yes no))))
-
-(defrule determine-preferred-alcohol
-   (declare (salience ?*very-high-priority*))
-   (driver no)
-   =>
-   (assert (UI-state (display "Do you generally prefer to drink low, mild, high or very high alcoholic drinks? 🍹")
-                     (relation-asserted preferred-alcohol)
-                     (valid-answers low mild high "very high"))))
-
-(defrule determine-whether-he-should-smoke-a-cigar
-   (declare (salience ?*very-high-priority*))
-   (start)
-   =>
-   (assert (UI-state (display "Do you have to smoke a cigar? If yes, is the cigar claro, maduro or oscuro? 🚬")
-                     (relation-asserted which-cigar)
-                     (valid-answers claro maduro oscuro no))))
 
 (defrule determine-preferred-flavor
    (declare (salience ?*very-high-priority*))
@@ -101,16 +93,35 @@
                      (relation-asserted main-meal-for-vegan)
                      (valid-answers pizza entrée dessert other))))
 
+   ; ... if main meal is pizza
+
+(defrule determine-pizza-for-omnivorous
+   (food-style omnivorous)
+   (main-meal-for-omnivorous-or-vegetarian pizza)
+   =>
+   (assert (UI-state (display "Is the pizza topping classic, meat, vegetables, cheese or other?")
+                     (relation-asserted pizza-for-omnivorous)
+                     (valid-answers classic meat vegetables cheese other))))
+
+(defrule determine-pizza-for-vegetarian
+   (food-style vegetarian)
+   (main-meal-for-omnivorous-or-vegetarian pizza)
+   =>
+   (assert (UI-state (display "Is the pizza topping classic, vegetables, cheese or other?")
+                     (relation-asserted pizza-for-vegetarian)
+                     (valid-answers classic vegetables cheese other))))
+
    ; ... if main meal is cheese
 
 (defrule determine-which-cheese-style
    (main-meal-for-omnivorous-or-vegetarian cheese)
    =>
    (assert (UI-state (display (str-cat "Is the cheese style fresh (Mascarpone, Ricotta, Chèvre, Feta, Cream Cheese, "
-                                       "Quark, Cottage), semi-soft (Mozzarella, Colby, Fontina, Havarti, Monterey Jack), "
-                                       "firm/hard (Gouda, Cheddar, Swiss, Parmesan), blue (Roquefort, Gorgonzola, "
-                                       "Danish), natural rind (Brie, Camembert, Triple Crème, Mimolette, Stilton, "
-                                       "Lancashire, Tomme de Savoie) or washed rind (Epoisses, Livarot, Taleggio)? 🧀"))
+                                       "Quark, Cottage, etc.), semi-soft (Mozzarella, Colby, Fontina, Havarti, Monterey "
+                                       "Jack, etc.), firm/hard (Gouda, Cheddar, Swiss, Parmesan), blue (Roquefort, "
+                                       "Gorgonzola, Danish, etc.), natural rind (Brie, Camembert, Triple Crème, "
+                                       "Mimolette, Stilton, Lancashire, Tomme de Savoie, etc.) or washed rind (Epoisses, "
+                                       "Livarot, Taleggio, etc.)? 🧀"))
                      (help (format nil "%s %n%s %n%s %n%s %n%s %n%s"
                                        (str-cat "🧀 Fresh cheeses have not been aged, or are very slightly cured. These "
                                                 "cheeses have a high moisture content and are usually mild and have a "
@@ -242,7 +253,7 @@
 (defrule determine-which-blue-cheese
    (which-cheese-style blue)
    =>
-   (assert (UI-state (display (str-cat "Is the blue cheese Stilton or other? 🧀"))
+   (assert (UI-state (display "Is the blue cheese Stilton or other? 🧀")
                      (why "🧀 Stilton cheese can be intensified the sweetness on the palate with a Barley Wine.")
                      (relation-asserted which-blue-cheese)
                      (valid-answers Stilton other))))
@@ -273,9 +284,9 @@
    (food-style omnivorous)
    (main-meal-for-omnivorous-or-vegetarian entrée)
    =>
-   (assert (UI-state (display (str-cat "Is the main component of the entrée grain (farro, arborio, wild rice, polenta), "
-                                       "legumes (lentils, fava, chickpea, green beans), fish, meat, vegetables, fats "
-                                       "or other?"))
+   (assert (UI-state (display (str-cat "Is the main component of the entrée grain (farro, arborio, wild rice, polenta, "
+                                       "etc.), legumes (lentils, fava, chickpea, green beans, etc.), fish, meat, "
+                                       "vegetables, fats or other?"))
                      (relation-asserted which-entrée-omnivorous)
                      (valid-answers grain legumes fish meat vegetables fats other))))
 
@@ -283,26 +294,44 @@
    (food-style vegetarian)
    (main-meal-for-omnivorous-or-vegetarian entrée)
    =>
-   (assert (UI-state (display (str-cat "Is the main component of the entrée grain (farro, arborio, wild rice, polenta), "
-                                       "legumes (lentils, fava, chickpea, green beans), vegetables, vegetables fats "
-                                       "(avocados, olive oil, peanut butter, nuts and seeds) or other?"))
+   (assert (UI-state (display (str-cat "Is the main component of the entrée grain (farro, arborio, wild rice, polenta, "
+                                       "etc.), legumes (lentils, fava, chickpea, green beans, etc.), vegetables, "
+                                       "vegetables fats (avocados, olive oil, peanut butter, nuts and seeds, etc.) or "
+                                       "other?"))
                      (relation-asserted which-entrée-vegetarian)
                      (valid-answers grain legumes vegetables "vegetables fats" other))))
 
 (defrule determine-which-entrée-vegan
    (main-meal-for-vegan entrée)
    =>
-   (assert (UI-state (display (str-cat "Is the main component of the entrée grain (farro, arborio, wild rice, polenta), "
-                                       "legumes (lentils, fava, chickpea, green beans), vegetables, vegetables fats "
-                                       "(avocados, olive oil, peanut butter, nuts and seeds), or other?"))
+   (assert (UI-state (display (str-cat "Is the main component of the entrée grain (farro, arborio, wild rice, polenta, "
+                                       "etc.), legumes (lentils, fava, chickpea, green beans, etc.), vegetables, "
+                                       "vegetables fats (avocados, olive oil, peanut butter, nuts and seeds, etc.), or "
+                                       "other?"))
                      (relation-asserted which-entrée-vegan)
                      (valid-answers grain legumes vegetables "vegetables fats" other))))
+
+(defrule determine-which-grain
+   (or (which-entrée-omnivorous grain)
+       (which-entrée-vegetarian grain)
+       (which-entrée-vegan grain))
+   =>
+   (assert (UI-state (display "Are the grain chips, spaghetti, bruschetta, grits or other?")
+                     (relation-asserted which-grain)
+                     (valid-answers chips spaghetti bruschetta grits other))))
+
+(defrule determine-which-fish-cooking-method
+   (which-entrée-omnivorous fish)
+   =>
+   (assert (UI-state (display "Is the fish cooking method grilled or other?")
+                     (relation-asserted fish-cooking-method)
+                     (valid-answers grilled other))))
 
 (defrule determine-which-fish
    (which-entrée-omnivorous fish)
    =>
-   (assert (UI-state (display (str-cat "Is the fish shellfish (clams, scallops, lobster, crab), bluefish (salmon, trout, "
-                                       "tuna) or other? 🦑🐙🦐🐟"))
+   (assert (UI-state (display (str-cat "Is the fish shellfish (clams, scallops, lobster, crab, etc.), bluefish (salmon, "
+                                       "trout, tuna, etc.) or other? 🦑🐙🦐🐟"))
                      (relation-asserted which-fish)
                      (valid-answers shellfish bluefish other))))
 
@@ -313,26 +342,33 @@
                      (relation-asserted shellfish-is-mild)
                      (valid-answers yes no))))
 
-(defrule determine-if-shellfish-are-mussels
+(defrule determine-which-shellfish
    (shellfish-is-mild no)
    =>
-   (assert (UI-state (display "Are the shellfish mussels?")
-                     (relation-asserted shellfish-is-mussels)
-                     (valid-answers yes no))))
+   (assert (UI-state (display "Are the fish shellfish shrimps, mussels, oysters or other? 🦐")
+                     (relation-asserted which-shellfish)
+                     (valid-answers shrimps mussels oysters other))))
+
+(defrule determine-which-bluefish
+   (which-fish bluefish)
+   =>
+   (assert (UI-state (display "Is the bluefish salmon or other?")
+                     (relation-asserted which-bluefish)
+                     (valid-answers salmon other))))
 
 (defrule determine-which-meat-cooking-method
    (which-entrée-omnivorous meat)
    =>
-   (assert (UI-state (display (str-cat "Is the meat cooking method barbecue, braised, grilled, roasted or other?"))
+   (assert (UI-state (display "Is the meat cooking method barbecue, braised, grilled, roasted or other?")
                      (relation-asserted meat-cooking-method)
                      (valid-answers barbecue braised grilled roasted other))))
 
 (defrule determine-which-meat
    (which-entrée-omnivorous meat)
    =>
-   (assert (UI-state (display "Is the meat rich (beef, lamb, pork), poultry, game or other?")
+   (assert (UI-state (display "Is the meat rich (beef, lamb, pork, etc.), poultry, game, steak or other?")
                      (relation-asserted which-meat)
-                     (valid-answers rich poultry game other))))
+                     (valid-answers rich poultry game steak other))))
 
 (defrule determine-which-rich
    (which-meat rich)
@@ -351,9 +387,9 @@
 (defrule determine-which-pork
    (which-rich pork)
    =>
-   (assert (UI-state (display "Is the pork prosciutto, speck, mortadella, sausage or other?")
+   (assert (UI-state (display "Is the pork loin, tenderloin, prosciutto, speck, mortadella, sausage or other?")
                      (relation-asserted which-pork)
-                     (valid-answers prosciutto speck mortadella sausage other))))
+                     (valid-answers loin tenderloin prosciutto speck mortadella sausage other))))
 
 (defrule determine-which-sausage
    (which-pork sausage)
@@ -372,25 +408,47 @@
 (defrule determine-which-game
    (which-meat game)
    =>
-   (assert (UI-state (display "Is the game wild or birds (duck, quail, quinoa)?")
+   (assert (UI-state (display "Is the game wild or birds (duck, quail, quinoa, etc.)?")
                      (relation-asserted which-game)
                      (valid-answers wild birds))))
+
+(defrule determine-which-game-birds
+   (which-game birds)
+   =>
+   (assert (UI-state (display "Is the game birds duck or other?")
+                     (relation-asserted which-game-birds)
+                     (valid-answers duck other))))
+
+(defrule determine-which-vegetables-cooking-method
+   (or (which-entrée-omnivorous vegetables)
+       (which-entrée-vegetarian vegetables)
+       (which-entrée-vegan vegetables))
+   =>
+   (assert (UI-state (display "Is the vegetables cooking method grilled, roasted or other?")
+                     (relation-asserted vegetables-cooking-method)
+                     (valid-answers grilled roasted other))))
 
 (defrule determine-which-vegetables
    (or (which-entrée-omnivorous vegetables)
        (which-entrée-vegetarian vegetables)
        (which-entrée-vegan vegetables))
    =>
-   (assert (UI-state (display (str-cat "Is the vegetables root (parsnips, carrots), grilled (peppers, onions, mushrooms) "
-                                       "or other?"))
+   (assert (UI-state (display "Is the vegetables root (parsnips, carrots, etc.), salad or other?")
                      (relation-asserted which-vegetables)
-                     (valid-answers root grilled other))))
+                     (valid-answers root salad other))))
+
+(defrule determine-which-other-vegetables
+   (which-vegetables other)
+   =>
+   (assert (UI-state (display "Are the vegetables mushrooms or other?")
+                     (relation-asserted which-other-vegetables)
+                     (valid-answers mushrooms other))))
 
 (defrule determine-which-fats
    (which-entrée-omnivorous fats)
    =>
-   (assert (UI-state (display (str-cat "Is the fats vegetable (avocados, olive oil, peanut butter, nuts and seeds) or "
-                                       "animal (duck/pork fat, dairy)?"))
+   (assert (UI-state (display (str-cat "Is the fats vegetable (avocados, olive oil, peanut butter, nuts and seeds, etc.) "
+                                       "or animal (duck/pork fat, dairy, etc.)?"))
                      (why "Carbonation is an effective tool to cleanse non-animal fats.")
                      (relation-asserted which-fats)
                      (valid-answers vegetable animal other))))
@@ -413,8 +471,6 @@
                                        "bittersweet (70% cacao ca.) or unsweetened/bitter (100% cacao)? 🍫"))
                      (relation-asserted which-chocolate)
                      (valid-answers white milk semisweet bittersweet unsweetened/bitter "don't know"))))
-
-
 
 ;(defrule determine-predominant-dish-taste
 ;   (start)
