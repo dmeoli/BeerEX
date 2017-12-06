@@ -196,13 +196,13 @@
    (assert (attribute (name best-name) (value "German-Style Pilsener") (certainty 80)))
    (assert (attribute (name best-name) (value "American Imperial Stout") (certainty 80))))
 
-(defrule determine-best-beer-attributes-if-which-firm/hard-cheese-is-Swiss
+(defrule determine-best-beer-attributes-if-which-firm-hard-cheese-is-Swiss
    (declare (salience ?*medium-low-priority*))
    (which-firm/hard-cheese Swiss)
    =>
    (assert (attribute (name best-name) (value "German-Style Maibock") (certainty 90))))
 
-(defrule determine-best-beer-attributes-if-which-firm/hard-cheese-is-Gouda
+(defrule determine-best-beer-attributes-if-which-firm-hard-cheese-is-Gouda
    (declare (salience ?*medium-low-priority*))
    (which-firm/hard-cheese Gouda)
    =>
@@ -225,7 +225,7 @@
    =>
    (assert (attribute (name best-name) (value "American Imperial Porter") (certainty 90))))
 
-(defrule determine-best-beer-attributes-if-which-firm/hard-cheese-is-Cheddar
+(defrule determine-best-beer-attributes-if-which-firm-hard-cheese-is-Cheddar
    (declare (salience ?*medium-low-priority*))
    (which-firm/hard-cheese Cheddar)
    =>
@@ -296,7 +296,7 @@
    =>
    (assert (attribute (name best-name) (value "German-Style Bock") (certainty 90))))
 
-(defrule determine-best-beer-attributes-if-which-firm/hard-cheese-is-Parmesan
+(defrule determine-best-beer-attributes-if-which-firm-hard-cheese-is-Parmesan
    (declare (salience ?*medium-low-priority*))
    (which-firm/hard-cheese Parmesan)
    =>
@@ -342,7 +342,7 @@
    =>
    (assert (attribute (name best-name) (value "Pumpkin Beer") (certainty 90))))
 
-(defrule determine-best-beer-attributes-if-which-natural-rind-cheese-is-Triple-Crème
+(defrule determine-best-beer-attributes-if-which-natural-rind-cheese-is-Triple-Creme
    (declare (salience ?*medium-low-priority*))
    (which-natural-rind-cheese "Triple Crème")
    =>
