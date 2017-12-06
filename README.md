@@ -1,4 +1,4 @@
-# BeerEX :robot::beer: [![Build Status](https://travis-ci.org/DonatoMeoli/BeerEXTelegramBot.svg?branch=master)](https://travis-ci.org/DonatoMeoli/BeerEXTelegramBot)
+# BeerEX :robot::beer: [![Build Status](https://api.travis-ci.org/DonatoMeoli/BeerEX.svg?branch=master)](https://travis-ci.org/DonatoMeoli/BeerEX)
 
 *"Beer is proof that God loves us and want us to be happy."* (Benjamin Franklin)
 
@@ -13,7 +13,8 @@ helps with the filling of the beers database and system knowledge through the in
 
 ## Prerequisites
 
-To run the expert system you must download [CLIPS 6.30](https://sourceforge.net/projects/clipsrules/files/CLIPS/6.30/).
+To run the expert system you must download [CLIPS 6.30](https://sourceforge.net/projects/clipsrules/files/CLIPS/6.30/) 
+for your operating system.
 
 ## Running the expert system
 
