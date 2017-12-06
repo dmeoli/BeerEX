@@ -130,7 +130,7 @@
    =>
    (assert (attribute (name best-name) (value "Honey Beer") (certainty 90))))
 
-(defrule determine-best-beer-attributes-if-which-fresh-cheese-is-Chèvre
+(defrule determine-best-beer-attributes-if-which-fresh-cheese-is-Chevre
    (declare (salience ?*medium-low-priority*))
    (which-fresh-cheese Chèvre)
    =>
@@ -186,7 +186,7 @@
    =>
    (assert (attribute (name best-name) (value "American Cream Ale") (certainty 90))))
 
-(defrule determine-best-beer-attributes-if-which-cheese-style-is-firm/hard
+(defrule determine-best-beer-attributes-if-which-cheese-style-is-firm-hard
    (declare (salience ?*medium-low-priority*))
    (which-cheese-style firm/hard)
    =>
@@ -283,7 +283,7 @@
    =>
    (assert (attribute (name best-name) (value "German-Style Brown/Altbier") (certainty 90))))
 
-(defrule determine-best-beer-attributes-if-which-type-of-Swiss-is-Gruyère
+(defrule determine-best-beer-attributes-if-which-type-of-Swiss-is-Gruyere
    (declare (salience ?*medium-low-priority*))
    (which-type-of-Swiss Gruyère)
    =>
@@ -371,7 +371,7 @@
    =>
    (assert (attribute (name best-name) (value "Belgian-Style Pale Ale") (certainty 90))))
 
-(defrule determine-best-beer-attributes-if-which-entrée-is-grain
+(defrule determine-best-beer-attributes-if-which-entree-is-grain
    (declare (salience ?*medium-low-priority*))
    (or (which-entrée-omnivorous grain)
        (which-entrée-vegetarian grain)
@@ -401,7 +401,7 @@
    =>
    (assert (attribute (name best-name) (value "American Black Ale") (certainty 90))))
 
-(defrule determine-best-beer-attributes-if-which-entrée-is-legumes
+(defrule determine-best-beer-attributes-if-which-entree-is-legumes
    (declare (salience ?*medium-low-priority*))
    (or (which-entrée-omnivorous legumes)
        (which-entrée-vegetarian legumes)
@@ -409,7 +409,7 @@
    =>
    (assert (attribute (name best-flavor) (value malty-sweet) (certainty 50))))
 
-(defrule determine-best-beer-attributes-if-which-which-entrée-omnivorous-is-fish
+(defrule determine-best-beer-attributes-if-which-which-entree-omnivorous-is-fish
    (declare (salience ?*medium-low-priority*))
    (which-entrée-omnivorous fish)
    =>
@@ -437,7 +437,7 @@
    =>
    (assert (attribute (name best-name) (value "Irish-Style Dry Stout") (certainty 90))))
 
-(defrule determine-best-beer-attributes-if-which-which-entrée-omnivorous-is-meat
+(defrule determine-best-beer-attributes-if-which-which-entree-omnivorous-is-meat
    (declare (salience ?*medium-low-priority*))
    (which-entrée-omnivorous meat)
    =>
@@ -650,7 +650,7 @@
    =>
    (assert (attribute (name best-name) (value "European-Style Export") (certainty 90))))
 
-(defrule determine-best-beer-attributes-if-which-entrée-is-vegetables
+(defrule determine-best-beer-attributes-if-which-entree-is-vegetables
    (declare (salience ?*medium-low-priority*))
    (or (which-entrée-omnivorous vegetables)
        (which-entrée-vegetarian vegetables)
@@ -690,7 +690,7 @@
    (assert (attribute (name best-name) (value "German-Style Dunkel") (certainty 90)))
    (assert (attribute (name best-name) (value "Irish-Style Red") (certainty 90))))
 
-(defrule determine-best-beer-attributes-if-which-entrée-is-fats
+(defrule determine-best-beer-attributes-if-which-entree-is-fats
    (declare (salience ?*medium-low-priority*))
    (or (which-entrée-omnivorous fats)
        (which-entrée-vegetarian "vegetable fats")
@@ -744,7 +744,7 @@
    (assert (attribute (name best-name) (value "Belgian-Style Lambic/Gueuze") (certainty 90)))
    (assert (attribute (name best-name) (value "Robust Porter") (certainty 90))))
 
-(defrule determine-best-beer-attributes-if-which-chocolate-is-unsweetened/bitter-or-which-entrée-vegan-is-chocolate
+(defrule determine-best-beer-attributes-if-which-chocolate-is-unsweetened-bitter-or-which-entree-vegan-is-chocolate
    (declare (salience ?*medium-low-priority*))
    (or (which-chocolate unsweetened/bitter)
        (which-entrée-vegan chocolate))
