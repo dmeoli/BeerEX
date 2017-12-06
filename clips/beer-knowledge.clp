@@ -25,18 +25,6 @@
    (assert (attribute (name best-name) (value "American Brown Ale") (certainty 10)))
    (assert (attribute (name best-name) (value "English-Style Brown Porter") (certainty 10))))
 
-(defrule determine-best-beer-attributes-if-preferred-color-is-any
-   (declare (salience ?*medium-low-priority*))
-   (preferred-color ?color)
-   =>
-   (assert (attribute (name best-color) (value ?color) (certainty 20))))
-
-(defrule determine-best-beer-attributes-if-preferred-fermentation-is-any
-   (declare (salience ?*medium-low-priority*))
-   (preferred-fermentation ?fermentation)
-   =>
-   (assert (attribute (name best-fermentation) (value ?fermentation) (certainty 20))))
-
 (defrule determine-best-beer-attributes-if-fermented-foods-eater-is-yes
    (declare (salience ?*medium-low-priority*))
    (fermented-foods-eater yes)
@@ -49,49 +37,6 @@
    =>
    (assert (attribute (name best-alcohol) (value not-detectable) (certainty 20)))
    (assert (attribute (name best-alcohol) (value mild) (certainty 10))))
-
-(defrule determine-best-beer-attributes-if-preferred-alcohol-is-low
-   (declare (salience ?*medium-low-priority*))
-   (preferred-alcohol low)
-   =>
-   (assert (attribute (name best-alcohol) (value not-detectable) (certainty 20))))
-
-(defrule determine-best-beer-attributes-if-preferred-alcohol-is-mild
-   (declare (salience ?*medium-low-priority*))
-   (preferred-alcohol mild)
-   =>
-   (assert (attribute (name best-alcohol) (value mild) (certainty 20))))
-
-(defrule determine-best-beer-attributes-if-preferred-alcohol-is-high
-   (declare (salience ?*medium-low-priority*))
-   (preferred-alcohol high)
-   =>
-   (assert (attribute (name best-alcohol) (value noticeable) (certainty 20))))
-
-(defrule determine-best-beer-attributes-if-preferred-alcohol-is-very-high
-   (declare (salience ?*medium-low-priority*))
-   (preferred-alcohol "very high")
-   =>
-   (assert (attribute (name best-alcohol) (value harsh) (certainty 20))))
-
-(defrule determine-best-beer-attributes-if-which-cigar-is-claro
-   (declare (salience ?*medium-low-priority*))
-   (which-cigar claro)
-   =>
-   (assert (attribute (name best-style) (value "Wheat Beer") (certainty 20))))
-
-(defrule determine-best-beer-attributes-if-which-cigar-is-maduro
-   (declare (salience ?*medium-low-priority*))
-   (which-cigar maduro)
-   =>
-   (assert (attribute (name best-style) (value "Stout") (certainty 20)))
-   (assert (attribute (name best-style) (value "India Pale Ale") (certainty 20))))
-
-(defrule determine-best-beer-attributes-if-which-cigar-is-oscuro
-   (declare (salience ?*medium-low-priority*))
-   (which-cigar oscuro)
-   =>
-   (assert (attribute (name best-style) (value "India Pale Ale") (certainty 20))))
 
 (defrule determine-best-beer-attributes-if-preferred-flavor-is-clean
    (declare (salience ?*medium-low-priority*))
@@ -125,7 +70,44 @@
 
 ; determine best beer attributes for meal type recognized...
 
-   ; ... if main meal is cheese
+(defrule determine-best-beer-attributes-if-which-pizza-topping-is-classic
+   (declare (salience ?*medium-low-priority*))
+   (or (pizza-topping-for-omnivorous classic)
+       (pizza-topping-for-vegetarian classic)
+       (pizza-topping-for-vegan classic))
+   =>
+   (assert (attribute (name best-flavor) (value crisp-clean) (certainty 50))))
+
+(defrule determine-best-beer-attributes-if-which-pizza-topping-for-omnivorous-is-meat
+   (declare (salience ?*medium-low-priority*))
+   (meat-topping-is-spicy no)
+   =>
+   (assert (attribute (name best-flavor) (value hoppy-bitter) (certainty 50))))
+
+(defrule determine-best-beer-attributes-if-which-pizza-topping-for-omnivorous-is-spicy-meat
+   (declare (salience ?*medium-low-priority*))
+   (meat-topping-is-spicy yes)
+   =>
+   (assert (attribute (name best-flavor) (value malty-sweet) (certainty 50))))
+
+(defrule determine-best-beer-attributes-if-which-pizza-topping-are-vegetables
+  (declare (salience ?*medium-low-priority*))
+  (vegetables-topping-are-roasted no)
+  =>
+  (assert (attribute (name best-flavor) (value sour-tart-funky) (certainty 50))))
+
+(defrule determine-best-beer-attributes-if-which-pizza-topping-are-roasted-vegetables
+   (declare (salience ?*medium-low-priority*))
+   (vegetables-topping-are-roasted yes)
+   =>
+   (assert (attribute (name best-flavor) (value dark-roasty) (certainty 50))))
+
+(defrule determine-best-beer-attributes-if-which-pizza-topping-for-omnivorous-or-vegetarian-is-cheese
+   (declare (salience ?*medium-low-priority*))
+   (or (pizza-topping-for-omnivorous cheese)
+       (pizza-topping-for-vegetarian cheese))
+   =>
+   (assert (attribute (name best-flavor) (value fruity-spicy) (certainty 50))))
 
 (defrule determine-best-beer-attributes-if-which-cheese-style-is-fresh
    (declare (salience ?*medium-low-priority*))
@@ -140,12 +122,6 @@
    (which-fresh-cheese Mascarpone)
    =>
    (assert (attribute (name best-name) (value "Belgian-Style Witbier") (certainty 90))))
-
-(defrule determine-best-beer-attributes-if-Mascarpone-with-fruit-is-yes
-   (declare (salience ?*medium-low-priority*))
-   (Mascarpone-with-fruit yes)
-   =>
-   (assert (attribute (name best-name) (value "Belgian-Style Lambic/Gueuze") (certainty 90))))
 
 (defrule determine-best-beer-attributes-if-which-fresh-cheese-is-Ricotta-or-which-grain-is-bruschetta
    (declare (salience ?*medium-low-priority*))
@@ -166,7 +142,7 @@
 (defrule determine-best-beer-attributes-if-which-fresh-cheese-is-Feta-or-which-pork-is-loin
    (declare (salience ?*medium-low-priority*))
    (or (which-fresh-cheese Feta)
-       (which-pork-is-loin))
+       (which-pork loin))
    =>
    (assert (attribute (name best-name) (value "California Common") (certainty 90))))
 
@@ -303,7 +279,7 @@
    (declare (salience ?*medium-low-priority*))
    (or (which-type-of-Swiss Emmental)
        (and (fish-cooking-method grilled)
-            (which-shellfish oysters)))
+            (which-bluefish salmon)))
    =>
    (assert (attribute (name best-name) (value "German-Style Brown/Altbier") (certainty 90))))
 
@@ -394,8 +370,6 @@
    (which-washed-rind-cheese Taleggio)
    =>
    (assert (attribute (name best-name) (value "Belgian-Style Pale Ale") (certainty 90))))
-
-   ; ... if main meal is entrée
 
 (defrule determine-best-beer-attributes-if-which-entrée-is-grain
    (declare (salience ?*medium-low-priority*))
@@ -734,8 +708,6 @@
    (assert (attribute (name best-carbonation) (value high) (certainty 50)))
    (assert (attribute (name best-carbonation) (value medium) (certainty 25))))
 
-   ; ... if main meal is dessert
-
 (defrule determine-best-beer-attributes-if-which-chocolate-is-white
    (declare (salience ?*medium-low-priority*))
    (which-chocolate white)
@@ -780,45 +752,3 @@
    (assert (attribute (name best-name) (value "Belgian-Style Flanders") (certainty 90)))
    (assert (attribute (name best-name) (value "Belgian-Style Fruit Lambic") (certainty 90)))
    (assert (attribute (name best-name) (value "American Sour") (certainty 90))))
-
-;(defrule determine-best-beer-attributes-if-predominant-dish-taste-is-sweet
-;   (declare (salience ?*medium-low-priority*))
-;   (predominant-dish-taste sweet)
-;   =>
-;   (assert (attribute (name best-flavor) (value dark-roasty) (certainty 50))))
-
-;(defrule determine-best-beer-attributes-if-predominant-dish-taste-is-acid
-;   (declare (salience ?*medium-low-priority*))
-;   (predominant-dish-taste acid)
-;   =>
-;   (assert (attribute (name best-flavor) (value malty-sweet) (certainty 50))))
-
-;(defrule determine-best-beer-attributes-if-predominant-dish-taste-is-spice
-;   (declare (salience ?*medium-low-priority*))
-;   (predominant-dish-taste spice)
-;   =>
-;   (assert (attribute (name best-flavor) (value malty-sweet) (certainty 50)))
-;   (assert (attribute (name best-flavor) (value hoppy-bitter) (certainty 50))))
-
-;(defrule determine-best-beer-attributes-if-predominant-dish-taste-is-umami
-;   (declare (salience ?*medium-low-priority*))
-;   (predominant-dish-taste umami)
-;   =>
-;   (assert (attribute (name best-carbonation) (value high) (certainty 50)))
-;   (assert (attribute (name best-carbonation) (value medium) (certainty 25))))
-
-;(defrule determine-best-beer-attributes-if-which-entrée-is-fats-and-predominant-dish-taste-is-sweet
-;   (declare (salience ?*medium-low-priority*))
-;   (or (which-entrée-omnivorous fats)
-;       (which-entrée-vegetarian "vegetable fats")
-;       (which-entrée-vegan "vegetable fats"))
-;   (predominant-dish-taste sweet)
-;   =>
-;   (assert (attribute (name best-alcohol) (value harsh) (certainty 50)))
-;   (assert (attribute (name best-alcohol) (value noticeable) (certainty 25))))
-
-;(defrule determine-best-beer-attributes-if-dish-cooking-method-is-dry-heat
-;   (declare (salience ?*medium-low-priority*))
-;   (dish-cooking-method dry-heat)
-;   =>
-;   (assert (attribute (name best-flavor) (value malty-sweet) (certainty 50))))

@@ -100,16 +100,39 @@
    (main-meal-for-omnivorous-or-vegetarian pizza)
    =>
    (assert (UI-state (display "Is the pizza topping classic, meat, vegetables, cheese or other?")
-                     (relation-asserted pizza-for-omnivorous)
+                     (relation-asserted pizza-topping-for-omnivorous)
                      (valid-answers classic meat vegetables cheese other))))
+
+(defrule determine-if-meat-topping-is-spicy
+   (pizza-topping-for-omnivorous meat)
+   =>
+   (assert (UI-state (display "Is the meat spicy?")
+                     (relation-asserted meat-topping-is-spicy)
+                     (valid-answers yes no))))
 
 (defrule determine-pizza-for-vegetarian
    (food-style vegetarian)
    (main-meal-for-omnivorous-or-vegetarian pizza)
    =>
    (assert (UI-state (display "Is the pizza topping classic, vegetables, cheese or other?")
-                     (relation-asserted pizza-for-vegetarian)
+                     (relation-asserted pizza-topping-for-vegetarian)
                      (valid-answers classic vegetables cheese other))))
+
+(defrule determine-pizza-for-vegan
+   (main-meal-for-vegan pizza)
+   =>
+   (assert (UI-state (display "Is the pizza topping classic, vegetables or other?")
+                     (relation-asserted pizza-topping-for-vegan)
+                     (valid-answers classic vegetables other))))
+
+(defrule determine-if-vegetables-topping-are-roasted
+   (or (pizza-topping-for-omnivorous vegetables)
+       (pizza-topping-for-vegetarian vegetables)
+       (pizza-topping-for-vegan vegetables))
+   =>
+   (assert (UI-state (display "Are the vegetables roasted?")
+                     (relation-asserted vegetables-topping-are-roasted)
+                     (valid-answers yes no))))
 
    ; ... if main meal is cheese
 
@@ -123,7 +146,7 @@
                                        "Mimolette, Stilton, Lancashire, Tomme de Savoie, etc.) or washed rind (Epoisses, "
                                        "Livarot, Taleggio, etc.)? 🧀"))
                      (help (format nil "%s %n%s %n%s %n%s %n%s %n%s"
-                                       (str-cat "🧀 Fresh cheeses have not been aged, or are very slightly cured. These "
+                                       (str-cat "🧀 _Fresh_ cheeses have not been aged, or are very slightly cured. These "
                                                 "cheeses have a high moisture content and are usually mild and have a "
                                                 "very creamy taste and soft texture.")
                                        (str-cat "🧀 [Semi-soft](www.goo.gl/izu1Bw) cheeses have a smooth, generally, "
@@ -177,13 +200,6 @@
                                    "of the beer and neither will overwhelm the palate in the beginning of a meal."))
                      (relation-asserted which-fresh-cheese)
                      (valid-answers Mascarpone Ricotta Chèvre Feta "Cream Cheese" other))))
-
-(defrule determine-whether-he-should-eat-Mascarpone-with-fruit
-   (which-fresh-cheese Mascarpone)
-   =>
-   (assert (UI-state (display "Do you have to eat Mascarpone with fruit?")
-                     (relation-asserted Mascarpone-with-fruit)
-                     (valid-answers yes no))))
 
 (defrule determine-which-semi-soft-cheese
    (which-cheese-style semi-soft)
@@ -308,6 +324,22 @@
                                        "etc.), legumes (lentils, fava, chickpea, green beans, etc.), vegetables, "
                                        "vegetables fats (avocados, olive oil, peanut butter, nuts and seeds, etc.), or "
                                        "other?"))
+                                       (help (format nil "%s %n%s %n%s %n%s %n%s %n%s"
+                                                         (str-cat "🌾 Complementary _grain_ flavors balance hops while remaining light on the "
+                                                                  "palate.")
+                                                         (str-cat "🌱 _Beans_ add richness to the beer while balancing salt and acidity.")
+                                                         (str-cat "🦐🦀 With _shellfish_ foods beers need to bring out salinity and natural  "
+                                                                  "sweetness while cleansing the palate.")
+                                                         (str-cat "🥩🥕 _Rich_ _meats_ and _root_ _vegetables_ flavors brings out umami and adds earthy "
+                                                                  "notes that rest on the center of the palate.")
+                                                         (str-cat "🦆🦃 _Game_ _birds_ roastiness and fat coats help neutralize hop bitterness. ")
+                                                         (str-cat "🥜 With _fats_ strong flavors, beer balances and allows for a complex finish.")
+                                                         (str-cat "🍆🍄 _Grilled_ _vegetables_ brings out umami and balances sweetnees and richness.")
+                                                         (str-cat "🧀 Beer complements the natural flavor and textures of _cheese_ while cutting "
+                                                                  "through fat, cleansing the palate.")
+                                                         (str-cat "🥘🍫 With _braised_ _meats_ and _chocolate_, beer highlights the roasted character.")
+                                                         (str-cat "🍖 The intensity of the _pork_ fat stands up to the strong beer characteristics.")
+                                                         (str-cat "🍨🍮 Beer balances richness on the palate so the _dessert_ doesn't finish cloyingly.")))
                      (relation-asserted which-entrée-vegan)
                      (valid-answers grain legumes vegetables "vegetables fats" other))))
 
