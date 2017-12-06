@@ -89,7 +89,7 @@
 (defrule determine-main-meal-for-vegan
    (food-style vegan)
    =>
-   (assert (UI-state (display "Is the main meal pizza, entrée or chocolate?")
+   (assert (UI-state (display "Is the main meal pizza, entrée or unsweetened/bitter chocolate?")
                      (relation-asserted main-meal-for-vegan)
                      (valid-answers pizza entrée "unsweetened/bitter chocolate" other))))
 
@@ -516,6 +516,13 @@
                                        "chocolate or other? "))
                      (relation-asserted which-dessert)
                      (valid-answers creamy chocolate other))))
+
+(defrule determine-if-creamy-dessert-is-fruit
+   (which-dessert creamy)
+   =>
+   (assert (UI-state (display "Is the creamy dessert with fruit?")
+                     (relation-asserted creamy-dessert-with-fruit)
+                     (valid-answers yes no))))
 
 (defrule determine-which-chocolate
    (which-dessert chocolate)

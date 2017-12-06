@@ -25,13 +25,13 @@
    (assert (attribute (name best-name) (value "American Brown Ale") (certainty 10)))
    (assert (attribute (name best-name) (value "English-Style Brown Porter") (certainty 10))))
 
-(defrule determine-best-beer-attributes-if-fermented-foods-eater-is-yes
+(defrule determine-best-beer-attributes-whether-he-eats-fermented-foods
    (declare (salience ?*medium-low-priority*))
    (fermented-foods-eater yes)
    =>
    (assert (attribute (name best-fermentation) (value wild) (certainty 20))))
 
-(defrule determine-best-beer-attributes-if-driver-is-yes
+(defrule determine-best-beer-attributes-whether-he-is-a-regular-beer-drinker
    (declare (salience ?*medium-low-priority*))
    (driver yes)
    =>
@@ -707,6 +707,14 @@
    =>
    (assert (attribute (name best-carbonation) (value high) (certainty 50)))
    (assert (attribute (name best-carbonation) (value medium) (certainty 25))))
+
+(defrule determine-best-beer-attributes-if-creamy-dessert-is-fruit
+   (declare (salience ?*medium-low-priority*))
+   (creamy-dessert-with-fruit yes)
+   =>
+   (assert (attribute (name best-name) (value "Scotch Ale/Wee Heavy") (certainty 90)))
+   (assert (attribute (name best-name) (value "Scottish-Style Ale") (certainty 90)))
+   (assert (attribute (name best-name) (value "American Sour") (certainty 90))))
 
 (defrule determine-best-beer-attributes-if-which-chocolate-is-white
    (declare (salience ?*medium-low-priority*))
