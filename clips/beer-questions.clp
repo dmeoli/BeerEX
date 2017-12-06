@@ -139,166 +139,6 @@
                      (relation-asserted vegetables-topping-are-roasted)
                      (valid-answers yes no))))
 
-   ; ... if main meal is cheese
-
-(defrule determine-which-cheese-style
-   (main-meal-for-omnivorous-or-vegetarian cheese)
-   =>
-   (assert (UI-state (display (str-cat "Is the cheese style fresh (Mascarpone, Ricotta, Chèvre, Feta, Cream Cheese, "
-                                       "Quark, Cottage, etc.), semi-soft (Mozzarella, Colby, Fontina, Havarti, Monterey "
-                                       "Jack, etc.), firm/hard (Gouda, Cheddar, Swiss, Parmesan), blue (Roquefort, "
-                                       "Gorgonzola, Danish, etc.), natural rind (Brie, Camembert, Triple Crème, "
-                                       "Mimolette, Stilton, Lancashire, Tomme de Savoie, etc.) or washed rind (Epoisses, "
-                                       "Livarot, Taleggio, etc.)? "))
-                     (help (format nil "%s %n%s %n%s %n%s %n%s %n%s"
-                                       (str-cat " _Fresh_ cheeses have not been aged, or are very slightly cured. "
-                                                "These cheeses have a high moisture content and are usually mild and
-                                                "have a very creamy taste and soft texture.")
-                                       (str-cat " [Semi-soft](www.goo.gl/izu1Bw) cheeses have a smooth, generally, "
-                                                "creamy interior with little or no rind. These cheeses are generally "
-                                                "high in moisture content and range from very mild in flavor to very "
-                                                "pungent.")
-                                       (str-cat " [Firm/hard](www.goo.gl/yrfoJK) cheeses have a taste profiles range "
-                                                "from very mild to sharp and pungent. They generally have a texture "
-                                                "profile that ranges from elastic, at room temperature, to the hard "
-                                                "cheeses that can be grated.")
-                                       (str-cat " [Blue](www.goo.gl/9KkNww) cheeses have a distinctive blue/green "
-                                                "veining, created when the penicillium roqueforti mold, added during the "
-                                                "make process, is exposed to air. This mold provides a distinct flavor "
-                                                "to the cheese, which ranges from fairly mild to assertive and pungent.")
-                                       (str-cat " [Natural rind](www.goo.gl/ys8pkz) cheeses have rinds that are "
-                                                "self-formed during the aging process. Generally, no molds or microflora "
-                                                "are added, nor is washing used to create the exterior rinds, and those "
-                                                "that do exhibit molds and microflora in their rinds get them naturally "
-                                                "from the environment.")
-                                       (str-cat " [Washed rind](www.goo.gl/Kh3BwD) cheeses are surface-ripened by "
-                                                "washing the cheese throughout the ripening/aging process with brine, "
-                                                "beer, wine, brandy, or a mixture of ingredients, which encourages the "
-                                                "growth of bacteria. The exterior rind of washed rind cheeses may vary "
-                                                "from bright orange to brown, with flavor and aroma profiles that are "
-                                                "quite pungent, yet the interior of these cheeses is most often "
-                                                "semi-soft and, sometimes, very creamy.")))
-                     (why (format nil "%s %n%s %n%s %n%s %n%s %n%s"
-                                      (str-cat " Fresh cheeses are light cheeses which pair excellently with the "
-                                               "softer flavors of Wheat and Lambic beers.")
-                                      (str-cat " [Semi-soft](www.goo.gl/izu1Bw) cheeses can be paired with many "
-                                               "different craft beers, such as German Kölsch or Bock and Pale Ale beers.")
-                                      (str-cat " [Firm/hard](www.goo.gl/yrfoJK) cheeses are easily paried with an "
-                                               "equally broad range of craft beer styles, such as Pilsner, Bock, Brown "
-                                               "Ale and Imperial Stout.")
-                                      (str-cat " [Blue](www.goo.gl/9KkNww) cheeses are stronger-flavored cheeses which "
-                                               "are most successfully balanced with stonger-flavored bolder beers like "
-                                               "IPAs or Imperial IPAs.")
-                                      (str-cat " [Natural rind](www.goo.gl/ys8pkz) cheeses pair well with Golden, "
-                                               "Blonde and traditional British-style ales.")
-                                      (str-cat " [Washed rind](www.goo.gl/Kh3BwD) cheeses, while potentially pungent, "
-                                               "are often creamy and can be paired with Belgian-styles ales, like "
-                                               "Triples and Golden Strong ales with these varieties.")))
-                     (relation-asserted which-cheese-style)
-                     (valid-answers fresh semi-soft firm/hard blue "natural rind" "washed rind" "don't know"))))
-
-(defrule determine-which-fresh-cheese
-   (which-cheese-style fresh)
-   =>
-   (assert (UI-state (display "Is the fresh cheese Mascarpone, Ricotta, Chèvre, Feta, Cream Cheese or other? ")
-                     (why (str-cat " Italian-Style Mascarpone, Ricotta and soft Chèvre will match the delicate notes "
-                                   "of the beer and neither will overwhelm the palate in the beginning of a meal."))
-                     (relation-asserted which-fresh-cheese)
-                     (valid-answers Mascarpone Ricotta Chèvre Feta "Cream Cheese" other))))
-
-(defrule determine-which-semi-soft-cheese
-   (which-cheese-style semi-soft)
-   =>
-   (assert (UI-state (display "Is the semi-soft cheese Mozzarella, Colby, Havarti, Monterey Jack or other? ")
-                     (why (str-cat " Fontina, Havarti and milder blue cheeses can be enhanced by the carbonation of "
-                                   "Kölsch style ales. The gentle notes of grass in the cheese can be brought out by "
-                                   "using the malt of a Bock or the hops of a Pale Ale."))
-                     (relation-asserted which-semi-soft-cheese)
-                     (valid-answers Mozzarella Colby Havarti "Monterey Jack" other))))
-
-(defrule determine-which-firm-hard-cheese
-   (which-cheese-style firm/hard)
-   =>
-   (assert (UI-state (display "Is the firm/hard cheese Gouda, Cheddar, Swiss, Parmesan or other? ")
-                     (why (str-cat " Cheddar and Swiss cheeses can mimic the Maillard reaction when paired with a beer "
-                                   "style, such as a Brown Ale. Roasty stouts can add a creaminess to the firm and hard "
-                                   "cheeses on the palate."))
-                     (relation-asserted which-firm/hard-cheese)
-                     (valid-answers Gouda Cheddar Swiss Parmesan other))))
-
-(defrule determine-which-type-of-Gouda
-   (which-firm/hard-cheese Gouda)
-   =>
-   (assert (UI-state (display "Is the Gouda cheese aged, smoked or other? ")
-                     (relation-asserted which-type-of-Gouda)
-                     (valid-answers aged smoked other))))
-
-(defrule determine-which-color-of-Cheddar
-   (which-firm/hard-cheese Cheddar)
-   =>
-   (assert (UI-state (display "Is the Cheddar cheese white or yellow? ")
-                     (relation-asserted which-color-of-Cheddar)
-                     (valid-answers white yellow))))
-
-(defrule determine-which-Cheddar-seasoning
-   (which-firm/hard-cheese Cheddar)
-   =>
-   (assert (UI-state (display "Is the Cheddar cheese seasoning mild, medium, aged or other? ")
-                     (relation-asserted which-Cheddar-seasoning)
-                     (valid-answers mild medium aged other))))
-
-(defrule determine-if-Cheddar-is-sharp
-   (or (which-Cheddar-seasoning medium)
-       (which-Cheddar-seasoning aged))
-   =>
-   (assert (UI-state (display "Is the Cheddar cheese sharp? ")
-                     (relation-asserted Cheddar-is-sharp)
-                     (valid-answers yes no "don't know"))))
-
-(defrule determine-which-type-of-Swiss
-   (which-firm/hard-cheese Swiss)
-   =>
-   (assert (UI-state (display "Is the Swiss cheese Emmental, Gruyère or other? ")
-                     (why (str-cat " Emmentaler-style cheeses can mimic the Maillard reaction when paired with a beer "
-                                   "style, such as a Brown Ale."))
-                     (relation-asserted which-type-of-Swiss)
-                     (valid-answers Emmental Gruyère other))))
-
-(defrule determine-if-Swiss-is-aged
-   (which-type-of-Swiss other)
-   =>
-   (assert (UI-state (display "Is the Swiss aged? ")
-                     (relation-asserted Swiss-is-aged)
-                     (valid-answers yes no "don't know"))))
-
-(defrule determine-which-blue-cheese
-   (which-cheese-style blue)
-   =>
-   (assert (UI-state (display "Is the blue cheese Stilton or other? ")
-                     (why " Stilton cheese can be intensified the sweetness on the palate with a Barley Wine.")
-                     (relation-asserted which-blue-cheese)
-                     (valid-answers Stilton other))))
-
-(defrule determine-which-natural-rind-cheese
-   (which-cheese-style "natural rind")
-   =>
-   (assert (UI-state (display (str-cat "Is the natural rind cheese Brie, Camembert, Triple Crème, Mimolette, Stilton, "
-                                       "or other? "))
-                     (why (str-cat " Lancashire, Stilton, Brie and Camembert all share a rich creamy base that can be "
-                                   "refreshed with a Golden, Blond or Pale Ale or intensified the sweetness on the "
-                                   "palate with a Barley Wine."))
-                     (relation-asserted which-natural-rind-cheese)
-                     (valid-answers Brie Camembert "Triple Crème" Mimolette Stilton other))))
-
-(defrule determine-which-washed-rind-cheese
-   (which-cheese-style "washed rind")
-   =>
-   (assert (UI-state (display "Is the washed rind cheese Taleggio or other? ")
-                     (why (str-cat " Classic Belgian yeast flavors spur a tighter carbonation as well as bring out "
-                                   "delicate sweet notes that can cut through the funk of a washed rind cheeses."))
-                     (relation-asserted which-washed-rind-cheese)
-                     (valid-answers Taleggio other))))
-
    ; ... if main meal is entrée
 
 (defrule determine-which-entree-omnivorous
@@ -506,6 +346,166 @@
                      (why "Carbonation is an effective tool to cleanse vegetable fats.")
                      (relation-asserted which-fats)
                      (valid-answers vegetable animal other))))
+
+   ; ... if main meal is cheese
+
+(defrule determine-which-cheese-style
+   (main-meal-for-omnivorous-or-vegetarian cheese)
+   =>
+   (assert (UI-state (display (str-cat "Is the cheese style fresh (Mascarpone, Ricotta, Chèvre, Feta, Cream Cheese, "
+                                       "Quark, Cottage, etc.), semi-soft (Mozzarella, Colby, Fontina, Havarti, Monterey "
+                                       "Jack, etc.), firm/hard (Gouda, Cheddar, Swiss, Parmesan), blue (Roquefort, "
+                                       "Gorgonzola, Danish, etc.), natural rind (Brie, Camembert, Triple Crème, "
+                                       "Mimolette, Stilton, Lancashire, Tomme de Savoie, etc.) or washed rind (Epoisses, "
+                                       "Livarot, Taleggio, etc.)? "))
+                     (help (format nil "%s %n%s %n%s %n%s %n%s %n%s"
+                                       (str-cat " _Fresh_ cheeses have not been aged, or are very slightly cured. "
+                                                "These cheeses have a high moisture content and are usually mild and
+                                                "have a very creamy taste and soft texture.")
+                                       (str-cat " [Semi-soft](www.goo.gl/izu1Bw) cheeses have a smooth, generally, "
+                                                "creamy interior with little or no rind. These cheeses are generally "
+                                                "high in moisture content and range from very mild in flavor to very "
+                                                "pungent.")
+                                       (str-cat " [Firm/hard](www.goo.gl/yrfoJK) cheeses have a taste profiles range "
+                                                "from very mild to sharp and pungent. They generally have a texture "
+                                                "profile that ranges from elastic, at room temperature, to the hard "
+                                                "cheeses that can be grated.")
+                                       (str-cat " [Blue](www.goo.gl/9KkNww) cheeses have a distinctive blue/green "
+                                                "veining, created when the penicillium roqueforti mold, added during the "
+                                                "make process, is exposed to air. This mold provides a distinct flavor "
+                                                "to the cheese, which ranges from fairly mild to assertive and pungent.")
+                                       (str-cat " [Natural rind](www.goo.gl/ys8pkz) cheeses have rinds that are "
+                                                "self-formed during the aging process. Generally, no molds or microflora "
+                                                "are added, nor is washing used to create the exterior rinds, and those "
+                                                "that do exhibit molds and microflora in their rinds get them naturally "
+                                                "from the environment.")
+                                       (str-cat " [Washed rind](www.goo.gl/Kh3BwD) cheeses are surface-ripened by "
+                                                "washing the cheese throughout the ripening/aging process with brine, "
+                                                "beer, wine, brandy, or a mixture of ingredients, which encourages the "
+                                                "growth of bacteria. The exterior rind of washed rind cheeses may vary "
+                                                "from bright orange to brown, with flavor and aroma profiles that are "
+                                                "quite pungent, yet the interior of these cheeses is most often "
+                                                "semi-soft and, sometimes, very creamy.")))
+                     (why (format nil "%s %n%s %n%s %n%s %n%s %n%s"
+                                      (str-cat " Fresh cheeses are light cheeses which pair excellently with the "
+                                               "softer flavors of Wheat and Lambic beers.")
+                                      (str-cat " [Semi-soft](www.goo.gl/izu1Bw) cheeses can be paired with many "
+                                               "different craft beers, such as German Kölsch or Bock and Pale Ale beers.")
+                                      (str-cat " [Firm/hard](www.goo.gl/yrfoJK) cheeses are easily paried with an "
+                                               "equally broad range of craft beer styles, such as Pilsner, Bock, Brown "
+                                               "Ale and Imperial Stout.")
+                                      (str-cat " [Blue](www.goo.gl/9KkNww) cheeses are stronger-flavored cheeses which "
+                                               "are most successfully balanced with stonger-flavored bolder beers like "
+                                               "IPAs or Imperial IPAs.")
+                                      (str-cat " [Natural rind](www.goo.gl/ys8pkz) cheeses pair well with Golden, "
+                                               "Blonde and traditional British-style ales.")
+                                      (str-cat " [Washed rind](www.goo.gl/Kh3BwD) cheeses, while potentially pungent, "
+                                               "are often creamy and can be paired with Belgian-styles ales, like "
+                                               "Triples and Golden Strong ales with these varieties.")))
+                     (relation-asserted which-cheese-style)
+                     (valid-answers fresh semi-soft firm/hard blue "natural rind" "washed rind" "don't know"))))
+
+(defrule determine-which-fresh-cheese
+   (which-cheese-style fresh)
+   =>
+   (assert (UI-state (display "Is the fresh cheese Mascarpone, Ricotta, Chèvre, Feta, Cream Cheese or other? ")
+                     (why (str-cat " Italian-Style Mascarpone, Ricotta and soft Chèvre will match the delicate notes "
+                                   "of the beer and neither will overwhelm the palate in the beginning of a meal."))
+                     (relation-asserted which-fresh-cheese)
+                     (valid-answers Mascarpone Ricotta Chèvre Feta "Cream Cheese" other))))
+
+(defrule determine-which-semi-soft-cheese
+   (which-cheese-style semi-soft)
+   =>
+   (assert (UI-state (display "Is the semi-soft cheese Mozzarella, Colby, Havarti, Monterey Jack or other? ")
+                     (why (str-cat " Fontina, Havarti and milder blue cheeses can be enhanced by the carbonation of "
+                                   "Kölsch style ales. The gentle notes of grass in the cheese can be brought out by "
+                                   "using the malt of a Bock or the hops of a Pale Ale."))
+                     (relation-asserted which-semi-soft-cheese)
+                     (valid-answers Mozzarella Colby Havarti "Monterey Jack" other))))
+
+(defrule determine-which-firm-hard-cheese
+   (which-cheese-style firm/hard)
+   =>
+   (assert (UI-state (display "Is the firm/hard cheese Gouda, Cheddar, Swiss, Parmesan or other? ")
+                     (why (str-cat " Cheddar and Swiss cheeses can mimic the Maillard reaction when paired with a beer "
+                                   "style, such as a Brown Ale. Roasty stouts can add a creaminess to the firm and hard "
+                                   "cheeses on the palate."))
+                     (relation-asserted which-firm/hard-cheese)
+                     (valid-answers Gouda Cheddar Swiss Parmesan other))))
+
+(defrule determine-which-type-of-Gouda
+   (which-firm/hard-cheese Gouda)
+   =>
+   (assert (UI-state (display "Is the Gouda cheese aged, smoked or other? ")
+                     (relation-asserted which-type-of-Gouda)
+                     (valid-answers aged smoked other))))
+
+(defrule determine-which-color-of-Cheddar
+   (which-firm/hard-cheese Cheddar)
+   =>
+   (assert (UI-state (display "Is the Cheddar cheese white or yellow? ")
+                     (relation-asserted which-color-of-Cheddar)
+                     (valid-answers white yellow))))
+
+(defrule determine-which-Cheddar-seasoning
+   (which-firm/hard-cheese Cheddar)
+   =>
+   (assert (UI-state (display "Is the Cheddar cheese seasoning mild, medium, aged or other? ")
+                     (relation-asserted which-Cheddar-seasoning)
+                     (valid-answers mild medium aged other))))
+
+(defrule determine-if-Cheddar-is-sharp
+   (or (which-Cheddar-seasoning medium)
+       (which-Cheddar-seasoning aged))
+   =>
+   (assert (UI-state (display "Is the Cheddar cheese sharp? ")
+                     (relation-asserted Cheddar-is-sharp)
+                     (valid-answers yes no "don't know"))))
+
+(defrule determine-which-type-of-Swiss
+   (which-firm/hard-cheese Swiss)
+   =>
+   (assert (UI-state (display "Is the Swiss cheese Emmental, Gruyère or other? ")
+                     (why (str-cat " Emmentaler-style cheeses can mimic the Maillard reaction when paired with a beer "
+                                   "style, such as a Brown Ale."))
+                     (relation-asserted which-type-of-Swiss)
+                     (valid-answers Emmental Gruyère other))))
+
+(defrule determine-if-Swiss-is-aged
+   (which-type-of-Swiss other)
+   =>
+   (assert (UI-state (display "Is the Swiss aged? ")
+                     (relation-asserted Swiss-is-aged)
+                     (valid-answers yes no "don't know"))))
+
+(defrule determine-which-blue-cheese
+   (which-cheese-style blue)
+   =>
+   (assert (UI-state (display "Is the blue cheese Stilton or other? ")
+                     (why " Stilton cheese can be intensified the sweetness on the palate with a Barley Wine.")
+                     (relation-asserted which-blue-cheese)
+                     (valid-answers Stilton other))))
+
+(defrule determine-which-natural-rind-cheese
+   (which-cheese-style "natural rind")
+   =>
+   (assert (UI-state (display (str-cat "Is the natural rind cheese Brie, Camembert, Triple Crème, Mimolette, Stilton, "
+                                       "or other? "))
+                     (why (str-cat " Lancashire, Stilton, Brie and Camembert all share a rich creamy base that can be "
+                                   "refreshed with a Golden, Blond or Pale Ale or intensified the sweetness on the "
+                                   "palate with a Barley Wine."))
+                     (relation-asserted which-natural-rind-cheese)
+                     (valid-answers Brie Camembert "Triple Crème" Mimolette Stilton other))))
+
+(defrule determine-which-washed-rind-cheese
+   (which-cheese-style "washed rind")
+   =>
+   (assert (UI-state (display "Is the washed rind cheese Taleggio or other? ")
+                     (why (str-cat " Classic Belgian yeast flavors spur a tighter carbonation as well as bring out "
+                                   "delicate sweet notes that can cut through the funk of a washed rind cheeses."))
+                     (relation-asserted which-washed-rind-cheese)
+                     (valid-answers Taleggio other))))
 
    ; ... if main meal is dessert
 
