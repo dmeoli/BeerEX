@@ -89,9 +89,9 @@
 (defrule determine-main-meal-for-vegan
    (food-style vegan)
    =>
-   (assert (UI-state (display "Is the main meal pizza, entrée or dessert?")
+   (assert (UI-state (display "Is the main meal pizza, entrée or chocolate?")
                      (relation-asserted main-meal-for-vegan)
-                     (valid-answers pizza entrée dessert other))))
+                     (valid-answers pizza entrée "unsweetened/bitter chocolate" other))))
 
    ; ... if main meal is pizza
 
@@ -509,9 +509,8 @@
 
    ; ... if main meal is dessert
 
-(defrule determine-which-dessert
-   (or (which-entrée-omnivorous dessert)
-       (which-entrée-vegetarian dessert))
+(defrule determine-which-dessert-for-omnivorous-or-vegetarian
+   (main-meal-for-omnivorous-or-vegetarian dessert)
    =>
    (assert (UI-state (display (str-cat "Is the dessert creamy (cheesecake, ice cream, creme brûlée, mousse cake), "
                                        "chocolate or other? "))

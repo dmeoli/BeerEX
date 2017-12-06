@@ -744,10 +744,10 @@
    (assert (attribute (name best-name) (value "Belgian-Style Lambic/Gueuze") (certainty 90)))
    (assert (attribute (name best-name) (value "Robust Porter") (certainty 90))))
 
-(defrule determine-best-beer-attributes-if-which-chocolate-is-unsweetened-bitter-or-which-entree-vegan-is-chocolate
+(defrule determine-best-beer-attributes-if-which-chocolate-is-unsweetened-bitter
    (declare (salience ?*medium-low-priority*))
    (or (which-chocolate unsweetened/bitter)
-       (which-entrée-vegan chocolate))
+       (main-meal-for-vegan "unsweetened/bitter chocolate"))
    =>
    (assert (attribute (name best-name) (value "Belgian-Style Flanders") (certainty 90)))
    (assert (attribute (name best-name) (value "Belgian-Style Fruit Lambic") (certainty 90)))
