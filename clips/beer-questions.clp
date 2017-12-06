@@ -33,7 +33,7 @@
    (declare (salience ?*very-high-priority*))
    (start)
    =>
-   (assert (UI-state (display "Do you generally prefer to drink low, medium or high carbonated drinks? 🍾")
+   (assert (UI-state (display "Do you generally prefer to drink low, medium or high carbonated drinks? ")
                      (relation-asserted preferred-carbonation)
                      (valid-answers low medium high))))
 
@@ -41,7 +41,7 @@
    (declare (salience ?*very-high-priority*))
    (start)
    =>
-   (assert (UI-state (display "Are you a regular beer drinker? 🍺")
+   (assert (UI-state (display "Are you a regular beer drinker? ")
                      (relation-asserted regular-beer-drinker)
                      (valid-answers yes no))))
 
@@ -49,7 +49,7 @@
    (declare (salience ?*very-high-priority*))
    (start)
    =>
-   (assert (UI-state (display "Do you generally eat fermented foods (probiotic yogurt, kefir, kombucha, etc.)? 🍶")
+   (assert (UI-state (display "Do you generally eat fermented foods (probiotic yogurt, kefir, kombucha, etc.)? ")
                      (relation-asserted fermented-foods-eater)
                      (valid-answers yes no))))
 
@@ -57,7 +57,7 @@
    (declare (salience ?*very-high-priority*))
    (start)
    =>
-   (assert (UI-state (display "Do you have to drive? 🚘")
+   (assert (UI-state (display "Do you have to drive? ")
                      (relation-asserted driver)
                      (valid-answers yes no))))
 
@@ -82,7 +82,7 @@
    (or (food-style omnivorous)
        (food-style vegetarian))
    =>
-   (assert (UI-state (display "Is the main meal pizza, entrée, cheese or dessert? 🧀")
+   (assert (UI-state (display "Is the main meal pizza, entrée, cheese or dessert? ")
                      (relation-asserted main-meal-for-omnivorous-or-vegetarian)
                      (valid-answers pizza entrée cheese dessert other))))
 
@@ -149,29 +149,29 @@
                                        "Jack, etc.), firm/hard (Gouda, Cheddar, Swiss, Parmesan), blue (Roquefort, "
                                        "Gorgonzola, Danish, etc.), natural rind (Brie, Camembert, Triple Crème, "
                                        "Mimolette, Stilton, Lancashire, Tomme de Savoie, etc.) or washed rind (Epoisses, "
-                                       "Livarot, Taleggio, etc.)? 🧀"))
+                                       "Livarot, Taleggio, etc.)? "))
                      (help (format nil "%s %n%s %n%s %n%s %n%s %n%s"
-                                       (str-cat "🧀 _Fresh_ cheeses have not been aged, or are very slightly cured. "
+                                       (str-cat " _Fresh_ cheeses have not been aged, or are very slightly cured. "
                                                 "These cheeses have a high moisture content and are usually mild and
                                                 "have a very creamy taste and soft texture.")
-                                       (str-cat "🧀 [Semi-soft](www.goo.gl/izu1Bw) cheeses have a smooth, generally, "
+                                       (str-cat " [Semi-soft](www.goo.gl/izu1Bw) cheeses have a smooth, generally, "
                                                 "creamy interior with little or no rind. These cheeses are generally "
                                                 "high in moisture content and range from very mild in flavor to very "
                                                 "pungent.")
-                                       (str-cat "🧀 [Firm/hard](www.goo.gl/yrfoJK) cheeses have a taste profiles range "
+                                       (str-cat " [Firm/hard](www.goo.gl/yrfoJK) cheeses have a taste profiles range "
                                                 "from very mild to sharp and pungent. They generally have a texture "
                                                 "profile that ranges from elastic, at room temperature, to the hard "
                                                 "cheeses that can be grated.")
-                                       (str-cat "🧀 [Blue](www.goo.gl/9KkNww) cheeses have a distinctive blue/green "
+                                       (str-cat " [Blue](www.goo.gl/9KkNww) cheeses have a distinctive blue/green "
                                                 "veining, created when the penicillium roqueforti mold, added during the "
                                                 "make process, is exposed to air. This mold provides a distinct flavor "
                                                 "to the cheese, which ranges from fairly mild to assertive and pungent.")
-                                       (str-cat "🧀 [Natural rind](www.goo.gl/ys8pkz) cheeses have rinds that are "
+                                       (str-cat " [Natural rind](www.goo.gl/ys8pkz) cheeses have rinds that are "
                                                 "self-formed during the aging process. Generally, no molds or microflora "
                                                 "are added, nor is washing used to create the exterior rinds, and those "
                                                 "that do exhibit molds and microflora in their rinds get them naturally "
                                                 "from the environment.")
-                                       (str-cat "🧀 [Washed rind](www.goo.gl/Kh3BwD) cheeses are surface-ripened by "
+                                       (str-cat " [Washed rind](www.goo.gl/Kh3BwD) cheeses are surface-ripened by "
                                                 "washing the cheese throughout the ripening/aging process with brine, "
                                                 "beer, wine, brandy, or a mixture of ingredients, which encourages the "
                                                 "growth of bacteria. The exterior rind of washed rind cheeses may vary "
@@ -179,19 +179,19 @@
                                                 "quite pungent, yet the interior of these cheeses is most often "
                                                 "semi-soft and, sometimes, very creamy.")))
                      (why (format nil "%s %n%s %n%s %n%s %n%s %n%s"
-                                      (str-cat "🧀 Fresh cheeses are light cheeses which pair excellently with the "
+                                      (str-cat " Fresh cheeses are light cheeses which pair excellently with the "
                                                "softer flavors of Wheat and Lambic beers.")
-                                      (str-cat "🧀 [Semi-soft](www.goo.gl/izu1Bw) cheeses can be paired with many "
+                                      (str-cat " [Semi-soft](www.goo.gl/izu1Bw) cheeses can be paired with many "
                                                "different craft beers, such as German Kölsch or Bock and Pale Ale beers.")
-                                      (str-cat "🧀 [Firm/hard](www.goo.gl/yrfoJK) cheeses are easily paried with an "
+                                      (str-cat " [Firm/hard](www.goo.gl/yrfoJK) cheeses are easily paried with an "
                                                "equally broad range of craft beer styles, such as Pilsner, Bock, Brown "
                                                "Ale and Imperial Stout.")
-                                      (str-cat "🧀 [Blue](www.goo.gl/9KkNww) cheeses are stronger-flavored cheeses which "
+                                      (str-cat " [Blue](www.goo.gl/9KkNww) cheeses are stronger-flavored cheeses which "
                                                "are most successfully balanced with stonger-flavored bolder beers like "
                                                "IPAs or Imperial IPAs.")
-                                      (str-cat "🧀 [Natural rind](www.goo.gl/ys8pkz) cheeses pair well with Golden, "
+                                      (str-cat " [Natural rind](www.goo.gl/ys8pkz) cheeses pair well with Golden, "
                                                "Blonde and traditional British-style ales.")
-                                      (str-cat "🧀 [Washed rind](www.goo.gl/Kh3BwD) cheeses, while potentially pungent, "
+                                      (str-cat " [Washed rind](www.goo.gl/Kh3BwD) cheeses, while potentially pungent, "
                                                "are often creamy and can be paired with Belgian-styles ales, like "
                                                "Triples and Golden Strong ales with these varieties.")))
                      (relation-asserted which-cheese-style)
@@ -200,8 +200,8 @@
 (defrule determine-which-fresh-cheese
    (which-cheese-style fresh)
    =>
-   (assert (UI-state (display "Is the fresh cheese Mascarpone, Ricotta, Chèvre, Feta, Cream Cheese or other? 🧀")
-                     (why (str-cat "🧀 Italian-Style Mascarpone, Ricotta and soft Chèvre will match the delicate notes "
+   (assert (UI-state (display "Is the fresh cheese Mascarpone, Ricotta, Chèvre, Feta, Cream Cheese or other? ")
+                     (why (str-cat " Italian-Style Mascarpone, Ricotta and soft Chèvre will match the delicate notes "
                                    "of the beer and neither will overwhelm the palate in the beginning of a meal."))
                      (relation-asserted which-fresh-cheese)
                      (valid-answers Mascarpone Ricotta Chèvre Feta "Cream Cheese" other))))
@@ -209,18 +209,18 @@
 (defrule determine-which-semi-soft-cheese
    (which-cheese-style semi-soft)
    =>
-   (assert (UI-state (display "Is the semi-soft cheese Mozzarella, Colby, Havarti, Monterey Jack or other? 🧀")
-                     (why (str-cat "🧀 Fontina, Havarti and milder blue cheeses can be enhanced by the carbonation of "
+   (assert (UI-state (display "Is the semi-soft cheese Mozzarella, Colby, Havarti, Monterey Jack or other? ")
+                     (why (str-cat " Fontina, Havarti and milder blue cheeses can be enhanced by the carbonation of "
                                    "Kölsch style ales. The gentle notes of grass in the cheese can be brought out by "
                                    "using the malt of a Bock or the hops of a Pale Ale."))
                      (relation-asserted which-semi-soft-cheese)
                      (valid-answers Mozzarella Colby Havarti "Monterey Jack" other))))
 
-(defrule determine-which-firm/hard-cheese
+(defrule determine-which-firm-hard-cheese
    (which-cheese-style firm/hard)
    =>
-   (assert (UI-state (display "Is the firm/hard cheese Gouda, Cheddar, Swiss, Parmesan or other? 🧀")
-                     (why (str-cat "🧀 Cheddar and Swiss cheeses can mimic the Maillard reaction when paired with a beer "
+   (assert (UI-state (display "Is the firm/hard cheese Gouda, Cheddar, Swiss, Parmesan or other? ")
+                     (why (str-cat " Cheddar and Swiss cheeses can mimic the Maillard reaction when paired with a beer "
                                    "style, such as a Brown Ale. Roasty stouts can add a creaminess to the firm and hard "
                                    "cheeses on the palate."))
                      (relation-asserted which-firm/hard-cheese)
@@ -229,21 +229,21 @@
 (defrule determine-which-type-of-Gouda
    (which-firm/hard-cheese Gouda)
    =>
-   (assert (UI-state (display "Is the Gouda cheese aged, smoked or other? 🧀")
+   (assert (UI-state (display "Is the Gouda cheese aged, smoked or other? ")
                      (relation-asserted which-type-of-Gouda)
                      (valid-answers aged smoked other))))
 
 (defrule determine-which-color-of-Cheddar
    (which-firm/hard-cheese Cheddar)
    =>
-   (assert (UI-state (display "Is the Cheddar cheese white or yellow? 🧀")
+   (assert (UI-state (display "Is the Cheddar cheese white or yellow? ")
                      (relation-asserted which-color-of-Cheddar)
                      (valid-answers white yellow))))
 
 (defrule determine-which-Cheddar-seasoning
    (which-firm/hard-cheese Cheddar)
    =>
-   (assert (UI-state (display "Is the Cheddar cheese seasoning mild, medium, aged or other? 🧀")
+   (assert (UI-state (display "Is the Cheddar cheese seasoning mild, medium, aged or other? ")
                      (relation-asserted which-Cheddar-seasoning)
                      (valid-answers mild medium aged other))))
 
@@ -251,15 +251,15 @@
    (or (which-Cheddar-seasoning medium)
        (which-Cheddar-seasoning aged))
    =>
-   (assert (UI-state (display "Is the Cheddar cheese sharp? 🧀")
+   (assert (UI-state (display "Is the Cheddar cheese sharp? ")
                      (relation-asserted Cheddar-is-sharp)
                      (valid-answers yes no "don't know"))))
 
 (defrule determine-which-type-of-Swiss
    (which-firm/hard-cheese Swiss)
    =>
-   (assert (UI-state (display "Is the Swiss cheese Emmental, Gruyère or other? 🧀")
-                     (why (str-cat "🧀 Emmentaler-style cheeses can mimic the Maillard reaction when paired with a beer "
+   (assert (UI-state (display "Is the Swiss cheese Emmental, Gruyère or other? ")
+                     (why (str-cat " Emmentaler-style cheeses can mimic the Maillard reaction when paired with a beer "
                                    "style, such as a Brown Ale."))
                      (relation-asserted which-type-of-Swiss)
                      (valid-answers Emmental Gruyère other))))
@@ -267,15 +267,15 @@
 (defrule determine-if-Swiss-is-aged
    (which-type-of-Swiss other)
    =>
-   (assert (UI-state (display "Is the Swiss aged? 🧀")
+   (assert (UI-state (display "Is the Swiss aged? ")
                      (relation-asserted Swiss-is-aged)
                      (valid-answers yes no "don't know"))))
 
 (defrule determine-which-blue-cheese
    (which-cheese-style blue)
    =>
-   (assert (UI-state (display "Is the blue cheese Stilton or other? 🧀")
-                     (why "🧀 Stilton cheese can be intensified the sweetness on the palate with a Barley Wine.")
+   (assert (UI-state (display "Is the blue cheese Stilton or other? ")
+                     (why " Stilton cheese can be intensified the sweetness on the palate with a Barley Wine.")
                      (relation-asserted which-blue-cheese)
                      (valid-answers Stilton other))))
 
@@ -283,8 +283,8 @@
    (which-cheese-style "natural rind")
    =>
    (assert (UI-state (display (str-cat "Is the natural rind cheese Brie, Camembert, Triple Crème, Mimolette, Stilton, "
-                                       "or other? 🧀"))
-                     (why (str-cat "🧀 Lancashire, Stilton, Brie and Camembert all share a rich creamy base that can be "
+                                       "or other? "))
+                     (why (str-cat " Lancashire, Stilton, Brie and Camembert all share a rich creamy base that can be "
                                    "refreshed with a Golden, Blond or Pale Ale or intensified the sweetness on the "
                                    "palate with a Barley Wine."))
                      (relation-asserted which-natural-rind-cheese)
@@ -293,15 +293,15 @@
 (defrule determine-which-washed-rind-cheese
    (which-cheese-style "washed rind")
    =>
-   (assert (UI-state (display "Is the washed rind cheese Taleggio or other? 🧀")
-                     (why (str-cat "🧀 Classic Belgian yeast flavors spur a tighter carbonation as well as bring out "
+   (assert (UI-state (display "Is the washed rind cheese Taleggio or other? ")
+                     (why (str-cat " Classic Belgian yeast flavors spur a tighter carbonation as well as bring out "
                                    "delicate sweet notes that can cut through the funk of a washed rind cheeses."))
                      (relation-asserted which-washed-rind-cheese)
                      (valid-answers Taleggio other))))
 
    ; ... if main meal is entrée
 
-(defrule determine-which-entrée-omnivorous
+(defrule determine-which-entree-omnivorous
    (food-style omnivorous)
    (main-meal-for-omnivorous-or-vegetarian entrée)
    =>
@@ -309,22 +309,22 @@
                                        "etc.), legumes (lentils, fava, chickpea, green beans, etc.), fish, meat, "
                                        "vegetables, fats or other?"))
                                        (why (format nil "%s %n%s %n%s %n%s %n%s %n%s"
-                                                        (str-cat "🌾 Complementary _grain_ flavors balance hops while "
+                                                        (str-cat " Complementary _grain_ flavors balance hops while "
                                                                  "remaining light on the palate.")
-                                                        (str-cat "🌱 _Legumes_ add richness to the beer while balancing "
+                                                        (str-cat " _Legumes_ add richness to the beer while balancing "
                                                                  "salt and acidity.")
-                                                        (str-cat "🐟🦐 _Fish_ pair well with the bitterness of the "
+                                                        (str-cat " _Fish_ pair well with the bitterness of the "
                                                                  "English-Style Bitter and the sweetness of the "
                                                                  "English-Style Pale Ale.")
-                                                        (str-cat "🥩🍖 _Meat_ pairs well with Scottish-Style Ales.")
-                                                        (str-cat "🍆🥦 _Vegetables_ pair well with clean Dark Lagers and "
+                                                        (str-cat " _Meat_ pairs well with Scottish-Style Ales.")
+                                                        (str-cat " _Vegetables_ pair well with clean Dark Lagers and "
                                                                  "American Brown Ale.")
-                                                        (str-cat "🥜 With _fats_ strong flavors, beer balances and "
+                                                        (str-cat " With _fats_ strong flavors, beer balances and "
                                                                  "allows for a complex finish.")))
                      (relation-asserted which-entrée-omnivorous)
                      (valid-answers grain legumes fish meat vegetables fats other))))
 
-(defrule determine-which-entrée-vegetarian
+(defrule determine-which-entree-vegetarian
    (food-style vegetarian)
    (main-meal-for-omnivorous-or-vegetarian entrée)
    =>
@@ -333,19 +333,19 @@
                                        "vegetables fats (avocados, olive oil, peanut butter, nuts and seeds, etc.) or "
                                        "other?"))
                                        (why (format nil "%s %n%s %n%s %n%s"
-                                                         (str-cat "🌾 Complementary _grain_ flavors balance hops while "
+                                                         (str-cat " Complementary _grain_ flavors balance hops while "
                                                                   "remaining light on the palate.")
-                                                         (str-cat "🌱 _Legumes_ add richness to the beer while balancing "
+                                                         (str-cat " _Legumes_ add richness to the beer while balancing "
                                                                   "salt and acidity.")
-                                                         (str-cat "🍆🥦 _Vegetables_ pair well with clean Dark Lagers and "
+                                                         (str-cat " _Vegetables_ pair well with clean Dark Lagers and "
                                                                   "American Brown Ale.")
-                                                         (str-cat "🥑 _Vegetables fats_ pair well with high carbonated "
+                                                         (str-cat " _Vegetables fats_ pair well with high carbonated "
                                                                   "beers. With fats strong flavors, beer balances and "
                                                                   "allows for a complex finish.")))
                      (relation-asserted which-entrée-vegetarian)
                      (valid-answers grain legumes vegetables "vegetables fats" other))))
 
-(defrule determine-which-entrée-vegan
+(defrule determine-which-entree-vegan
    (main-meal-for-vegan entrée)
    =>
    (assert (UI-state (display (str-cat "Is the main component of the entrée grain (farro, arborio, wild rice, polenta, "
@@ -353,13 +353,13 @@
                                        "vegetables fats (avocados, olive oil, peanut butter, nuts and seeds, etc.), or "
                                        "other?"))
                                        (why (format nil "%s %n%s %n%s %n%s"
-                                                        (str-cat "🌾 Complementary _grain_ flavors balance hops while "
+                                                        (str-cat " Complementary _grain_ flavors balance hops while "
                                                                  "remaining light on the palate.")
-                                                        (str-cat "🌱 _Legumes_ add richness to the beer while balancing "
+                                                        (str-cat " _Legumes_ add richness to the beer while balancing "
                                                                  "salt and acidity.")
-                                                        (str-cat "🍆🥦 _Vegetables_ pair well with clean Dark Lagers and "
+                                                        (str-cat " _Vegetables_ pair well with clean Dark Lagers and "
                                                                  "American Brown Ale.")
-                                                        (str-cat "🥑 _Vegetables fats_ pair well with high carbonated "
+                                                        (str-cat " _Vegetables fats_ pair well with high carbonated "
                                                                  "beers. With fats strong flavors, beer balances and "
                                                                  "allows for a complex finish.")))
                      (relation-asserted which-entrée-vegan)
@@ -385,21 +385,21 @@
    (which-entrée-omnivorous fish)
    =>
    (assert (UI-state (display (str-cat "Is the fish shellfish (clams, scallops, lobster, crab, etc.), bluefish (salmon, "
-                                       "trout, tuna, etc.) or other? 🦑🐙🦐🐟"))
+                                       "trout, tuna, etc.) or other? "))
                      (relation-asserted which-fish)
                      (valid-answers shellfish bluefish other))))
 
 (defrule determine-if-shellfish-is-mild
    (which-fish shellfish)
    =>
-   (assert (UI-state (display "Is the shellfish mild (squid, cuttlefish, octopus)? 🦑🐙")
+   (assert (UI-state (display "Is the shellfish mild (squid, cuttlefish, octopus)? ")
                      (relation-asserted shellfish-is-mild)
                      (valid-answers yes no))))
 
 (defrule determine-which-shellfish
    (shellfish-is-mild no)
    =>
-   (assert (UI-state (display "Are the fish shellfish shrimps, mussels, oysters or other? 🦐")
+   (assert (UI-state (display "Are the fish shellfish shrimps, mussels, oysters or other? ")
                      (relation-asserted which-shellfish)
                      (valid-answers shrimps mussels oysters other))))
 
@@ -514,7 +514,7 @@
        (which-entrée-vegetarian dessert))
    =>
    (assert (UI-state (display (str-cat "Is the dessert creamy (cheesecake, ice cream, creme brûlée, mousse cake), "
-                                       "chocolate or other? 🍫"))
+                                       "chocolate or other? "))
                      (relation-asserted which-dessert)
                      (valid-answers creamy chocolate other))))
 
@@ -522,6 +522,6 @@
    (which-dessert chocolate)
    =>
    (assert (UI-state (display (str-cat "Is the chocolate white, milk (35% cacao ca.), semisweet (55% cacao ca.), "
-                                       "bittersweet (70% cacao ca.) or unsweetened/bitter (100% cacao)? 🍫"))
+                                       "bittersweet (70% cacao ca.) or unsweetened/bitter (100% cacao)? "))
                      (relation-asserted which-chocolate)
                      (valid-answers white milk semisweet bittersweet unsweetened/bitter "don't know"))))
