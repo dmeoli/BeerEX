@@ -19,7 +19,7 @@
    =>
    (assert (UI-state (display "How old are you?")
                      (relation-asserted which-age)
-                     (valid-answers <=18 18-22 22-25 25-30 30-40 >=40))))
+                     (valid-answers 18-22 22-25 25-30 30-40 >=40))))
 
 (defrule determine-which-season
    (declare (salience ?*very-high-priority*))
@@ -100,6 +100,11 @@
    (main-meal-for-omnivorous-or-vegetarian pizza)
    =>
    (assert (UI-state (display "Is the pizza topping classic, meat, vegetables, cheese or other?")
+                     (why (format nil "%s %n%s %n%s %n%s"
+                                      "Classic topping pizzas pair well with crisp and clean beers."
+                                      "Meat topping pizzas pair well with hoppy and bitter beers."
+                                      "Vegetables."
+                                      "Cheese topping pizzas pair well with fruity and spicy beers."))
                      (relation-asserted pizza-topping-for-omnivorous)
                      (valid-answers classic meat vegetables cheese other))))
 
@@ -146,9 +151,9 @@
                                        "Mimolette, Stilton, Lancashire, Tomme de Savoie, etc.) or washed rind (Epoisses, "
                                        "Livarot, Taleggio, etc.)? 🧀"))
                      (help (format nil "%s %n%s %n%s %n%s %n%s %n%s"
-                                       (str-cat "🧀 _Fresh_ cheeses have not been aged, or are very slightly cured. These "
-                                                "cheeses have a high moisture content and are usually mild and have a "
-                                                "very creamy taste and soft texture.")
+                                       (str-cat "🧀 _Fresh_ cheeses have not been aged, or are very slightly cured. "
+                                                "These cheeses have a high moisture content and are usually mild and
+                                                "have a very creamy taste and soft texture.")
                                        (str-cat "🧀 [Semi-soft](www.goo.gl/izu1Bw) cheeses have a smooth, generally, "
                                                 "creamy interior with little or no rind. These cheeses are generally "
                                                 "high in moisture content and range from very mild in flavor to very "
@@ -303,6 +308,19 @@
    (assert (UI-state (display (str-cat "Is the main component of the entrée grain (farro, arborio, wild rice, polenta, "
                                        "etc.), legumes (lentils, fava, chickpea, green beans, etc.), fish, meat, "
                                        "vegetables, fats or other?"))
+                                       (why (format nil "%s %n%s %n%s %n%s %n%s %n%s"
+                                                        (str-cat "🌾 Complementary _grain_ flavors balance hops while "
+                                                                 "remaining light on the palate.")
+                                                        (str-cat "🌱 _Legumes_ add richness to the beer while balancing "
+                                                                 "salt and acidity.")
+                                                        (str-cat "🐟🦐 _Fish_ pair well with the bitterness of the "
+                                                                 "English-Style Bitter and the sweetness of the "
+                                                                 "English-Style Pale Ale.")
+                                                        (str-cat "🥩🍖 _Meat_ pairs well with Scottish-Style Ales.")
+                                                        (str-cat "🍆🥦 _Vegetables_ pair well with clean Dark Lagers and "
+                                                                 "American Brown Ale.")
+                                                        (str-cat "🥜 With _fats_ strong flavors, beer balances and "
+                                                                 "allows for a complex finish.")))
                      (relation-asserted which-entrée-omnivorous)
                      (valid-answers grain legumes fish meat vegetables fats other))))
 
@@ -314,6 +332,16 @@
                                        "etc.), legumes (lentils, fava, chickpea, green beans, etc.), vegetables, "
                                        "vegetables fats (avocados, olive oil, peanut butter, nuts and seeds, etc.) or "
                                        "other?"))
+                                       (why (format nil "%s %n%s %n%s %n%s"
+                                                         (str-cat "🌾 Complementary _grain_ flavors balance hops while "
+                                                                  "remaining light on the palate.")
+                                                         (str-cat "🌱 _Legumes_ add richness to the beer while balancing "
+                                                                  "salt and acidity.")
+                                                         (str-cat "🍆🥦 _Vegetables_ pair well with clean Dark Lagers and "
+                                                                  "American Brown Ale.")
+                                                         (str-cat "🥑 _Vegetables fats_ pair well with high carbonated "
+                                                                  "beers. With fats strong flavors, beer balances and "
+                                                                  "allows for a complex finish.")))
                      (relation-asserted which-entrée-vegetarian)
                      (valid-answers grain legumes vegetables "vegetables fats" other))))
 
@@ -324,22 +352,16 @@
                                        "etc.), legumes (lentils, fava, chickpea, green beans, etc.), vegetables, "
                                        "vegetables fats (avocados, olive oil, peanut butter, nuts and seeds, etc.), or "
                                        "other?"))
-                                       (help (format nil "%s %n%s %n%s %n%s %n%s %n%s"
-                                                         (str-cat "🌾 Complementary _grain_ flavors balance hops while remaining light on the "
-                                                                  "palate.")
-                                                         (str-cat "🌱 _Beans_ add richness to the beer while balancing salt and acidity.")
-                                                         (str-cat "🦐🦀 With _shellfish_ foods beers need to bring out salinity and natural  "
-                                                                  "sweetness while cleansing the palate.")
-                                                         (str-cat "🥩🥕 _Rich_ _meats_ and _root_ _vegetables_ flavors brings out umami and adds earthy "
-                                                                  "notes that rest on the center of the palate.")
-                                                         (str-cat "🦆🦃 _Game_ _birds_ roastiness and fat coats help neutralize hop bitterness. ")
-                                                         (str-cat "🥜 With _fats_ strong flavors, beer balances and allows for a complex finish.")
-                                                         (str-cat "🍆🍄 _Grilled_ _vegetables_ brings out umami and balances sweetnees and richness.")
-                                                         (str-cat "🧀 Beer complements the natural flavor and textures of _cheese_ while cutting "
-                                                                  "through fat, cleansing the palate.")
-                                                         (str-cat "🥘🍫 With _braised_ _meats_ and _chocolate_, beer highlights the roasted character.")
-                                                         (str-cat "🍖 The intensity of the _pork_ fat stands up to the strong beer characteristics.")
-                                                         (str-cat "🍨🍮 Beer balances richness on the palate so the _dessert_ doesn't finish cloyingly.")))
+                                       (why (format nil "%s %n%s %n%s %n%s"
+                                                        (str-cat "🌾 Complementary _grain_ flavors balance hops while "
+                                                                 "remaining light on the palate.")
+                                                        (str-cat "🌱 _Legumes_ add richness to the beer while balancing "
+                                                                 "salt and acidity.")
+                                                        (str-cat "🍆🥦 _Vegetables_ pair well with clean Dark Lagers and "
+                                                                 "American Brown Ale.")
+                                                        (str-cat "🥑 _Vegetables fats_ pair well with high carbonated "
+                                                                 "beers. With fats strong flavors, beer balances and "
+                                                                 "allows for a complex finish.")))
                      (relation-asserted which-entrée-vegan)
                      (valid-answers grain legumes vegetables "vegetables fats" other))))
 
@@ -481,7 +503,7 @@
    =>
    (assert (UI-state (display (str-cat "Is the fats vegetable (avocados, olive oil, peanut butter, nuts and seeds, etc.) "
                                        "or animal (duck/pork fat, dairy, etc.)?"))
-                     (why "Carbonation is an effective tool to cleanse non-animal fats.")
+                     (why "Carbonation is an effective tool to cleanse vegetable fats.")
                      (relation-asserted which-fats)
                      (valid-answers vegetable animal other))))
 
@@ -503,19 +525,3 @@
                                        "bittersweet (70% cacao ca.) or unsweetened/bitter (100% cacao)? 🍫"))
                      (relation-asserted which-chocolate)
                      (valid-answers white milk semisweet bittersweet unsweetened/bitter "don't know"))))
-
-;(defrule determine-predominant-dish-taste
-;   (start)
-;   =>
-;   (assert (UI-state (display "Which is the predominant taste of the dish?")
-;                     (relation-asserted predominant-dish-taste)
-;                     (valid-answers sweet acid spice umami "not tasted yet"))))
-
-;(defrule determine-dish-cooking-method
-;   (start)
-;   =>
-;   (assert (UI-state (display (str-cat "Is the dish cooking method dry-heat (broiling, grilling, roasting, baking, "
-;                                       "sautéing, pan-frying, deep-frying), moist-heat (poaching, simmering, boiling, "
-;                                       "steaming) or it is a combination of both (braising, stewing)?"))
-;                     (relation-asserted dish-cooking-method)
-;                     (valid-answers dry-heat moist-heat combination "don't know"))))
