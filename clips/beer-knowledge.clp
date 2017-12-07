@@ -68,7 +68,7 @@
    =>
    (assert (attribute (name best-flavor) (value fruity-spicy) (certainty 20))))
 
-; determine best beer attributes for meal type recognized...
+; determine best beer attributes for meal type recognized
 
 (defrule determine-best-beer-attributes-if-which-pizza-topping-is-classic
    (declare (salience ?*medium-low-priority*))
