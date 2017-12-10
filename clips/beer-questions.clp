@@ -19,7 +19,7 @@
    =>
    (assert (UI-state (display "How old are you? 🔞")
                      (relation-asserted which-age)
-                     (valid-answers 18-22 22-25 25-30 30-40 >=40))))
+                     (valid-answers 18-23 24-30 31-40 >=40))))
 
 (defrule determine-which-season
    (declare (salience ?*very-high-priority*))
@@ -28,6 +28,14 @@
    (assert (UI-state (display "It is autumn, spring, summer or winter? 🍁🌱🏖❄️")
                      (relation-asserted which-season)
                      (valid-answers autumn spring summer winter))))
+
+(defrule determines-which-company
+   (declare (salience ?*very-high-priority*))
+   (start)
+   =>
+   (assert (UI-state (display "Do you have to drink whith your partner or with your friends?")
+                     (relation-asserted which-company)
+                     (valid-answers partner friends other))))
 
 (defrule determine-preferred-carbonation
    (declare (salience ?*very-high-priority*))
@@ -60,14 +68,6 @@
    (assert (UI-state (display "Do you have to drive? 🚘")
                      (relation-asserted driver)
                      (valid-answers yes no))))
-
-(defrule determine-preferred-flavor
-   (declare (salience ?*very-high-priority*))
-   (start)
-   =>
-   (assert (UI-state (display "What kind of flavor do you generally prefer?")
-                     (relation-asserted preferred-flavor)
-                     (valid-answers clean sweet bitter roasty fruity spicy sour "don't know"))))
 
 ; depth questions for meal type recognition
 
@@ -105,9 +105,9 @@
                                       (str-cat "🍕🥓 _Meat_ topping pizzas pair well with hoppy and bitter beers, which "
                                                "stands up to strong flavors and cut through fat to deliver a complex "
                                                "finish.")
-                                      (str-cat "🍕🍆 _Vegetables_ topping pizzas pair well with beers which increases the "
-                                               "perception of savoriness or with beers which contrasts the char of the "
-                                               "oven-roasted vegetables.")
+                                      (str-cat "🍕🍆 _Vegetables_ topping pizzas pair well with sour beers which "
+                                               "increases the perception of savoriness or with beers which contrasts "
+                                               "the char of the oven-roasted vegetables.")
                                       (str-cat "🍕🧀 _Cheese_ topping pizzas pair well with fruity and spicy beers, "
                                                "thanks to their high carbonation which works overtime to cleanse the "
                                                "palate from a strong flavor.")))
@@ -118,6 +118,8 @@
    (pizza-topping-for-omnivorous meat)
    =>
    (assert (UI-state (display "Is the meat spicy? 🌶")
+                     (why (str-cat "Malty flavors highlight the roasted qualities of the meat, while sweetness works to "
+                                   "neutralize capsaicin, the active component in chili peppers."))
                      (relation-asserted meat-topping-is-spicy)
                      (valid-answers yes no))))
 
@@ -130,9 +132,9 @@
                                       (str-cat "🍕 _Classic_ topping pizzas pair well with crisp and clean beers. "
                                                "Complementary grain and cheese flavors balance hop character while "
                                                "remaining light on the palate.")
-                                      (str-cat "🍕🍆 _Vegetables_ topping pizzas pair well with beers which increases the "
-                                               "perception of savoriness or with beers which contrasts the char of the "
-                                               "oven-roasted vegetables.")
+                                      (str-cat "🍕🍆 _Vegetables_ topping pizzas pair well with sour beers which "
+                                               "increases the perception of savoriness or with beers which contrasts "
+                                               "the char of the oven-roasted vegetables.")
                                       (str-cat "🍕🧀 _Cheese_ topping pizzas pair well with fruity and spicy beers, "
                                                "thanks to their high carbonation which works overtime to cleanse the "
                                                "palate from a strong flavor.")))
@@ -147,9 +149,9 @@
                                       (str-cat "🍕 _Classic_ topping pizzas pair well with crisp and clean beers. "
                                                "Complementary grain and cheese flavors balance hop character while "
                                                "remaining light on the palate.")
-                                      (str-cat "🍕🍆 _Vegetables_ topping pizzas pair well with beers which increases the "
-                                               "perception of savoriness or with beers which contrasts the char of the "
-                                               "oven-roasted vegetables.")))
+                                      (str-cat "🍕🍆 _Vegetables_ topping pizzas pair well with sour beers which "
+                                               "increases the perception of savoriness or with beers which contrasts "
+                                               "the char of the oven-roasted vegetables.")))
                      (relation-asserted pizza-topping-for-vegan)
                      (valid-answers classic vegetables other))))
 
@@ -159,6 +161,7 @@
        (pizza-topping-for-vegan vegetables))
    =>
    (assert (UI-state (display "Are the vegetables roasted?")
+                     (why "The roasted character of the beer complements the char on oven-roasted vegetables.")
                      (relation-asserted vegetables-topping-are-roasted)
                      (valid-answers yes no))))
 
@@ -349,8 +352,8 @@
 (defrule determine-which-fats
    (which-entrée-omnivorous fats)
    =>
-   (assert (UI-state (display (str-cat "Is the fats vegetable (avocados, olive oil, peanut butter, nuts and seeds, etc.) 🥑"
-                                       "or animal (duck/pork fat, dairy, etc.) 🍖?"))
+   (assert (UI-state (display (str-cat "Is the fats vegetable (avocados, olive oil, peanut butter, nuts and seeds, etc.) "
+                                       "🥑 or animal (duck/pork fat, dairy, etc.) 🍖?"))
                      (why "Carbonation is an effective tool to cleanse vegetable fats.")
                      (relation-asserted which-fats)
                      (valid-answers vegetable animal other))))
@@ -397,7 +400,7 @@
                                                "softer flavors of Wheat and Lambic beers.")
                                       (str-cat "🧀 [Semi-soft](www.goo.gl/izu1Bw) cheeses can be paired with many "
                                                "different craft beers, such as German Kölsch or Bock and Pale Ale beers.")
-                                      (str-cat "🧀 [Firm/hard](www.goo.gl/yrfoJK) cheeses are easily paried with an "
+                                      (str-cat "🧀 [Firm/hard](www.goo.gl/yrfoJK) cheeses are easily paired with an "
                                                "equally broad range of craft beer styles, such as Pilsner, Bock, Brown "
                                                "Ale and Imperial Stout.")
                                       (str-cat "🧀 [Blue](www.goo.gl/9KkNww) cheeses are stronger-flavored cheeses which "

@@ -5,6 +5,70 @@
 
 ; determine best beer attributes for user type and scenario recognized
 
+(defrule determine-best-beer-attributes-if-which-sex-is-male
+   (declare (salience ?*medium-low-priority*))
+   (which-sex male)
+   =>
+   (assert (attribute (name best-alcohol) (value noticeable) (certainty 4)))
+   (assert (attribute (name best-color) (value brown) (certainty 4)))
+   (assert (attribute (name best-alcohol) (value harsh) (certainty 5)))
+   (assert (attribute (name best-color) (value dark) (certainty 5)))
+   (assert (attribute (name best-flavor) (value dark-roasty) (certainty 5)))
+   (assert (attribute (name best-flavor) (value hoppy-bitter) (certainty 5)))
+   (assert (attribute (name best-flavor) (value sour-tart-funky) (certainty 5))))
+
+(defrule determine-best-beer-attributes-if-which-sex-is-female
+   (declare (salience ?*medium-low-priority*))
+   (which-sex female)
+   =>
+   (assert (attribute (name best-alcohol) (value mild) (certainty 4)))
+   (assert (attribute (name best-color) (value amber) (certainty 4)))
+   (assert (attribute (name best-alcohol) (value not-detectable) (certainty 5)))
+   (assert (attribute (name best-color) (value pale) (certainty 5)))
+   (assert (attribute (name best-flavor) (value crisp-clean) (certainty 5)))
+   (assert (attribute (name best-flavor) (value malty-sweet) (certainty 5)))
+   (assert (attribute (name best-flavor) (value fruity-spicy) (certainty 5))))
+
+(defrule determine-best-beer-attributes-if-which-season-is-autumn
+   (declare (salience ?*medium-low-priority*))
+   (which-season autumn)
+   =>
+   (assert (attribute (name best-alcohol) (value not-detectable) (certainty 2.5)))
+   (assert (attribute (name best-alcohol) (value mild) (certainty 3)))
+   (assert (attribute (name best-alcohol) (value noticeable) (certainty 3.5)))
+   (assert (attribute (name best-alcohol) (value harsh) (certainty 4)))
+   (assert (attribute (name best-flavor) (value sour-tart-funky) (certainty 4)))
+   (assert (attribute (name best-flavor) (value fruity-spicy) (certainty 5))))
+
+(defrule determine-best-beer-attributes-if-which-season-is-spring
+   (declare (salience ?*medium-low-priority*))
+   (which-season spring)
+   =>
+   (assert (attribute (name best-alcohol) (value harsh) (certainty 2.5)))
+   (assert (attribute (name best-alcohol) (value noticeable) (certainty 3)))
+   (assert (attribute (name best-alcohol) (value mild) (certainty 3.5)))
+   (assert (attribute (name best-alcohol) (value not-detectable) (certainty 4)))
+   (assert (attribute (name best-flavor) (value fruity-spicy) (certainty 4)))
+   (assert (attribute (name best-flavor) (value crisp-clean) (certainty 5))))
+
+(defrule determine-best-beer-attributes-if-which-season-is-summer
+   (declare (salience ?*medium-low-priority*))
+   (which-season summer)
+   =>
+   (assert (attribute (name best-alcohol) (value mild) (certainty 4)))
+   (assert (attribute (name best-alcohol) (value not-detectable) (certainty 5)))
+   (assert (attribute (name best-flavor) (value crisp-clean) (certainty 5)))
+   (assert (attribute (name best-flavor) (value hoppy-bitter) (certainty 5))))
+
+(defrule determine-best-beer-attributes-if-which-season-is-winter
+   (declare (salience ?*medium-low-priority*))
+   (which-season winter)
+   =>
+   (assert (attribute (name best-alcohol) (value noticeable) (certainty 4)))
+   (assert (attribute (name best-alcohol) (value harsh) (certainty 5)))
+   (assert (attribute (name best-flavor) (value malty-sweet) (certainty 5)))
+   (assert (attribute (name best-flavor) (value dark-roasty) (certainty 5))))
+
 (defrule determine-best-beer-attributes-if-preferred-carbonation-is-any
    (declare (salience ?*medium-low-priority*))
    (preferred-carbonation ?carbonation)
@@ -37,36 +101,6 @@
    =>
    (assert (attribute (name best-alcohol) (value not-detectable) (certainty 20)))
    (assert (attribute (name best-alcohol) (value mild) (certainty 10))))
-
-(defrule determine-best-beer-attributes-if-preferred-flavor-is-clean
-   (declare (salience ?*medium-low-priority*))
-   (preferred-flavor clean)
-   =>
-   (assert (attribute (name best-flavor) (value crisp-clean) (certainty 20))))
-
-(defrule determine-best-beer-attributes-if-preferred-flavor-is-sweet
-   (declare (salience ?*medium-low-priority*))
-   (preferred-flavor sweet)
-   =>
-   (assert (attribute (name best-flavor) (value malty-sweet) (certainty 20))))
-
-(defrule determine-best-beer-attributes-if-preferred-flavor-is-roasty
-   (declare (salience ?*medium-low-priority*))
-   (preferred-flavor roasty)
-   =>
-   (assert (attribute (name best-flavor) (value dark-roasty) (certainty 20))))
-
-(defrule determine-best-beer-attributes-if-preferred-flavor-is-bitter
-   (declare (salience ?*medium-low-priority*))
-   (preferred-flavor bitter)
-   =>
-   (assert (attribute (name best-flavor) (value hoppy-bitter) (certainty 20))))
-
-(defrule determine-best-beer-attributes-if-preferred-flavor-is-fruity
-   (declare (salience ?*medium-low-priority*))
-   (preferred-flavor fruity)
-   =>
-   (assert (attribute (name best-flavor) (value fruity-spicy) (certainty 20))))
 
 ; determine best beer attributes for meal type recognized
 
