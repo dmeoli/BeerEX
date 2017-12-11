@@ -369,7 +369,7 @@
                                        "Livarot, Taleggio, etc.)? 🧀"))
                      (help (format nil "%s %n%s %n%s %n%s %n%s %n%s"
                                        (str-cat "🧀 _Fresh_ cheeses have not been aged, or are very slightly cured. "
-                                                "These cheeses have a high moisture content and are usually mild and
+                                                "These cheeses have a high moisture content and are usually mild and "
                                                 "have a very creamy taste and soft texture.")
                                        (str-cat "🧀 [Semi-soft](www.goo.gl/izu1Bw) cheeses have a smooth, generally, "
                                                 "creamy interior with little or no rind. These cheeses are generally "

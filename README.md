@@ -5,7 +5,8 @@
 BeerEX is a rule based expert system, available as [Telegram bot](https://t.me/BeerEXpertBot), which suggests a  beer to 
 drink with a meal. This code was developed during the Knowledge Engineering course @ 
 [Department of Computer Science](http://www.uniba.it/ricerca/dipartimenti/informatica) 
-@ [University of Bari "Aldo Moro"](http://www.uniba.it/).
+@ [University of Bari "Aldo Moro"](http://www.uniba.it/) under the supervision of Prof. 
+[Floriana Esposito](http://lacam.di.uniba.it/people/FlorianaEsposito.html).
 
 [CraftBeer.com](https://www.craftbeer.com), published by the [Brewers Association](https://www.brewersassociation.org/),
 helps with the filling of the beers database and system knowledge through the information contained into the
