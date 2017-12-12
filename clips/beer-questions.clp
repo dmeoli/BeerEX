@@ -9,7 +9,8 @@
    (declare (salience ?*very-high-priority*))
    (start)
    =>
-   (assert (UI-state (display "Are you male or female? 👩🏻👨🏻")
+   (assert (UI-state (display "Are you male or female? 👨🏻👩🏻")
+                     (why "Male or female persons tend to prefer more or less intense beers.")
                      (relation-asserted which-sex)
                      (valid-answers male female))))
 
@@ -18,14 +19,16 @@
    (start)
    =>
    (assert (UI-state (display "How old are you? 🔞")
+                     (why "Younger people tend to prefer less intense beers.")
                      (relation-asserted which-age)
-                     (valid-answers 18-23 24-30 31-40 >=40))))
+                     (valid-answers 18-23 24-29 >=30))))
 
 (defrule determine-which-season
    (declare (salience ?*very-high-priority*))
    (start)
    =>
    (assert (UI-state (display "It is autumn, spring, summer or winter? 🍁🌱🏖❄️")
+                     (why "Weather conditions influence our perceptions and needs. The choice of a beer is among these.")
                      (relation-asserted which-season)
                      (valid-answers autumn spring summer winter))))
 
@@ -34,6 +37,8 @@
    (start)
    =>
    (assert (UI-state (display "Do you have to drink whith your partner or with your friends?")
+                     (why (str-cat "Couples tend to prefer less alcoholic beers, instead groups "
+                                    "of friends tend to consume higher quantities of alcohol."))
                      (relation-asserted which-company)
                      (valid-answers partner friends other))))
 
@@ -42,6 +47,9 @@
    (start)
    =>
    (assert (UI-state (display "Do you generally prefer to drink low, medium or high carbonated drinks? 🍾")
+                     (why (str-cat "Carbonation lends body or weight on the tongue and stimulates "
+                                    "the trigeminal nerves, which sense temperature, texture "
+                                    "and pain in the face."))
                      (relation-asserted preferred-carbonation)
                      (valid-answers low medium high))))
 
@@ -50,23 +58,8 @@
    (start)
    =>
    (assert (UI-state (display "Are you a regular beer drinker? 🍺")
+                     (why "Better start with more standard beers. On the other hand, you may be surprised!")
                      (relation-asserted regular-beer-drinker)
-                     (valid-answers yes no))))
-
-(defrule determine-whether-he-eats-fermented-foods
-   (declare (salience ?*very-high-priority*))
-   (start)
-   =>
-   (assert (UI-state (display "Do you generally eat fermented foods (probiotic yogurt, kefir, kombucha, etc.)? 🍶")
-                     (relation-asserted fermented-foods-eater)
-                     (valid-answers yes no))))
-
-(defrule determine-whether-he-should-drive
-   (declare (salience ?*very-high-priority*))
-   (start)
-   =>
-   (assert (UI-state (display "Do you have to drive? 🚘")
-                     (relation-asserted driver)
                      (valid-answers yes no))))
 
 ; depth questions for meal type recognition
@@ -243,7 +236,7 @@
 (defrule determine-if-shellfish-is-mild
    (which-fish shellfish)
    =>
-   (assert (UI-state (display "Is the shellfish mild (squid, cuttlefish, octopus)? 🐙🦑")
+   (assert (UI-state (display "Is the shellfish mild (squid, cuttlefish, octopus, etc.)? 🐙🦑")
                      (relation-asserted shellfish-is-mild)
                      (valid-answers yes no))))
 
@@ -271,9 +264,9 @@
 (defrule determine-which-meat
    (which-entrée-omnivorous meat)
    =>
-   (assert (UI-state (display "Is the meat rich (beef, lamb, pork, etc.), poultry, game, steak or other? 🍖🥩🦆")
+   (assert (UI-state (display "Is the meat rich (beef, lamb, pork, etc.), poultry, game or other? 🍖🥩🦆")
                      (relation-asserted which-meat)
-                     (valid-answers rich poultry game steak other))))
+                     (valid-answers rich poultry game other))))
 
 (defrule determine-which-rich
    (which-meat rich)
@@ -363,7 +356,7 @@
    =>
    (assert (UI-state (display (str-cat "Is the cheese style fresh (Mascarpone, Ricotta, Chèvre, Feta, Cream Cheese, "
                                        "Quark, Cottage, etc.), semi-soft (Mozzarella, Colby, Fontina, Havarti, Monterey "
-                                       "Jack, etc.), firm/hard (Gouda, Cheddar, Swiss, Parmesan), blue (Roquefort, "
+                                       "Jack, etc.), firm/hard (Gouda, Cheddar, Swiss, Parmesan, etc.), blue (Roquefort, "
                                        "Gorgonzola, Danish, etc.), natural rind (Brie, Camembert, Triple Crème, "
                                        "Mimolette, Stilton, Lancashire, Tomme de Savoie, etc.) or washed rind (Epoisses, "
                                        "Livarot, Taleggio, etc.)? 🧀"))
@@ -519,10 +512,9 @@
 (defrule determine-which-dessert-for-omnivorous-or-vegetarian
    (main-meal-for-omnivorous-or-vegetarian dessert)
    =>
-   (assert (UI-state (display (str-cat "Is the dessert creamy (cheesecake, ice cream, creme brûlée, mousse cake), "
-                                       "chocolate or other? 🍫🍨🍮"))
+   (assert (UI-state (display "Is the dessert creamy 🍮, fruit 🥧, chocolate 🍪🍫 or other?")
                      (relation-asserted which-dessert)
-                     (valid-answers creamy chocolate other))))
+                     (valid-answers creamy fruit chocolate other))))
 
 (defrule determine-if-creamy-dessert-is-fruit
    (which-dessert creamy)
@@ -531,7 +523,7 @@
                      (relation-asserted creamy-dessert-with-fruit)
                      (valid-answers yes no))))
 
-(defrule determine-which-chocolate
+(defrule determine-which-chocolate-dessert
    (which-dessert chocolate)
    =>
    (assert (UI-state (display (str-cat "Is the chocolate white, milk (35% cacao ca.), semisweet (55% cacao ca.), "

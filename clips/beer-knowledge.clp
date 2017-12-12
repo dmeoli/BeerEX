@@ -29,6 +29,30 @@
    (assert (attribute (name best-flavor) (value malty-sweet) (certainty 5)))
    (assert (attribute (name best-flavor) (value fruity-spicy) (certainty 5))))
 
+(defrule determine-best-beer-attributes-if-which-age-is-18-23
+   (declare (salience ?*medium-low-priority*))
+   (which-age 18-23)
+   =>
+   (assert (attribute (name best-alcohol) (value mild) (certainty 5)))
+   (assert (attribute (name best-flavor) (value crisp-clean) (certainty 5))))
+
+(defrule determine-best-beer-attributes-if-which-age-is-24-29
+   (declare (salience ?*medium-low-priority*))
+   (which-age 24-29)
+   =>
+   (assert (attribute (name best-alcohol) (value noticeable) (certainty 3)))
+   (assert (attribute (name best-alcohol) (value mild) (certainty 3))))
+
+(defrule determine-best-beer-attributes-if-which-age-is-more-or-equal-than-30
+   (declare (salience ?*medium-low-priority*))
+   (which-age >=30)
+   =>
+   (assert (attribute (name best-flavor) (value dark-roasty) (certainty 3)))
+   (assert (attribute (name best-flavor) (value hoppy-bitter) (certainty 3)))
+   (assert (attribute (name best-flavor) (value sour-tart-funky) (certainty 3)))
+   (assert (attribute (name best-alcohol) (value harsh) (certainty 4)))
+   (assert (attribute (name best-alcohol) (value noticeable) (certainty 5))))
+
 (defrule determine-best-beer-attributes-if-which-season-is-autumn
    (declare (salience ?*medium-low-priority*))
    (which-season autumn)
@@ -69,6 +93,18 @@
    (assert (attribute (name best-flavor) (value malty-sweet) (certainty 5)))
    (assert (attribute (name best-flavor) (value dark-roasty) (certainty 5))))
 
+(defrule determine-best-beer-attributes-if-which-company-is-partner
+   (declare (salience ?*medium-low-priority*))
+   (which-company partner)
+   =>
+   (assert (attribute (name best-alcohol mild) (value mild) (certainty 3))))
+
+(defrule determine-best-beer-attributes-if-which-company-is-friends
+   (declare (salience ?*medium-low-priority*))
+   (which-company friends)
+   =>
+   (assert (attribute (name best-alcohol noticeable) (value mild) (certainty 3))))
+
 (defrule determine-best-beer-attributes-if-preferred-carbonation-is-any
    (declare (salience ?*medium-low-priority*))
    (preferred-carbonation ?carbonation)
@@ -88,19 +124,6 @@
    (assert (attribute (name best-name) (value "Irish-Style Red") (certainty 10)))
    (assert (attribute (name best-name) (value "American Brown Ale") (certainty 10)))
    (assert (attribute (name best-name) (value "English-Style Brown Porter") (certainty 10))))
-
-(defrule determine-best-beer-attributes-whether-he-eats-fermented-foods
-   (declare (salience ?*medium-low-priority*))
-   (fermented-foods-eater yes)
-   =>
-   (assert (attribute (name best-fermentation) (value wild) (certainty 20))))
-
-(defrule determine-best-beer-attributes-whether-he-is-a-regular-beer-drinker
-   (declare (salience ?*medium-low-priority*))
-   (driver yes)
-   =>
-   (assert (attribute (name best-alcohol) (value not-detectable) (certainty 20)))
-   (assert (attribute (name best-alcohol) (value mild) (certainty 10))))
 
 ; determine best beer attributes for meal type recognized
 
@@ -547,11 +570,10 @@
    (assert (attribute (name best-flavor) (value fruity-spicy) (certainty 50)))
    (assert (attribute (name best-name) (value "German-Style Doppelbock") (certainty 90))))
 
-(defrule determine-best-beer-attributes-if-which-rich-is-roasted-pork-or-which-meat-is-steak
+(defrule determine-best-beer-attributes-if-which-rich-is-roasted-pork
    (declare (salience ?*medium-low-priority*))
-   (or (and (meat-cooking-method roasted)
-            (which-rich pork))
-       (which-meat steak))
+   (meat-cooking-method roasted)
+   (which-rich pork)
    =>
    (assert (attribute (name best-name) (value "English-Style Brown Ale") (certainty 90))))
 
@@ -676,13 +698,6 @@
    (which-game-birds duck)
    =>
    (assert (attribute (name best-name) (value "Belgian-Style Quadrupel") (certainty 90))))
-
-(defrule determine-best-beer-attributes-if-which-meat-is-grilled-steak
-   (declare (salience ?*medium-low-priority*))
-   (meat-cooking-method grilled)
-   (which-meat steak)
-   =>
-   (assert (attribute (name best-name) (value "European-Style Export") (certainty 90))))
 
 (defrule determine-best-beer-attributes-if-which-entree-is-vegetables
    (declare (salience ?*medium-low-priority*))

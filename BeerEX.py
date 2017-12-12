@@ -98,14 +98,14 @@ def handleEvent(bot, update):
         clips.Run()
         nextUIState(bot, update)
     elif response == emojize(':sos: Help', use_aliases=True):
-        update.message.reply_text(text=current_ui[0].Slots['help'],
-                                  parse_mode=ParseMode.MARKDOWN,
-                                  disable_web_page_preview=True)
+        help = current_ui[0].Slots['help']
+        update.message.reply_text(text=help)
+
         nextUIState(bot, update)
     elif response == emojize(':question: Why', use_aliases=True):
-        update.message.reply_text(current_ui[0].Slots['why'],
-                                  parse_mode=ParseMode.MARKDOWN,
-                                  disable_web_page_preview=True)
+        why = current_ui[0].Slots['why']
+        update.message.reply_text(text=why)
+
         nextUIState(bot, update)
     elif response == emojize(':back: Previous', use_aliases=True):
         clips.Assert('(prev %s)' % current_id)
