@@ -37,21 +37,10 @@
    (start)
    =>
    (assert (UI-state (display "Do you have to drink whith your partner or with your friends?")
-                     (why (str-cat "Couples tend to prefer less alcoholic beers, instead groups "
-                                    "of friends tend to consume higher quantities of alcohol."))
+                     (why (str-cat "Couples tend to prefer less alcoholic beers, instead groups of friends tend to "
+                                   "consume higher quantities of alcohol."))
                      (relation-asserted which-company)
                      (valid-answers partner friends other))))
-
-(defrule determine-preferred-carbonation
-   (declare (salience ?*very-high-priority*))
-   (start)
-   =>
-   (assert (UI-state (display "Do you generally prefer to drink low, medium or high carbonated drinks? 🍾")
-                     (why (str-cat "Carbonation lends body or weight on the tongue and stimulates "
-                                    "the trigeminal nerves, which sense temperature, texture "
-                                    "and pain in the face."))
-                     (relation-asserted preferred-carbonation)
-                     (valid-answers low medium high))))
 
 (defrule determine-whether-he-is-a-regular-beer-drinker
    (declare (salience ?*very-high-priority*))
@@ -60,6 +49,14 @@
    (assert (UI-state (display "Are you a regular beer drinker? 🍺")
                      (why "Better start with more standard beers. On the other hand, you may be surprised!")
                      (relation-asserted regular-beer-drinker)
+                     (valid-answers yes no))))
+
+(defrule determine-whether-he-is-going-to-smoke
+   (declare (salience ?*very-high-priority*))
+   (start)
+   =>
+   (assert (UI-state (display "Are you going to smoke while you drink? 🚬")
+                     (relation-asserted smoker)
                      (valid-answers yes no))))
 
 ; depth questions for meal type recognition

@@ -32,7 +32,7 @@ def start(bot, update):
 
     clips.Reset()
     clips.Run()
-    update.message.reply_text(text='Hello {}! 🤖'.format(update.message.from_user.first_name),
+    update.message.reply_text(text='Hello %s! 🤖' % update.message.from_user.first_name,
                               reply_markup=ReplyKeyboardRemove())
     update.message.reply_text(clips.Eval('(find-fact ((?u UI-state)) (eq ?u:state initial))')[0].Slots['display'])
 
@@ -84,7 +84,7 @@ def nextUIState(bot, update):
 
 def handleEvent(bot, update):
     """
-    Triggers the next state in working memory based on which button was pressed.
+    Triggers the next state in working memory based on which button is pressed.
     """
 
     current_id = clips.Eval('(find-fact ((?s state-list)) TRUE)')[0].Slots['current']
@@ -129,9 +129,9 @@ def handleEvent(bot, update):
                                   reply_markup=ReplyKeyboardRemove())
 
 
-def button(bot, update):
+def imageButton(bot, update):
     """
-    Sends help images based on which button was pressed.
+    Sends help images based on which button is pressed.
     """
 
     query = update.callback_query
@@ -177,13 +177,12 @@ def main():
     # Get the dispatcher to register handlers
     dispatcher = updater.dispatcher
 
+    # Handler registers
     dispatcher.add_handler(CommandHandler('start', start))
     dispatcher.add_handler(CommandHandler('new', new))
-
     dispatcher.add_handler(MessageHandler(Filters.text, handleEvent))
     dispatcher.add_handler(MessageHandler(Filters.command, unknown))
-
-    dispatcher.add_handler(CallbackQueryHandler(button))
+    dispatcher.add_handler(CallbackQueryHandler(imageButton))
 
     # Log all errors
     dispatcher.add_error_handler(error)
@@ -193,11 +192,10 @@ def main():
                           port=int(os.environ.get('PORT', '5000')),
                           url_path=token)
     updater.bot.set_webhook('https://beerex-telegram-bot.herokuapp.com/' + token)
-    # updater.start_polling()
+    updater.start_polling()
 
-    # Run the bot until you press Ctrl-C or the process receives SIGINT,
-    # SIGTERM or SIGABRT. This should be used most of the time, since
-    # start_polling() is non-blocking and will stop the bot gracefully.
+    # Run the bot until you press Ctrl-C or the process receives SIGINT, SIGTERM or SIGABRT. This should be used most
+    # of the time, since start_polling() is non-blocking and will stop the bot gracefully.
     updater.idle()
 
 

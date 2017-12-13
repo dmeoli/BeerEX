@@ -97,33 +97,28 @@
    (declare (salience ?*medium-low-priority*))
    (which-company partner)
    =>
-   (assert (attribute (name best-alcohol mild) (value mild) (certainty 3))))
+   (assert (attribute (name best-alcohol) (value mild) (certainty 3))))
 
 (defrule determine-best-beer-attributes-if-which-company-is-friends
    (declare (salience ?*medium-low-priority*))
    (which-company friends)
    =>
-   (assert (attribute (name best-alcohol noticeable) (value mild) (certainty 3))))
+   (assert (attribute (name best-alcohol) (value noticeable) (certainty 3))))
 
-(defrule determine-best-beer-attributes-if-preferred-carbonation-is-any
-   (declare (salience ?*medium-low-priority*))
-   (preferred-carbonation ?carbonation)
-   =>
-   (assert (attribute (name best-carbonation) (value ?carbonation) (certainty 20))))
-
-(defrule determine-best-beer-attributes-if-regular-beer-drinker-is-no
+(defrule determine-best-beer-attributes-if-he-is-not-a-regular-beer-drinker
    (declare (salience ?*medium-low-priority*))
    (regular-beer-drinker no)
    =>
-   (assert (attribute (name best-name) (value "American Cream Ale") (certainty 20)))
-   (assert (attribute (name best-name) (value "Blonde Ale") (certainty 20)))
-   (assert (attribute (name best-name) (value "German-Style Helles") (certainty 20)))
-   (assert (attribute (name best-name) (value "German-Style Kölsch") (certainty 20)))
-   (assert (attribute (name best-name) (value "Belgian-Style Witbier") (certainty 10)))
-   (assert (attribute (name best-name) (value "American Amber Ale") (certainty 10)))
-   (assert (attribute (name best-name) (value "Irish-Style Red") (certainty 10)))
-   (assert (attribute (name best-name) (value "American Brown Ale") (certainty 10)))
-   (assert (attribute (name best-name) (value "English-Style Brown Porter") (certainty 10))))
+   (assert (attribute (name best-flavor) (value crisp-clean) (certainty 8))))
+
+(defrule determine-best-beer-attributes-if-he-is-going-to-smoke
+   (declare (salience ?*medium-low-priority*))
+   (smoker yes)
+   =>
+   (assert (attribute (name best-flavor) (value crisp-clean) (certainty 8)))
+   (assert (attribute (name best-color) (value pale) (certainty 7)))
+   (assert (attribute (name best-alcohol) (value noticeable) (certainty 5)))
+   (assert (attribute (name best-carbonation) (value medium) (certainty 5))))
 
 ; determine best beer attributes for meal type recognized
 
