@@ -192,7 +192,7 @@ def main():
                           port=int(os.environ.get('PORT', '5000')),
                           url_path=token)
     updater.bot.set_webhook('https://beerex-telegram-bot.herokuapp.com/' + token)
-    updater.start_polling()
+    # updater.start_polling()
 
     # Run the bot until you press Ctrl-C or the process receives SIGINT, SIGTERM or SIGABRT. This should be used most
     # of the time, since start_polling() is non-blocking and will stop the bot gracefully.
