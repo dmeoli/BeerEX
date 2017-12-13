@@ -364,24 +364,24 @@
                                        (str-cat "🧀 _Fresh_ cheeses have not been aged, or are very slightly cured. "
                                                 "These cheeses have a high moisture content and are usually mild and "
                                                 "have a very creamy taste and soft texture.")
-                                       (str-cat "🧀 [Semi-soft](www.goo.gl/izu1Bw) cheeses have a smooth, generally, "
+                                       (str-cat "🧀 _Semi-soft_(www.goo.gl/izu1Bw) cheeses have a smooth, generally, "
                                                 "creamy interior with little or no rind. These cheeses are generally "
                                                 "high in moisture content and range from very mild in flavor to very "
                                                 "pungent.")
-                                       (str-cat "🧀 [Firm/hard](www.goo.gl/yrfoJK) cheeses have a taste profiles range "
+                                       (str-cat "🧀 _Firm/hard_(www.goo.gl/yrfoJK) cheeses have a taste profiles range "
                                                 "from very mild to sharp and pungent. They generally have a texture "
                                                 "profile that ranges from elastic, at room temperature, to the hard "
                                                 "cheeses that can be grated.")
-                                       (str-cat "🧀 [Blue](www.goo.gl/9KkNww) cheeses have a distinctive blue/green "
+                                       (str-cat "🧀 _Blue_(www.goo.gl/9KkNww) cheeses have a distinctive blue/green "
                                                 "veining, created when the penicillium roqueforti mold, added during the "
                                                 "make process, is exposed to air. This mold provides a distinct flavor "
                                                 "to the cheese, which ranges from fairly mild to assertive and pungent.")
-                                       (str-cat "🧀 [Natural rind](www.goo.gl/ys8pkz) cheeses have rinds that are "
+                                       (str-cat "🧀 _Natural rind_(www.goo.gl/ys8pkz) cheeses have rinds that are "
                                                 "self-formed during the aging process. Generally, no molds or microflora "
                                                 "are added, nor is washing used to create the exterior rinds, and those "
                                                 "that do exhibit molds and microflora in their rinds get them naturally "
                                                 "from the environment.")
-                                       (str-cat "🧀 [Washed rind](www.goo.gl/Kh3BwD) cheeses are surface-ripened by "
+                                       (str-cat "🧀 _Washed rind_(www.goo.gl/Kh3BwD) cheeses are surface-ripened by "
                                                 "washing the cheese throughout the ripening/aging process with brine, "
                                                 "beer, wine, brandy, or a mixture of ingredients, which encourages the "
                                                 "growth of bacteria. The exterior rind of washed rind cheeses may vary "
@@ -389,21 +389,20 @@
                                                 "quite pungent, yet the interior of these cheeses is most often "
                                                 "semi-soft and, sometimes, very creamy.")))
                      (why (format nil "%s %n%s %n%s %n%s %n%s %n%s"
-                                      (str-cat "🧀 Fresh cheeses are light cheeses which pair excellently with the "
+                                      (str-cat "🧀 _Fresh_ cheeses are light cheeses which pair excellently with the "
                                                "softer flavors of Wheat and Lambic beers.")
-                                      (str-cat "🧀 [Semi-soft](www.goo.gl/izu1Bw) cheeses can be paired with many "
-                                               "different craft beers, such as German Kölsch or Bock and Pale Ale beers.")
-                                      (str-cat "🧀 [Firm/hard](www.goo.gl/yrfoJK) cheeses are easily paired with an "
-                                               "equally broad range of craft beer styles, such as Pilsner, Bock, Brown "
-                                               "Ale and Imperial Stout.")
-                                      (str-cat "🧀 [Blue](www.goo.gl/9KkNww) cheeses are stronger-flavored cheeses which "
-                                               "are most successfully balanced with stonger-flavored bolder beers like "
-                                               "IPAs or Imperial IPAs.")
-                                      (str-cat "🧀 [Natural rind](www.goo.gl/ys8pkz) cheeses pair well with Golden, "
-                                               "Blonde and traditional British-style ales.")
-                                      (str-cat "🧀 [Washed rind](www.goo.gl/Kh3BwD) cheeses, while potentially pungent, "
-                                               "are often creamy and can be paired with Belgian-styles ales, like "
-                                               "Triples and Golden Strong ales with these varieties.")))
+                                      (str-cat "🧀 _Semi-soft_ cheeses can be paired with many different craft beers, "
+                                               "such as German Kölsch or Bock and Pale Ale beers.")
+                                      (str-cat "🧀 _Firm/hard_ cheeses are easily paired with an equally broad range of "
+                                               "craft beer styles, such as Pilsner, Bock, Brown Ale and Imperial Stout.")
+                                      (str-cat "🧀 _Blue_ cheeses are stronger-flavored cheeses which are most "
+                                               "successfully balanced with stonger-flavored bolder beers like IPAs or "
+                                               "Imperial IPAs.")
+                                      (str-cat "🧀 _Natural rind_ cheeses pair well with Golden, Blonde and traditional "
+                                               "British-style ales.")
+                                      (str-cat "🧀 _Washed rind_ cheeses, while potentially pungent, are often creamy "
+                                               "and can be paired with Belgian-styles ales, like Triples and Golden "
+                                               "Strong ales with these varieties.")))
                      (relation-asserted which-cheese-style)
                      (valid-answers fresh semi-soft firm/hard blue "natural rind" "washed rind" "don't know"))))
 

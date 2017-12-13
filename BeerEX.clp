@@ -13,7 +13,7 @@
            (member$ restart ?allowed-values))
     then (printout t crlf))
    (while (not (member ?answer ?allowed-values))
-      (printout t " " ?display " " ?allowed-values " ")
+      (printout t ?display " " ?allowed-values " ")
       (bind ?answer (readline))
       (if (member$ restart ?allowed-values)
        then (printout t crlf))

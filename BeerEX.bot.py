@@ -8,12 +8,14 @@ This expert system suggests a beer to drink with a meal.
 Author: Donato Meoli
 """
 
-from telegram import ReplyKeyboardRemove, KeyboardButton, ReplyKeyboardMarkup, ParseMode
-from telegram.ext import MessageHandler, Filters, Updater, CommandHandler
+from telegram import ReplyKeyboardRemove, KeyboardButton, ReplyKeyboardMarkup, \
+                     InlineKeyboardMarkup, InlineKeyboardButton, ParseMode
+from telegram.ext import MessageHandler, CommandHandler, CallbackQueryHandler, Filters, Updater
 from emoji import emojize
 import logging
 import clips
 import sys
+import re
 import os
 
 # Enable logging
@@ -61,13 +63,12 @@ def nextUIState(bot, update):
         keyboard = [[KeyboardButton(text=emojize(':back: Previous', use_aliases=True))],
                     [KeyboardButton(text=emojize(':repeat: Restart', use_aliases=True))],
                     [KeyboardButton(text=emojize(':x: Cancel', use_aliases=True))]]
-        reply_markup = ReplyKeyboardMarkup(keyboard)
         update.message.reply_text(text=current_ui[0].Slots['display'],
                                   parse_mode=ParseMode.MARKDOWN,
                                   disable_web_page_preview=True,
-                                  reply_markup=reply_markup)
+                                  reply_markup=ReplyKeyboardMarkup(keyboard))
     else:
-        keyboard = []
+        keyboard = list()
         for answer in current_ui[0].Slots['valid-answers']:
             keyboard.append([KeyboardButton(text=answer)])
         if current_ui[0].Slots['help']:
@@ -77,9 +78,8 @@ def nextUIState(bot, update):
         if len(clips.Eval('(find-fact ((?s state-list)) TRUE)')[0].Slots['sequence']) > 2:
             keyboard.append([KeyboardButton(text=emojize(':back: Previous', use_aliases=True))])
         keyboard.append([KeyboardButton(text=emojize(':x: Cancel', use_aliases=True))])
-        reply_markup = ReplyKeyboardMarkup(keyboard)
         update.message.reply_text(text=current_ui[0].Slots['display'],
-                                  reply_markup=reply_markup)
+                                  reply_markup=ReplyKeyboardMarkup(keyboard))
 
 
 def handleEvent(bot, update):
@@ -99,13 +99,23 @@ def handleEvent(bot, update):
         nextUIState(bot, update)
     elif response == emojize(':sos: Help', use_aliases=True):
         help = current_ui[0].Slots['help']
-        update.message.reply_text(text=help)
-
+        if not re.findall('_.+?_\(.*?\)', help):
+            update.message.reply_text(text=help,
+                                      parse_mode=ParseMode.MARKDOWN)
+        else:
+            keyboard = list()
+            for pattern in re.findall('_.+?_\(.*?\)', help):
+                keyboard.append([InlineKeyboardButton(text=re.findall('_(.+?)_', pattern)[0],
+                                                      callback_data=re.findall('\((.*?)\)', pattern)[0])])
+            for link in re.findall('\(.*?\)', help):
+                help = help.replace(link, '')
+            update.message.reply_text(text=help,
+                                      parse_mode=ParseMode.MARKDOWN,
+                                      reply_markup=InlineKeyboardMarkup(keyboard))
         nextUIState(bot, update)
     elif response == emojize(':question: Why', use_aliases=True):
-        why = current_ui[0].Slots['why']
-        update.message.reply_text(text=why)
-
+        update.message.reply_text(text=current_ui[0].Slots['why'],
+                                  parse_mode=ParseMode.MARKDOWN)
         nextUIState(bot, update)
     elif response == emojize(':back: Previous', use_aliases=True):
         clips.Assert('(prev %s)' % current_id)
@@ -117,6 +127,16 @@ def handleEvent(bot, update):
         clips.Reset()
         update.message.reply_text(text='Bye! I hope we can talk again some day. 👋🏻',
                                   reply_markup=ReplyKeyboardRemove())
+
+
+def button(bot, update):
+    """
+    Sends help images based on which button was pressed.
+    """
+
+    query = update.callback_query
+    bot.send_photo(chat_id=query.message.chat_id,
+                   photo=query.data)
 
 
 def unknown(bot, update):
@@ -137,7 +157,7 @@ def error(bot, update, error):
 
 
 def main():
-    """"
+    """
     Run bot.
     """
 
@@ -154,18 +174,16 @@ def main():
     # Create the updater and pass it the bot's token
     updater = Updater(token)
 
-    # Get the dispatcher to register handlers...
+    # Get the dispatcher to register handlers
     dispatcher = updater.dispatcher
 
-    # ... on different commands - answer in Telegram
     dispatcher.add_handler(CommandHandler('start', start))
     dispatcher.add_handler(CommandHandler('new', new))
 
-    # ... on noncommand i.e. message - echo the message on Telegram
     dispatcher.add_handler(MessageHandler(Filters.text, handleEvent))
-
-    # ... on unrecognized commands in Telegram
     dispatcher.add_handler(MessageHandler(Filters.command, unknown))
+
+    dispatcher.add_handler(CallbackQueryHandler(button))
 
     # Log all errors
     dispatcher.add_error_handler(error)
