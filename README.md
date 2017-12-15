@@ -2,7 +2,7 @@
 
 *"Beer is proof that God loves us and want us to be happy."* (Benjamin Franklin)
 
-BeerEX is a rule based expert system, available as [Telegram bot](https://t.me/BeerEXpertBot), which suggests a  beer to 
+BeerEX is a rule-based expert system, available as [Telegram bot](https://t.me/BeerEXpertBot), which suggests a  beer to 
 drink with a meal. This code was developed during the Knowledge Engineering course @ 
 [Department of Computer Science](http://www.uniba.it/ricerca/dipartimenti/informatica) 
 @ [University of Bari "Aldo Moro"](http://www.uniba.it/) under the supervision of Dr. 
