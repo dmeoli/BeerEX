@@ -1,4 +1,4 @@
-# BeerEX :robot::beer:
+# BeerEX
 
 *"Beer is proof that God loves us and want us to be happy."* (Benjamin Franklin)
 
