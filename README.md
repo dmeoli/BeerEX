@@ -1,4 +1,4 @@
-# BeerEX :robot::beer: [![Build Status](https://api.travis-ci.org/DonatoMeoli/BeerEX.svg?branch=master)](https://travis-ci.org/DonatoMeoli/BeerEX)
+# BeerEX :robot::beer:
 
 *"Beer is proof that God loves us and want us to be happy."* (Benjamin Franklin)
 
