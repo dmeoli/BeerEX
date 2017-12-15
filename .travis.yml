@@ -1,9 +1,0 @@
-language: python
-
-python: "2.7"
-
-install:
-    - pip install pyclips
-    - pip install python-telegram-bot
-
-script: nosetests
