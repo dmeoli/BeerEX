@@ -133,12 +133,15 @@ def handleEvent(bot, update):
           response == emojize(':star2::star2::star2::star2::star2:', use_aliases=True)):
         ratings = pickle.load(open('ratings.p', 'r'))
         if ratings.has_key(update.message.from_user.username):
+            ratings[update.message.from_user.username] = response
+            ratings[response] += 1
             update.message.reply_text(text='Thanks! I have updated your rating.',
                                       reply_markup=ReplyKeyboardRemove())
         else:
+            ratings[update.message.from_user.username] = response
+            ratings[response] += 1
             update.message.reply_text(text='Thanks! I added your rating.',
                                       reply_markup=ReplyKeyboardRemove())
-        ratings[update.message.from_user.username] = response
         pickle.dump(ratings, open('ratings.p', 'w'))
 
 

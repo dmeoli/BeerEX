@@ -50,6 +50,7 @@
    (start)
    =>
    (assert (UI-state (display "Are you going to smoke while you drink? 🚬")
+   					 (why "Beer may alter the taste of tobacco. Also, stronger beers pair well with tobacco flavor.")
                      (relation-asserted smoker)
                      (valid-answers yes no))))
 
