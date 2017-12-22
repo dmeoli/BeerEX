@@ -113,11 +113,9 @@ def handleEvent(bot, update):
             update.message.reply_text(text=help,
                                       parse_mode=ParseMode.MARKDOWN,
                                       reply_markup=InlineKeyboardMarkup(keyboard))
-        nextUIState(bot, update)
     elif response == emojize(':question: Why', use_aliases=True):
         update.message.reply_text(text=current_ui[0].Slots['why'],
                                   parse_mode=ParseMode.MARKDOWN)
-        nextUIState(bot, update)
     elif response == emojize(':back: Previous', use_aliases=True):
         clips.Assert('(prev %s)' % current_id)
         clips.Run()
