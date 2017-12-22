@@ -55,36 +55,20 @@
 
 ; depth questions for meal type recognition
 
-(defrule determine-food-style
+(defrule determine-main-meal
    (smoker ?smoker)
    (which-sex ?sex)
    (which-age ?age)
    (which-season ?season)
    (which-company ?company)
-   (regular-beer-drinker ?regular)
-   =>
-   (assert (UI-state (display "Are you vegetarian, vegan or omnivorous?")
-                     (relation-asserted food-style)
-                     (valid-answers vegetarian vegan omnivorous))))
-
-(defrule determine-main-meal-for-omnivorous-or-vegetarian
-   (or (food-style omnivorous)
-       (food-style vegetarian))
+   (regular-beer-drinker ?regular-beer-drinker)
    =>
    (assert (UI-state (display "Is the main meal pizza, entrée, cheese or dessert?")
-                     (relation-asserted main-meal-for-omnivorous-or-vegetarian)
+                     (relation-asserted main-meal)
                      (valid-answers pizza entrée cheese dessert other))))
 
-(defrule determine-main-meal-for-vegan
-   (food-style vegan)
-   =>
-   (assert (UI-state (display "Is the main meal pizza, entrée or unsweetened/bitter chocolate?")
-                     (relation-asserted main-meal-for-vegan)
-                     (valid-answers pizza entrée "unsweetened/bitter chocolate" other))))
-
-(defrule determine-pizza-for-omnivorous
-   (food-style omnivorous)
-   (main-meal-for-omnivorous-or-vegetarian pizza)
+(defrule determine-pizza-topping
+   (main-meal pizza)
    =>
    (assert (UI-state (display "Is the pizza topping classic, meat, vegetables, cheese or other? 🍕🥓🍆🧀")
                      (why (format nil "%s %n%s %n%s %n%s"
@@ -100,11 +84,11 @@
                                       (str-cat "🍕🧀 _Cheese_ topping pizzas pair well with fruity and spicy beers, "
                                                "thanks to their high carbonation which works overtime to cleanse the "
                                                "palate from a strong flavor.")))
-                     (relation-asserted pizza-topping-for-omnivorous)
+                     (relation-asserted pizza-topping)
                      (valid-answers classic meat vegetables cheese other))))
 
 (defrule determine-if-meat-topping-is-spicy
-   (pizza-topping-for-omnivorous meat)
+   (pizza-topping meat)
    =>
    (assert (UI-state (display "Is the meat spicy? 🌶")
                      (why (str-cat "Malty flavors highlight the roasted qualities of the meat, while sweetness works to "
@@ -112,51 +96,16 @@
                      (relation-asserted meat-topping-is-spicy)
                      (valid-answers yes no))))
 
-(defrule determine-pizza-for-vegetarian
-   (food-style vegetarian)
-   (main-meal-for-omnivorous-or-vegetarian pizza)
-   =>
-   (assert (UI-state (display "Is the pizza topping classic, vegetables, cheese or other? 🍕🍆🧀")
-                     (why (format nil "%s %n%s %n%s"
-                                      (str-cat "🍕 _Classic_ topping pizzas pair well with crisp and clean beers. "
-                                               "Complementary grain and cheese flavors balance hop character while "
-                                               "remaining light on the palate.")
-                                      (str-cat "🍕🍆 _Vegetables_ topping pizzas pair well with sour beers which "
-                                               "increases the perception of savoriness or with beers which contrasts "
-                                               "the char of the oven-roasted vegetables.")
-                                      (str-cat "🍕🧀 _Cheese_ topping pizzas pair well with fruity and spicy beers, "
-                                               "thanks to their high carbonation which works overtime to cleanse the "
-                                               "palate from a strong flavor.")))
-                     (relation-asserted pizza-topping-for-vegetarian)
-                     (valid-answers classic vegetables cheese other))))
-
-(defrule determine-pizza-for-vegan
-   (main-meal-for-vegan pizza)
-   =>
-   (assert (UI-state (display "Is the pizza topping classic, vegetables or other? 🍕🍆")
-                     (why (format nil "%s %n%s"
-                                      (str-cat "🍕 _Classic_ topping pizzas pair well with crisp and clean beers. "
-                                               "Complementary grain and cheese flavors balance hop character while "
-                                               "remaining light on the palate.")
-                                      (str-cat "🍕🍆 _Vegetables_ topping pizzas pair well with sour beers which "
-                                               "increases the perception of savoriness or with beers which contrasts "
-                                               "the char of the oven-roasted vegetables.")))
-                     (relation-asserted pizza-topping-for-vegan)
-                     (valid-answers classic vegetables other))))
-
 (defrule determine-if-vegetables-topping-are-roasted
-   (or (pizza-topping-for-omnivorous vegetables)
-       (pizza-topping-for-vegetarian vegetables)
-       (pizza-topping-for-vegan vegetables))
+   (pizza-topping vegetables)
    =>
    (assert (UI-state (display "Are the vegetables roasted?")
                      (why "The roasted character of the beer complements the char on oven-roasted vegetables.")
                      (relation-asserted vegetables-topping-are-roasted)
                      (valid-answers yes no))))
 
-(defrule determine-which-entree-omnivorous
-   (food-style omnivorous)
-   (main-meal-for-omnivorous-or-vegetarian entrée)
+(defrule determine-which-entree
+   (main-meal entrée)
    =>
    (assert (UI-state (display (str-cat "Is the main component of the entrée grain (farro, arborio, wild rice, polenta, "
                                        "etc.), legumes (lentils, fava, chickpea, green beans, etc.), fish, meat, "
@@ -169,60 +118,25 @@
                                       "🥩🍖 _Meat_ pairs well with Scottish-Style Ales."
                                       "🍆🥦 _Vegetables_ pair well with clean Dark Lagers and American Brown Ale."
                                       "🥜 With _fats_ strong flavors, beer balances and allows for a complex finish."))
-                     (relation-asserted which-entrée-omnivorous)
+                     (relation-asserted which-entrée)
                      (valid-answers grain legumes fish meat vegetables fats other))))
 
-(defrule determine-which-entree-vegetarian
-   (food-style vegetarian)
-   (main-meal-for-omnivorous-or-vegetarian entrée)
-   =>
-   (assert (UI-state (display (str-cat "Is the main component of the entrée grain (farro, arborio, wild rice, polenta, "
-                                       "etc.), legumes (lentils, fava, chickpea, green beans, etc.), vegetables, "
-                                       "vegetables fats (avocados, olive oil, peanut butter, nuts and seeds, etc.) or "
-                                       "other?"))
-                     (why (format nil "%s %n%s %n%s %n%s"
-                                      "🌾 Complementary _grain_ flavors balance hops while remaining light on the palate."
-                                      "🌱 _Legumes_ add richness to the beer while balancing salt and acidity."
-                                      "🍆🥦 _Vegetables_ pair well with clean Dark Lagers and American Brown Ale."
-                                      (str-cat "🥑 _Vegetables fats_ pair well with high carbonated beers. With fats "
-                                               "strong flavors, beer balances and allows for a complex finish.")))
-                     (relation-asserted which-entrée-vegetarian)
-                     (valid-answers grain legumes vegetables "vegetables fats" other))))
-
-(defrule determine-which-entree-vegan
-   (main-meal-for-vegan entrée)
-   =>
-   (assert (UI-state (display (str-cat "Is the main component of the entrée grain (farro, arborio, wild rice, polenta, "
-                                       "etc.), legumes (lentils, fava, chickpea, green beans, etc.), vegetables, "
-                                       "vegetables fats (avocados, olive oil, peanut butter, nuts and seeds, etc.), or "
-                                       "other?"))
-                     (why (format nil "%s %n%s %n%s %n%s"
-                                      "🌾 Complementary _grain_ flavors balance hops while remaining light on the palate."
-                                      "🌱 _Legumes_ add richness to the beer while balancing salt and acidity."
-                                      "🍆🥦 _Vegetables_ pair well with clean Dark Lagers and American Brown Ale."
-                                      (str-cat "🥑 _Vegetables fats_ pair well with high carbonated beers. With fats "
-                                               "strong flavors, beer balances and allows for a complex finish.")))
-                     (relation-asserted which-entrée-vegan)
-                     (valid-answers grain legumes vegetables "vegetables fats" other))))
-
 (defrule determine-which-grain
-   (or (which-entrée-omnivorous grain)
-       (which-entrée-vegetarian grain)
-       (which-entrée-vegan grain))
+   (which-entrée grain)
    =>
    (assert (UI-state (display "Are the grain chips, spaghetti, bruschetta, grits or other?")
                      (relation-asserted which-grain)
                      (valid-answers chips spaghetti bruschetta grits other))))
 
 (defrule determine-which-fish-cooking-method
-   (which-entrée-omnivorous fish)
+   (which-entrée fish)
    =>
    (assert (UI-state (display "Is the fish cooking method grilled or other?")
                      (relation-asserted fish-cooking-method)
                      (valid-answers grilled other))))
 
 (defrule determine-which-fish
-   (which-entrée-omnivorous fish)
+   (which-entrée fish)
    =>
    (assert (UI-state (display (str-cat "Is the fish shellfish (clams, scallops, lobster, crab, etc.), bluefish (salmon, "
                                        "trout, tuna, etc.) or other? 🐟🦐🦀🦑"))
@@ -251,14 +165,14 @@
                      (valid-answers salmon other))))
 
 (defrule determine-which-meat-cooking-method
-   (which-entrée-omnivorous meat)
+   (which-entrée meat)
    =>
    (assert (UI-state (display "Is the meat cooking method barbecue, braised, grilled, roasted or other?")
                      (relation-asserted meat-cooking-method)
                      (valid-answers barbecue braised grilled roasted other))))
 
 (defrule determine-which-meat
-   (which-entrée-omnivorous meat)
+   (which-entrée meat)
    =>
    (assert (UI-state (display "Is the meat rich (beef, lamb, pork, etc.), poultry, game or other? 🍖🥩🦆")
                      (relation-asserted which-meat)
@@ -309,46 +223,42 @@
 (defrule determine-which-game-birds
    (which-game birds)
    =>
-   (assert (UI-state (display "Is the game birds duck 🦆 or other?")
+   (assert (UI-state (display "Is the game birds duck or other? 🦆")
                      (relation-asserted which-game-birds)
                      (valid-answers duck other))))
 
 (defrule determine-which-vegetables-cooking-method
-   (or (which-entrée-omnivorous vegetables)
-       (which-entrée-vegetarian vegetables)
-       (which-entrée-vegan vegetables))
+   (which-entrée vegetables)
    =>
    (assert (UI-state (display "Is the vegetables cooking method grilled, roasted or other?")
                      (relation-asserted vegetables-cooking-method)
                      (valid-answers grilled roasted other))))
 
 (defrule determine-which-vegetables
-   (or (which-entrée-omnivorous vegetables)
-       (which-entrée-vegetarian vegetables)
-       (which-entrée-vegan vegetables))
+   (which-entrée vegetables)
    =>
-   (assert (UI-state (display "Is the vegetables root (parsnips, carrots, etc.) 🥕, salad 🥗 or other?")
+   (assert (UI-state (display "Is the vegetables root (parsnips, carrots, etc.), salad or other? 🥕🥗")
                      (relation-asserted which-vegetables)
                      (valid-answers root salad other))))
 
 (defrule determine-which-other-vegetables
    (which-vegetables other)
    =>
-   (assert (UI-state (display "Are the vegetables mushrooms 🍄 or other?")
+   (assert (UI-state (display "Are the vegetables mushrooms or other? 🍄")
                      (relation-asserted which-other-vegetables)
                      (valid-answers mushrooms other))))
 
 (defrule determine-which-fats
-   (which-entrée-omnivorous fats)
+   (which-entrée fats)
    =>
    (assert (UI-state (display (str-cat "Is the fats vegetable (avocados, olive oil, peanut butter, nuts and seeds, etc.) "
-                                       "🥑 or animal (duck/pork fat, dairy, etc.) 🍖?"))
+                                       "or animal (duck/pork fat, dairy, etc.) 🥑🍖?"))
                      (why "Carbonation is an effective tool to cleanse vegetable fats.")
                      (relation-asserted which-fats)
                      (valid-answers vegetable animal other))))
 
 (defrule determine-which-cheese-style
-   (main-meal-for-omnivorous-or-vegetarian cheese)
+   (main-meal cheese)
    =>
    (assert (UI-state (display (str-cat "Is the cheese style fresh (Mascarpone, Ricotta, Chèvre, Feta, Cream Cheese, "
                                        "Quark, Cottage, etc.), semi-soft (Mozzarella, Colby, Fontina, Havarti, Monterey "
@@ -504,10 +414,10 @@
                      (relation-asserted which-washed-rind-cheese)
                      (valid-answers Taleggio other))))
 
-(defrule determine-which-dessert-for-omnivorous-or-vegetarian
-   (main-meal-for-omnivorous-or-vegetarian dessert)
+(defrule determine-which-dessert
+   (main-meal dessert)
    =>
-   (assert (UI-state (display "Is the dessert creamy 🍮, fruit 🥧, chocolate 🍪🍫 or other?")
+   (assert (UI-state (display "Is the dessert creamy, fruit, chocolate or other? 🍮🥧🍪🍫")
                      (relation-asserted which-dessert)
                      (valid-answers creamy fruit chocolate other))))
 

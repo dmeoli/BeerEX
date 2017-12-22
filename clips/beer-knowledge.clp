@@ -124,19 +124,17 @@
 
 (defrule determine-best-beer-attributes-if-which-pizza-topping-is-classic
    (declare (salience ?*medium-low-priority*))
-   (or (pizza-topping-for-omnivorous classic)
-       (pizza-topping-for-vegetarian classic)
-       (pizza-topping-for-vegan classic))
+   (pizza-topping classic)
    =>
    (assert (attribute (name best-flavor) (value crisp-clean) (certainty 50))))
 
-(defrule determine-best-beer-attributes-if-which-pizza-topping-for-omnivorous-is-meat
+(defrule determine-best-beer-attributes-if-which-pizza-topping-is-meat
    (declare (salience ?*medium-low-priority*))
    (meat-topping-is-spicy no)
    =>
    (assert (attribute (name best-flavor) (value hoppy-bitter) (certainty 50))))
 
-(defrule determine-best-beer-attributes-if-which-pizza-topping-for-omnivorous-is-spicy-meat
+(defrule determine-best-beer-attributes-if-which-pizza-topping-is-spicy-meat
    (declare (salience ?*medium-low-priority*))
    (meat-topping-is-spicy yes)
    =>
@@ -154,10 +152,9 @@
    =>
    (assert (attribute (name best-flavor) (value dark-roasty) (certainty 50))))
 
-(defrule determine-best-beer-attributes-if-which-pizza-topping-for-omnivorous-or-vegetarian-is-cheese
+(defrule determine-best-beer-attributes-if-which-pizza-topping-is-cheese
    (declare (salience ?*medium-low-priority*))
-   (or (pizza-topping-for-omnivorous cheese)
-       (pizza-topping-for-vegetarian cheese))
+   (pizza-topping cheese)
    =>
    (assert (attribute (name best-flavor) (value fruity-spicy) (certainty 50))))
 
@@ -425,9 +422,7 @@
 
 (defrule determine-best-beer-attributes-if-which-entree-is-grain
    (declare (salience ?*medium-low-priority*))
-   (or (which-entrée-omnivorous grain)
-       (which-entrée-vegetarian grain)
-       (which-entrée-vegan grain))
+   (which-entrée grain)
    =>
    (assert (attribute (name best-flavor) (value crisp-clean) (certainty 50))))
 
@@ -455,15 +450,13 @@
 
 (defrule determine-best-beer-attributes-if-which-entree-is-legumes
    (declare (salience ?*medium-low-priority*))
-   (or (which-entrée-omnivorous legumes)
-       (which-entrée-vegetarian legumes)
-       (which-entrée-vegan legumes))
+   (which-entrée legumes)
    =>
    (assert (attribute (name best-flavor) (value malty-sweet) (certainty 50))))
 
-(defrule determine-best-beer-attributes-if-which-which-entree-omnivorous-is-fish
+(defrule determine-best-beer-attributes-if-which-which-entree-is-fish
    (declare (salience ?*medium-low-priority*))
-   (which-entrée-omnivorous fish)
+   (which-entrée fish)
    =>
    (assert (attribute (name best-name) (value "English-Style Bitter") (certainty 80)))
    (assert (attribute (name best-name) (value "English-Style Pale Ale (ESB)") (certainty 80))))
@@ -489,9 +482,9 @@
    =>
    (assert (attribute (name best-name) (value "Irish-Style Dry Stout") (certainty 90))))
 
-(defrule determine-best-beer-attributes-if-which-which-entree-omnivorous-is-meat
+(defrule determine-best-beer-attributes-if-which-which-entree-is-meat
    (declare (salience ?*medium-low-priority*))
-   (which-entrée-omnivorous meat)
+   (which-entrée meat)
    =>
    (assert (attribute (name best-name) (value "Scotch Ale/Wee Heavy") (certainty 80)))
    (assert (attribute (name best-name) (value "Scottish-Style Ale") (certainty 80))))
@@ -696,9 +689,7 @@
 
 (defrule determine-best-beer-attributes-if-which-entree-is-vegetables
    (declare (salience ?*medium-low-priority*))
-   (or (which-entrée-omnivorous vegetables)
-       (which-entrée-vegetarian vegetables)
-       (which-entrée-vegan vegetables))
+   (which-entrée vegetables)
    =>
    (assert (attribute (name best-name) (value "American Amber Lager") (certainty 80)))
    (assert (attribute (name best-name) (value "Vienna-Style Lager") (certainty 80)))
@@ -736,18 +727,14 @@
 
 (defrule determine-best-beer-attributes-if-which-entree-is-fats
    (declare (salience ?*medium-low-priority*))
-   (or (which-entrée-omnivorous fats)
-       (which-entrée-vegetarian "vegetable fats")
-       (which-entrée-vegan "vegetable fats"))
+   (which-entrée fats)
    =>
    (assert (attribute (name best-flavor) (value hoppy-bitter) (certainty 50)))
    (assert (attribute (name best-flavor) (value dark-roasty) (certainty 50))))
 
 (defrule determine-best-beer-attributes-if-which-fats-is-vegetable
    (declare (salience ?*medium-low-priority*))
-   (or (which-fats vegetable)
-       (which-entrée-vegetarian "vegetables fats")
-       (which-entrée-vegan "vegetables fats"))
+   (which-fats vegetable)
    =>
    (assert (attribute (name best-carbonation) (value high) (certainty 50)))
    (assert (attribute (name best-carbonation) (value medium) (certainty 25))))
@@ -798,8 +785,7 @@
 
 (defrule determine-best-beer-attributes-if-which-chocolate-is-unsweetened-bitter
    (declare (salience ?*medium-low-priority*))
-   (or (which-chocolate unsweetened/bitter)
-       (main-meal-for-vegan "unsweetened/bitter chocolate"))
+   (which-chocolate unsweetened/bitter)
    =>
    (assert (attribute (name best-name) (value "Belgian-Style Flanders") (certainty 90)))
    (assert (attribute (name best-name) (value "Belgian-Style Fruit Lambic") (certainty 90)))

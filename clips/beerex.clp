@@ -15,12 +15,10 @@
 ;;**************
 
 (defglobal
-   ?*very-high-priority* = 10000
    ?*high-priority* = 1000
    ?*medium-high-priority* = 100
    ?*medium-low-priority* = -100
-   ?*low-priority* = -1000
-   ?*very-low-priority* = -10000)
+   ?*low-priority* = -1000)
 
 ;;****************
 ;;* DEFTEMPLATES *
@@ -163,7 +161,7 @@
    (retract ?f))
 
 (defrule print-results
-   (declare (salience ?*very-low-priority*))
+   (declare (salience ?*medium-low-priority*))
    (UI-state (id ?id))
    (state-list (current ?id))
    =>
