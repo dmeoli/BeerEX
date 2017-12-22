@@ -126,11 +126,11 @@ def handleEvent(bot, update):
         clips.Reset()
         update.message.reply_text(text='Bye! I hope we can talk again some day. 👋🏻',
                                   reply_markup=ReplyKeyboardRemove())
-    elif response == (emojize('🌟', use_aliases=True) or
-                      emojize('🌟🌟', use_aliases=True) or
-                      emojize('🌟🌟🌟', use_aliases=True) or
-                      emojize('🌟🌟🌟🌟', use_aliases=True) or
-                      emojize('🌟🌟🌟🌟🌟', use_aliases=True)):
+    elif (response == emojize(':star2:', use_aliases=True) or
+          response == emojize(':star2::star2:', use_aliases=True) or
+          response == emojize(':star2::star2::star2:', use_aliases=True) or
+          response == emojize(':star2::star2::star2::star2:', use_aliases=True) or
+          response == emojize(':star2::star2::star2::star2::star2:', use_aliases=True)):
         ratings = pickle.load(open('ratings.p', 'r+'))
         if ratings.has_key(update.message.from_user.username):
             ratings[update.message.from_user.username] = response
@@ -147,11 +147,11 @@ def rating(bot, update):
     Sends a rating request when the command /rating is issued.
     """
 
-    keyboard = [[KeyboardButton(text=emojize('🌟', use_aliases=True)),
-                 KeyboardButton(text=emojize('🌟🌟', use_aliases=True))],
-                [KeyboardButton(text=emojize('🌟🌟🌟', use_aliases=True)),
-                 KeyboardButton(text=emojize('🌟🌟🌟🌟', use_aliases=True))],
-                [KeyboardButton(text=emojize('🌟🌟🌟🌟🌟', use_aliases=True))]]
+    keyboard = [[KeyboardButton(text=emojize(':star2:', use_aliases=True)),
+                 KeyboardButton(text=emojize(':star2::star2:', use_aliases=True))],
+                [KeyboardButton(text=emojize(':star2::star2::star2:', use_aliases=True)),
+                 KeyboardButton(text=emojize(':star2::star2::star2::star2:', use_aliases=True))],
+                [KeyboardButton(text=emojize(':star2::star2::star2::star2::star2:', use_aliases=True))]]
     update.message.reply_text(text="What do you think about my beer advices?",
                               reply_markup=ReplyKeyboardMarkup(keyboard))
 
