@@ -161,7 +161,7 @@
    (retract ?f))
 
 (defrule print-results
-   (declare (salience ?*medium-low-priority*))
+   (declare (salience ?*low-priority*))
    (UI-state (id ?id))
    (state-list (current ?id))
    =>
