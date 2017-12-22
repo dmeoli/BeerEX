@@ -132,9 +132,13 @@ def handleEvent(bot, update):
                       emojize('🌟🌟🌟🌟', use_aliases=True) or
                       emojize('🌟🌟🌟🌟🌟', use_aliases=True)):
         ratings = pickle.load(open('ratings.p', 'r+'))
+        if ratings.has_key(update.message.from_user.username):
+            update.message.reply_text(text='Thanks! I have updated your rating.',
+                                      reply_markup=ReplyKeyboardRemove())
+        else:
+            update.message.reply_text(text='Thanks! I added your rating.',
+                                      reply_markup=ReplyKeyboardRemove())
         ratings[update.message.from_user.username] = response
-        update.message.reply_text(text='Thanks!',
-                                  reply_markup=ReplyKeyboardRemove())
 
 
 def rating(bot, update):
