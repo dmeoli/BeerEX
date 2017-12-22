@@ -134,6 +134,8 @@ def handleEvent(bot, update):
         ratings = dict()
         ratings = pickle.load(open('ratings.p', 'w+'))
         ratings[update.message.from_user.username] = response
+        update.message.reply_text(text='Thanks!',
+                                  reply_markup=ReplyKeyboardRemove())
 
 
 def rating(bot, update):
