@@ -1,0 +1,17 @@
+(dp1
+S'1STAR'
+p2
+I0
+sS'3STARS'
+p3
+I0
+sS'2STARS'
+p4
+I0
+sS'5STARS'
+p5
+I0
+sS'4STARS'
+p6
+I0
+s.

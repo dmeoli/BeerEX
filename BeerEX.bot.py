@@ -127,12 +127,11 @@ def handleEvent(bot, update):
         update.message.reply_text(text='Bye! I hope we can talk again some day. 👋🏻',
                                   reply_markup=ReplyKeyboardRemove())
     elif response == (emojize('🌟', use_aliases=True) or
-                      emojize('🌟 🌟', use_aliases=True) or
-                      emojize('🌟 🌟 🌟', use_aliases=True) or
-                      emojize('🌟 🌟 🌟 🌟', use_aliases=True) or
-                      emojize('🌟 🌟 🌟 🌟 🌟', use_aliases=True)):
-        ratings = dict()
-        ratings = pickle.load(open('ratings.p', 'w+'))
+                      emojize('🌟🌟', use_aliases=True) or
+                      emojize('🌟🌟🌟', use_aliases=True) or
+                      emojize('🌟🌟🌟🌟', use_aliases=True) or
+                      emojize('🌟🌟🌟🌟🌟', use_aliases=True)):
+        ratings = pickle.load(open('ratings.p', 'r+'))
         ratings[update.message.from_user.username] = response
         update.message.reply_text(text='Thanks!',
                                   reply_markup=ReplyKeyboardRemove())
@@ -144,10 +143,10 @@ def rating(bot, update):
     """
 
     keyboard = [[KeyboardButton(text=emojize('🌟', use_aliases=True)),
-                 KeyboardButton(text=emojize('🌟 🌟', use_aliases=True))],
-                [KeyboardButton(text=emojize('🌟 🌟 🌟', use_aliases=True)),
-                 KeyboardButton(text=emojize('🌟 🌟 🌟 🌟', use_aliases=True))],
-                [KeyboardButton(text=emojize('🌟 🌟 🌟 🌟 🌟', use_aliases=True))]]
+                 KeyboardButton(text=emojize('🌟🌟', use_aliases=True))],
+                [KeyboardButton(text=emojize('🌟🌟🌟', use_aliases=True)),
+                 KeyboardButton(text=emojize('🌟🌟🌟🌟', use_aliases=True))],
+                [KeyboardButton(text=emojize('🌟🌟🌟🌟🌟', use_aliases=True))]]
     update.message.reply_text(text="What do you think about my beer advices?",
                               reply_markup=ReplyKeyboardMarkup(keyboard))
 
