@@ -12,7 +12,6 @@ from telegram import ReplyKeyboardRemove, KeyboardButton, ReplyKeyboardMarkup, \
                      InlineKeyboardMarkup, InlineKeyboardButton, ParseMode
 from telegram.ext import MessageHandler, CommandHandler, CallbackQueryHandler, Filters, Updater
 from emoji import emojize
-import cPickle as pickle
 import logging
 import clips
 import sys
@@ -126,36 +125,6 @@ def handleEvent(bot, update):
         clips.Reset()
         update.message.reply_text(text='Bye! I hope we can talk again some day. 👋🏻',
                                   reply_markup=ReplyKeyboardRemove())
-    elif (response == emojize(':star2:', use_aliases=True) or
-          response == emojize(':star2::star2:', use_aliases=True) or
-          response == emojize(':star2::star2::star2:', use_aliases=True) or
-          response == emojize(':star2::star2::star2::star2:', use_aliases=True) or
-          response == emojize(':star2::star2::star2::star2::star2:', use_aliases=True)):
-        file = open('ratings.p', 'r+')
-        ratings = pickle.load(file)
-        if ratings.has_key(update.message.from_user.username):
-            update.message.reply_text(text='Thanks! I have updated your rating.',
-                                      reply_markup=ReplyKeyboardRemove())
-        else:
-            update.message.reply_text(text='Thanks! I added your rating.',
-                                      reply_markup=ReplyKeyboardRemove())
-        ratings[update.message.from_user.username] = response
-        ratings[response] += 1
-        pickle.dump(ratings, file)
-
-
-def rating(bot, update):
-    """
-    Sends a rating request when the command /rating is issued.
-    """
-
-    keyboard = [[KeyboardButton(text=emojize(':star2:', use_aliases=True)),
-                 KeyboardButton(text=emojize(':star2::star2:', use_aliases=True))],
-                [KeyboardButton(text=emojize(':star2::star2::star2:', use_aliases=True)),
-                 KeyboardButton(text=emojize(':star2::star2::star2::star2:', use_aliases=True))],
-                [KeyboardButton(text=emojize(':star2::star2::star2::star2::star2:', use_aliases=True))]]
-    update.message.reply_text(text="What do you think about my beer advices?",
-                              reply_markup=ReplyKeyboardMarkup(keyboard))
 
 
 def imageButton(bot, update):
@@ -209,7 +178,6 @@ def main():
     # Handler registers
     dispatcher.add_handler(CommandHandler('start', start))
     dispatcher.add_handler(CommandHandler('new', new))
-    dispatcher.add_handler(CommandHandler('rating', rating))
     dispatcher.add_handler(MessageHandler(Filters.command, unknown))
     dispatcher.add_handler(MessageHandler(Filters.text, handleEvent))
     dispatcher.add_handler(CallbackQueryHandler(imageButton))
