@@ -61,7 +61,6 @@ def nextUIState(bot, update):
         clips.Run()
         nextUIState(bot, update)
     elif state == 'final':
-        clips.SaveFacts('facts')
         keyboard = [[KeyboardButton(text=emojize(':back: Previous', use_aliases=True))],
                     [KeyboardButton(text=emojize(':repeat: Restart', use_aliases=True))],
                     [KeyboardButton(text=emojize(':x: Cancel', use_aliases=True))]]
@@ -70,7 +69,6 @@ def nextUIState(bot, update):
                                   disable_web_page_preview=True,
                                   reply_markup=ReplyKeyboardMarkup(keyboard))
     else:
-        clips.SaveFacts('facts')
         keyboard = list()
         for answer in current_ui[0].Slots['valid-answers']:
             keyboard.append([KeyboardButton(text=answer)])
@@ -85,7 +83,7 @@ def nextUIState(bot, update):
                                   reply_markup=ReplyKeyboardMarkup(keyboard))
 
 
-def replyButton(bot, update):
+def handleEvent(bot, update):
     """
     Triggers the next state in working memory based on which button is pressed.
     """
@@ -141,13 +139,16 @@ def replyButton(bot, update):
 
 
 def rating(bot, update):
+    """
+    Sends a rating request when the command /rating is issued.
+    """
 
     keyboard = [[KeyboardButton(text=emojize('🌟', use_aliases=True)),
                  KeyboardButton(text=emojize('🌟 🌟', use_aliases=True))],
                 [KeyboardButton(text=emojize('🌟 🌟 🌟', use_aliases=True)),
                  KeyboardButton(text=emojize('🌟 🌟 🌟 🌟', use_aliases=True))],
                 [KeyboardButton(text=emojize('🌟 🌟 🌟 🌟 🌟', use_aliases=True))]]
-    update.message.reply_text(text="Tell me what you think about my beer advices!",
+    update.message.reply_text(text="What do you think about my beer advices?",
                               reply_markup=ReplyKeyboardMarkup(keyboard))
 
 
@@ -204,7 +205,7 @@ def main():
     dispatcher.add_handler(CommandHandler('new', new))
     dispatcher.add_handler(CommandHandler('rating', rating))
     dispatcher.add_handler(MessageHandler(Filters.command, unknown))
-    dispatcher.add_handler(MessageHandler(Filters.text, replyButton))
+    dispatcher.add_handler(MessageHandler(Filters.text, handleEvent))
     dispatcher.add_handler(CallbackQueryHandler(imageButton))
 
     # Log all errors
