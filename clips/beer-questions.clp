@@ -6,7 +6,6 @@
 ; random questions for user type and scenario recognition
 
 (defrule determine-which-sex
-   (declare (salience ?*very-high-priority*))
    (start)
    =>
    (assert (UI-state (display "Are you male or female? 👨🏻👩🏻")
@@ -15,7 +14,6 @@
                      (valid-answers male female))))
 
 (defrule determine-which-age
-   (declare (salience ?*very-high-priority*))
    (start)
    =>
    (assert (UI-state (display "How old are you? 🔞")
@@ -24,7 +22,6 @@
                      (valid-answers 18-23 24-29 >=30))))
 
 (defrule determine-which-season
-   (declare (salience ?*very-high-priority*))
    (start)
    =>
    (assert (UI-state (display "It is autumn, spring, summer or winter? 🍁🌱🏖❄️")
@@ -33,17 +30,15 @@
                      (valid-answers autumn spring summer winter))))
 
 (defrule determines-which-company
-   (declare (salience ?*very-high-priority*))
    (start)
    =>
-   (assert (UI-state (display "Do you have to drink whith your partner or with your friends?")
+   (assert (UI-state (display "Do you have to drink with your partner or with your friends?")
                      (why (str-cat "Couples tend to prefer less alcoholic beers, instead groups of friends tend to "
                                    "consume higher quantities of alcohol."))
                      (relation-asserted which-company)
                      (valid-answers partner friends other))))
 
 (defrule determine-whether-he-is-a-regular-beer-drinker
-   (declare (salience ?*very-high-priority*))
    (start)
    =>
    (assert (UI-state (display "Are you a regular beer drinker? 🍺")
@@ -52,7 +47,6 @@
                      (valid-answers yes no))))
 
 (defrule determine-whether-he-is-going-to-smoke
-   (declare (salience ?*very-high-priority*))
    (start)
    =>
    (assert (UI-state (display "Are you going to smoke while you drink? 🚬")
@@ -62,7 +56,12 @@
 ; depth questions for meal type recognition
 
 (defrule determine-food-style
-   (start)
+   (smoker ?smoker)
+   (which-sex ?sex)
+   (which-age ?age)
+   (which-season ?season)
+   (which-company ?company)
+   (regular-beer-drinker ?regular)
    =>
    (assert (UI-state (display "Are you vegetarian, vegan or omnivorous?")
                      (relation-asserted food-style)

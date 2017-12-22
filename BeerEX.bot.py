@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
+# coding=utf-8
 
 """
 BeerEX: the Beer EXpert system bot.
@@ -12,6 +12,7 @@ from telegram import ReplyKeyboardRemove, KeyboardButton, ReplyKeyboardMarkup, \
                      InlineKeyboardMarkup, InlineKeyboardButton, ParseMode
 from telegram.ext import MessageHandler, CommandHandler, CallbackQueryHandler, Filters, Updater
 from emoji import emojize
+import cPickle as pickle
 import logging
 import clips
 import sys
@@ -60,6 +61,7 @@ def nextUIState(bot, update):
         clips.Run()
         nextUIState(bot, update)
     elif state == 'final':
+        clips.SaveFacts('facts')
         keyboard = [[KeyboardButton(text=emojize(':back: Previous', use_aliases=True))],
                     [KeyboardButton(text=emojize(':repeat: Restart', use_aliases=True))],
                     [KeyboardButton(text=emojize(':x: Cancel', use_aliases=True))]]
@@ -68,6 +70,7 @@ def nextUIState(bot, update):
                                   disable_web_page_preview=True,
                                   reply_markup=ReplyKeyboardMarkup(keyboard))
     else:
+        clips.SaveFacts('facts')
         keyboard = list()
         for answer in current_ui[0].Slots['valid-answers']:
             keyboard.append([KeyboardButton(text=answer)])
@@ -82,7 +85,7 @@ def nextUIState(bot, update):
                                   reply_markup=ReplyKeyboardMarkup(keyboard))
 
 
-def handleEvent(bot, update):
+def replyButton(bot, update):
     """
     Triggers the next state in working memory based on which button is pressed.
     """
@@ -127,6 +130,25 @@ def handleEvent(bot, update):
         clips.Reset()
         update.message.reply_text(text='Bye! I hope we can talk again some day. 👋🏻',
                                   reply_markup=ReplyKeyboardRemove())
+    elif response == (emojize('🌟', use_aliases=True) or
+                      emojize('🌟 🌟', use_aliases=True) or
+                      emojize('🌟 🌟 🌟', use_aliases=True) or
+                      emojize('🌟 🌟 🌟 🌟', use_aliases=True) or
+                      emojize('🌟 🌟 🌟 🌟 🌟', use_aliases=True)):
+        ratings = dict()
+        ratings = pickle.load(open('ratings.p', 'w+'))
+        ratings[update.message.from_user.username] = response
+
+
+def rating(bot, update):
+
+    keyboard = [[KeyboardButton(text=emojize('🌟', use_aliases=True)),
+                 KeyboardButton(text=emojize('🌟 🌟', use_aliases=True))],
+                [KeyboardButton(text=emojize('🌟 🌟 🌟', use_aliases=True)),
+                 KeyboardButton(text=emojize('🌟 🌟 🌟 🌟', use_aliases=True))],
+                [KeyboardButton(text=emojize('🌟 🌟 🌟 🌟 🌟', use_aliases=True))]]
+    update.message.reply_text(text="Tell me what you think about my beer advices!",
+                              reply_markup=ReplyKeyboardMarkup(keyboard))
 
 
 def imageButton(bot, update):
@@ -180,8 +202,9 @@ def main():
     # Handler registers
     dispatcher.add_handler(CommandHandler('start', start))
     dispatcher.add_handler(CommandHandler('new', new))
-    dispatcher.add_handler(MessageHandler(Filters.text, handleEvent))
+    dispatcher.add_handler(CommandHandler('rating', rating))
     dispatcher.add_handler(MessageHandler(Filters.command, unknown))
+    dispatcher.add_handler(MessageHandler(Filters.text, replyButton))
     dispatcher.add_handler(CallbackQueryHandler(imageButton))
 
     # Log all errors
@@ -194,8 +217,8 @@ def main():
     updater.bot.set_webhook('https://beerex-telegram-bot.herokuapp.com/' + token)
     # updater.start_polling()
 
-    # Run the bot until you press Ctrl-C or the process receives SIGINT, SIGTERM or SIGABRT. This should be used most
-    # of the time, since start_polling() is non-blocking and will stop the bot gracefully.
+    # Run the bot until you press Ctrl-C or the process receives SIGINT, SIGTERM or SIGABRT. This should
+    # be used most of the time, since start_polling() is non-blocking and will stop the bot gracefully.
     updater.idle()
 
 
