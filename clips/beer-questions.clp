@@ -8,6 +8,7 @@
 (defrule determine-which-sex
    (start)
    =>
+   (set-strategy random)
    (assert (UI-state (display "Are you male or female? 👨🏻👩🏻")
                      (why "Male or female persons tend to prefer more or less intense beers.")
                      (relation-asserted which-sex)
@@ -16,6 +17,7 @@
 (defrule determine-which-age
    (start)
    =>
+   (set-strategy random)
    (assert (UI-state (display "How old are you? 🔞")
                      (why "Younger people tend to prefer less intense beers.")
                      (relation-asserted which-age)
@@ -24,23 +26,16 @@
 (defrule determine-which-season
    (start)
    =>
+   (set-strategy random)
    (assert (UI-state (display "It is autumn, spring, summer or winter? 🍁🌱🏖❄️")
                      (why "Weather conditions influence our perceptions and needs. The choice of a beer is among these.")
                      (relation-asserted which-season)
                      (valid-answers autumn spring summer winter))))
 
-(defrule determines-which-company
-   (start)
-   =>
-   (assert (UI-state (display "Do you have to drink with your partner or with your friends?")
-                     (why (str-cat "Couples tend to prefer less alcoholic beers, instead groups of friends tend to "
-                                   "consume higher quantities of alcohol."))
-                     (relation-asserted which-company)
-                     (valid-answers partner friends other))))
-
 (defrule determine-whether-he-is-a-regular-beer-drinker
    (start)
    =>
+   (set-strategy random)
    (assert (UI-state (display "Are you a regular beer drinker? 🍺")
                      (why "Better start with more standard beers. On the other hand, you may be surprised!")
                      (relation-asserted regular-beer-drinker)
@@ -49,6 +44,7 @@
 (defrule determine-whether-he-is-going-to-smoke
    (start)
    =>
+   (set-strategy random)
    (assert (UI-state (display "Are you going to smoke while you drink? 🚬")
    					 (why "Beer may alter the taste of tobacco. Also, stronger beers pair well with tobacco flavor.")
                      (relation-asserted smoker)
@@ -61,9 +57,9 @@
    (which-sex ?sex)
    (which-age ?age)
    (which-season ?season)
-   (which-company ?company)
    (regular-beer-drinker ?regular-beer-drinker)
    =>
+   (set-strategy depth)
    (assert (UI-state (display "Is the main meal pizza, entrée, cheese or dessert?")
                      (relation-asserted main-meal)
                      (valid-answers pizza entrée cheese dessert other))))

@@ -93,18 +93,6 @@
    (assert (attribute (name best-flavor) (value malty-sweet) (certainty 5)))
    (assert (attribute (name best-flavor) (value dark-roasty) (certainty 5))))
 
-(defrule determine-best-beer-attributes-if-which-company-is-partner
-   (declare (salience ?*medium-low-priority*))
-   (which-company partner)
-   =>
-   (assert (attribute (name best-alcohol) (value mild) (certainty 3))))
-
-(defrule determine-best-beer-attributes-if-which-company-is-friends
-   (declare (salience ?*medium-low-priority*))
-   (which-company friends)
-   =>
-   (assert (attribute (name best-alcohol) (value noticeable) (certainty 3))))
-
 (defrule determine-best-beer-attributes-if-he-is-not-a-regular-beer-drinker
    (declare (salience ?*medium-low-priority*))
    (regular-beer-drinker no)
