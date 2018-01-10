@@ -130,13 +130,6 @@
                      (relation-asserted which-grain)
                      (valid-answers chips spaghetti bruschetta grits other))))
 
-(defrule determine-which-fish-cooking-method
-   (which-entrée fish)
-   =>
-   (assert (UI-state (display "Is the fish cooking method grilled or other?")
-                     (relation-asserted fish-cooking-method)
-                     (valid-answers grilled other))))
-
 (defrule determine-which-fish
    (which-entrée fish)
    =>
@@ -144,6 +137,13 @@
                                        "trout, tuna, etc.) or other? 🐟🦐🦀🦑"))
                      (relation-asserted which-fish)
                      (valid-answers shellfish bluefish other))))
+
+(defrule determine-which-fish-cooking-method
+   (which-fish ?fish)
+   =>
+   (assert (UI-state (display "Is the fish cooking method grilled or other?")
+                     (relation-asserted fish-cooking-method)
+                     (valid-answers grilled other))))
 
 (defrule determine-if-shellfish-is-mild
    (which-fish shellfish)
@@ -166,19 +166,19 @@
                      (relation-asserted which-bluefish)
                      (valid-answers salmon other))))
 
-(defrule determine-which-meat-cooking-method
-   (which-entrée meat)
-   =>
-   (assert (UI-state (display "Is the meat cooking method barbecue, braised, grilled, roasted or other?")
-                     (relation-asserted meat-cooking-method)
-                     (valid-answers barbecue braised grilled roasted other))))
-
 (defrule determine-which-meat
    (which-entrée meat)
    =>
    (assert (UI-state (display "Is the meat rich (beef, lamb, pork, etc.), poultry, game or other? 🍖🥩🦆")
                      (relation-asserted which-meat)
                      (valid-answers rich poultry game other))))
+
+(defrule determine-which-meat-cooking-method
+   (which-meat ?meat)
+   =>
+   (assert (UI-state (display "Is the meat cooking method barbecue, braised, grilled, roasted or other?")
+                     (relation-asserted meat-cooking-method)
+                     (valid-answers barbecue braised grilled roasted other))))
 
 (defrule determine-which-rich
    (which-meat rich)
@@ -229,19 +229,19 @@
                      (relation-asserted which-game-birds)
                      (valid-answers duck other))))
 
-(defrule determine-which-vegetables-cooking-method
-   (which-entrée vegetables)
-   =>
-   (assert (UI-state (display "Is the vegetables cooking method grilled, roasted or other?")
-                     (relation-asserted vegetables-cooking-method)
-                     (valid-answers grilled roasted other))))
-
 (defrule determine-which-vegetables
    (which-entrée vegetables)
    =>
    (assert (UI-state (display "Is the vegetables root (parsnips, carrots, etc.), salad or other? 🥕🥗")
                      (relation-asserted which-vegetables)
                      (valid-answers root salad other))))
+
+(defrule determine-which-vegetables-cooking-method
+   (which-vegetables ?vegetable)
+   =>
+   (assert (UI-state (display "Is the vegetables cooking method grilled, roasted or other?")
+                     (relation-asserted vegetables-cooking-method)
+                     (valid-answers grilled roasted other))))
 
 (defrule determine-which-other-vegetables
    (which-vegetables other)
