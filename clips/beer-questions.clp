@@ -5,8 +5,9 @@
 
 ; random questions for user type and scenario recognition
 
-(defrule determine-which-sex
+(defrule random-question-to-determine-which-sex
    (start)
+   (not (which-sex ?sex))
    =>
    (set-strategy random)
    (assert (UI-state (display "Are you male or female? 👨🏻👩🏻")
@@ -14,8 +15,9 @@
                      (relation-asserted which-sex)
                      (valid-answers male female))))
 
-(defrule determine-which-age
+(defrule random-question-to-determine-which-age
    (start)
+   (not (which-age ?age))
    =>
    (set-strategy random)
    (assert (UI-state (display "How old are you? 🔞")
@@ -23,8 +25,9 @@
                      (relation-asserted which-age)
                      (valid-answers 18-23 24-29 >=30))))
 
-(defrule determine-which-season
+(defrule random-question-to-determine-which-season
    (start)
+   (not (which-season ?season))
    =>
    (set-strategy random)
    (assert (UI-state (display "It is autumn, spring, summer or winter? 🍁🌱🏖❄️")
@@ -32,8 +35,9 @@
                      (relation-asserted which-season)
                      (valid-answers autumn spring summer winter))))
 
-(defrule determine-whether-he-is-a-regular-beer-drinker
+(defrule random-question-to-determine-whether-he-is-a-regular-beer-drinker
    (start)
+   (not (regular-beer-drinker ?drinker))
    =>
    (set-strategy random)
    (assert (UI-state (display "Are you a regular beer drinker? 🍺")
@@ -41,8 +45,9 @@
                      (relation-asserted regular-beer-drinker)
                      (valid-answers yes no))))
 
-(defrule determine-whether-he-is-going-to-smoke
+(defrule random-question-to-determine-whether-he-is-going-to-smoke
    (start)
+   (not (smoker ?smoker))
    =>
    (set-strategy random)
    (assert (UI-state (display "Are you going to smoke while you drink? 🚬")
@@ -57,7 +62,7 @@
    (which-sex ?sex)
    (which-age ?age)
    (which-season ?season)
-   (regular-beer-drinker ?regular-beer-drinker)
+   (regular-beer-drinker ?drinker)
    =>
    (set-strategy depth)
    (assert (UI-state (display "Is the main meal pizza, entrée, cheese or dessert?")

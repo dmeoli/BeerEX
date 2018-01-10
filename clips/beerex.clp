@@ -89,8 +89,8 @@
 ;;* DEFFUNCTIONS *
 ;;****************
 
-(deffunction sort-certainties (?a1 ?a2)
-   (< (fact-slot-value ?a1 certainty) (fact-slot-value ?a2 certainty)))
+(deffunction sort-certainties (?attribute1 ?attribute2)
+   (< (fact-slot-value ?attribute1 certainty) (fact-slot-value ?attribute2 certainty)))
 
 ;;*****************
 ;;* INITIAL STATE *
@@ -155,17 +155,14 @@
                       (value (format nil "🍺 [%s - %s](%s)" ?beer-style ?beer-name ?link))
                       (certainty ?certainty))))
 
-(defrule remove-poor-beer-choices
-   ?f <- (attribute (name beer) (certainty ?certainty&:(< ?certainty 60)))
-   =>
-   (retract ?f))
-
-(defrule print-results
+(defrule clean-working-memory-and-print-results
    (declare (salience ?*low-priority*))
    (UI-state (id ?id))
    (state-list (current ?id))
    =>
    (do-for-all-facts ((?a attribute)) (neq ?a:name beer) (retract ?a))
+   (do-for-all-facts ((?a attribute)) (and (eq ?a:name beer)
+                                           (< ?a:certainty 60)) (retract ?a))
    (bind ?beers "")
    (bind ?attributes (find-all-facts ((?a attribute)) (eq ?a:name beer)))
    (bind ?attributes (sort sort-certainties ?attributes))
@@ -269,6 +266,10 @@
    (retract ?f1)
    (modify ?f2 (current ?pid))
    (do-for-fact ((?r ?relation)) (neq ?relation start) (retract ?r))
+   (if (eq (get-strategy) random)
+    then (progn$ (?rule (get-defrule-list))
+                 (if (neq (str-index "random-question" ?rule) FALSE)
+                  then (refresh ?rule))))
    (if (eq ?state final)
     then (progn$ (?rule (get-defrule-list))
                  (if (neq (str-index "determine-best-beer-attributes" ?rule) FALSE)
