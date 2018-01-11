@@ -108,6 +108,79 @@
    (assert (attribute (name best-alcohol) (value noticeable) (certainty 5)))
    (assert (attribute (name best-carbonation) (value medium) (certainty 5))))
 
+(defrule preferred-color-is-any
+   (declare (salience ?*medium-low-priority*))
+   (preferred-color ?color)
+   =>
+   (assert (attribute (name best-color) (value ?color) (certainty 20))))
+
+(defrule preferred-alcohol-is-low
+   (declare (salience ?*medium-low-priority*))
+   (preferred-alcohol low)
+   =>
+   (assert (attribute (name best-alcohol) (value not-detectable) (certainty 20))))
+
+(defrule preferred-alcohol-is-mild
+   (declare (salience ?*medium-low-priority*))
+   (preferred-alcohol mild)
+   =>
+   (assert (attribute (name best-alcohol) (value mild) (certainty 20))))
+
+(defrule preferred-alcohol-is-high
+   (declare (salience ?*medium-low-priority*))
+   (preferred-alcohol high)
+   =>
+   (assert (attribute (name best-alcohol) (value noticeable) (certainty 20))))
+
+(defrule preferred-alcohol-is-very-high
+   (declare (salience ?*medium-low-priority*))
+   (preferred-alcohol "very high")
+   =>
+   (assert (attribute (name best-alcohol) (value harsh) (certainty 20))))
+
+(defrule preferred-carbonation-is-any
+   (declare (salience ?*medium-low-priority*))
+   (preferred-carbonation ?carbonation)
+   =>
+   (assert (attribute (name best-carbonation) (value ?carbonation) (certainty 20))))
+
+(defrule preferred-flavor-is-clean
+   (declare (salience ?*medium-low-priority*))
+   (preferred-flavor clean)
+   =>
+   (assert (attribute (name best-flavor) (value crisp-clean) (certainty 20))))
+
+(defrule preferred-flavor-is-sweet
+   (declare (salience ?*medium-low-priority*))
+   (preferred-flavor sweet)
+   =>
+   (assert (attribute (name best-flavor) (value malty-sweet) (certainty 20))))
+
+(defrule preferred-flavor-is-bitter
+   (declare (salience ?*medium-low-priority*))
+   (preferred-flavor bitter)
+   =>
+   (assert (attribute (name best-flavor) (value hoppy-bitter) (certainty 20))))
+
+(defrule preferred-flavor-is-roasty
+   (declare (salience ?*medium-low-priority*))
+   (preferred-flavor roasty)
+   =>
+   (assert (attribute (name best-flavor) (value dark-roasty) (certainty 20))))
+
+(defrule preferred-flavor-is-fruity
+   (declare (salience ?*medium-low-priority*))
+   (or (preferred-flavor fruity)
+       (preferred-flavor spicy))
+   =>
+   (assert (attribute (name best-flavor) (value fruity-spicy) (certainty 20))))
+
+(defrule preferred-flavor-is-sour
+   (declare (salience ?*medium-low-priority*))
+   (preferred-flavor sour)
+   =>
+   (assert (attribute (name best-flavor) (value sour-tart-funky) (certainty 20))))
+
 ; determine best beer attributes for meal type recognized
 
 (defrule determine-best-beer-attributes-if-which-pizza-topping-is-classic

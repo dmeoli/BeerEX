@@ -25,16 +25,6 @@
                      (relation-asserted which-age)
                      (valid-answers 18-23 24-29 >=30))))
 
-(defrule random-question-to-determine-which-season
-   (start)
-   (not (which-season ?season))
-   =>
-   (set-strategy random)
-   (assert (UI-state (display "It is autumn, spring, summer or winter? 🍁🌱🏖❄️")
-                     (why "Weather conditions influence our perceptions and needs. The choice of a beer is among these.")
-                     (relation-asserted which-season)
-                     (valid-answers autumn spring summer winter))))
-
 (defrule random-question-to-determine-whether-he-is-a-regular-beer-drinker
    (start)
    (not (regular-beer-drinker ?drinker))
@@ -55,14 +45,64 @@
                      (relation-asserted smoker)
                      (valid-answers yes no))))
 
+(defrule random-question-to-determine-which-season
+   (start)
+   (not (which-season ?season))
+   =>
+   (set-strategy random)
+   (assert (UI-state (display "It is autumn, spring, summer or winter? 🍁🌱🏖❄️")
+                     (why "Weather conditions influence our perceptions and needs. The choice of a beer is among these.")
+                     (relation-asserted which-season)
+                     (valid-answers autumn spring summer winter))))
+
+(defrule random-question-to-determine-preferred-color
+   (start)
+   (not (preferred-color ?color))
+   =>
+   (set-strategy random)
+   (assert (UI-state (display "Do you generally prefer pale, amber, brown or dark beer? 🍺")
+                     (relation-asserted preferred-color)
+                     (valid-answers pale amber brown dark "don't mind"))))
+
+(defrule random-question-to-determine-preferred-alcohol
+   (start)
+   (not (preferred-alcohol ?alcohol))
+   =>
+   (set-strategy random)
+   (assert (UI-state (display "Do you generally prefer to drink low, mild, high or very high alcoholic drinks? 🍹")
+                     (relation-asserted preferred-alcohol)
+                     (valid-answers low mild high "very high" "don't mind"))))
+
+(defrule random-question-to-determine-preferred-carbonation
+   (start)
+   (not (preferred-carbonation ?carbonation))
+   =>
+   (set-strategy random)
+   (assert (UI-state (display "Do you generally prefer to drink low, medium or high carbonated drinks? 🍾")
+                     (relation-asserted preferred-carbonation)
+                     (valid-answers low medium high "don't mind"))))
+
+(defrule random-question-to-determine-preferred-flavor
+   (start)
+   (not (preferred-flavor ?flavor))
+   =>
+   (set-strategy random)
+   (assert (UI-state (display "What kind of flavor do you generally prefer?")
+                     (relation-asserted preferred-flavor)
+                     (valid-answers clean sweet bitter roasty fruity spicy sour "don't mind"))))
+
 ; depth questions for meal type recognition
 
 (defrule determine-main-meal
-   (smoker ?smoker)
    (which-sex ?sex)
    (which-age ?age)
+   (smoker ?smoker)
    (which-season ?season)
+   (preferred-color ?color)
+   (preferred-flavor ?flavor)
+   (preferred-alcohol ?alcohol)
    (regular-beer-drinker ?drinker)
+   (preferred-carbonation ?carbonation)
    =>
    (set-strategy depth)
    (assert (UI-state (display "Is the main meal pizza, entrée, cheese or dessert?")
