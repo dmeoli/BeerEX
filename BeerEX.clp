@@ -1,10 +1,10 @@
 
 (load clips/beerex.clp)
 
-(undefrule load-beer-knowledge-rules)
 (undefrule load-beer-question-rules)
-
 (load clips/beer-questions.clp)
+
+(undefrule load-beer-knowledge-rules)
 (load clips/beer-knowledge.clp)
 
 (deffunction ask-question (?display ?allowed-values)
@@ -12,13 +12,17 @@
    (if (or (not (member$ prev ?allowed-values))
            (member$ restart ?allowed-values))
     then (printout t crlf))
-   (while (not (member ?answer ?allowed-values))
-      (printout t ?display " " ?allowed-values " ")
-      (bind ?answer (readline))
+   (while (not (member$ ?answer ?allowed-values))
+      (printout t ?display " ")
+      (bind ?i 1)
+      (progn$ (?value ?allowed-values)
+              (printout t ?i "." ?value " ")
+              (bind ?i (+ ?i 1)))
+      (printout t "-> ")
+      (if (neq (bind ?number (read-number)) "*** READ ERROR ***")
+       then (bind ?answer (nth$ ?number ?allowed-values)))
       (if (member$ restart ?allowed-values)
-       then (printout t crlf))
-      (if (eq (str-index " " ?answer) FALSE)
-       then (bind ?answer (nth$ 1 (explode$ ?answer)))))
+       then (printout t crlf)))
    ?answer)
 
 (deffunction next-UI-state ()
