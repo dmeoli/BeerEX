@@ -161,14 +161,12 @@
    (state-list (current ?id))
    =>
    (do-for-all-facts ((?a attribute)) (neq ?a:name beer) (retract ?a))
-   (do-for-all-facts ((?a attribute)) (and (eq ?a:name beer)
-                                           (< ?a:certainty 60)) (retract ?a))
    (bind ?beers "")
-   (bind ?attributes (find-all-facts ((?a attribute)) (eq ?a:name beer)))
-   (bind ?attributes (sort sort-certainties ?attributes))
+   (bind ?attributes (sort sort-certainties (find-all-facts ((?a attribute)) (eq ?a:name beer))))
    (progn$ (?a ?attributes)
-           (bind ?beers (str-cat ?beers (format nil "%s with certainty %-2d%% %n"
-                                                    (fact-slot-value ?a value) (fact-slot-value ?a certainty))))
+           (if (< (member$ ?a ?attributes) 5)
+            then (bind ?beers (str-cat ?beers (format nil "%s with certainty %-2d%% %n"
+                                                          (fact-slot-value ?a value) (fact-slot-value ?a certainty)))))
            (retract ?a))
    (if (neq ?beers "")
     then (bind ?results (str-cat (format nil "%s %n%n" "*✅ Done. I have selected these beer styles for you.*") ?beers))
