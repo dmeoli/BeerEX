@@ -46,7 +46,8 @@
    (slot name)
    (slot value)
    (slot certainty
-      (default 100.0)))
+      (range -1.0 1.0)
+      (default 1.0)))
 
 (deftemplate beer
    (slot style
@@ -92,6 +93,14 @@
 (deffunction sort-certainties (?attribute1 ?attribute2)
    (< (fact-slot-value ?attribute1 certainty) (fact-slot-value ?attribute2 certainty)))
 
+(deffunction combine-certainty-factors (?x ?y)
+    (if (and (> ?x 0) (> ?y 0))
+     then (bind ?c (- (+ ?x ?y) (* ?x ?y)))
+     else (if (and (< ?x 0) (< ?y 0))
+           then (bind ?c (+ (+ ?x ?y) (* ?x ?y)))
+           else (bind ?c (/ (+ ?x ?y ) (- 1 (min (abs ?x) (abs ?y)))))))
+    ?c)
+
 ;;*****************
 ;;* INITIAL STATE *
 ;;*****************
@@ -132,7 +141,7 @@
    (test (neq ?f1 ?f2))
    =>
    (retract ?f1)
-   (modify ?f2 (certainty (/ (- (* (+ ?certainty1 ?certainty2) 100) (* ?certainty1 ?certainty2)) 100))))
+   (modify ?f2 (certainty combine-certainty-factors (?certainty1 ?certainty2))))
 
 (defrule generate-beers
    (declare (salience ?*medium-low-priority*))
@@ -165,8 +174,8 @@
    (bind ?attributes (sort sort-certainties (find-all-facts ((?a attribute)) (eq ?a:name beer))))
    (progn$ (?a ?attributes)
            (if (< (member$ ?a ?attributes) 5)
-            then (bind ?beers (str-cat ?beers (format nil "%s with certainty %-2d%% %n"
-                                                          (fact-slot-value ?a value) (fact-slot-value ?a certainty)))))
+            then (bind ?beers (str-cat ?beers (format nil "%s with certainty %2d%% %n" (fact-slot-value ?a value)
+                                                          (* (fact-slot-value ?a certainty) 100)))))
            (retract ?a))
    (if (neq ?beers "")
     then (bind ?results (str-cat (format nil "%s %n%n" "*✅ Done. I have selected these beer styles for you.*") ?beers))
