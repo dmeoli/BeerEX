@@ -113,6 +113,10 @@
 (defrule preferred-color-is-any
    (declare (salience ?*medium-low-priority*))
    (preferred-color ?color)
+   (or (eq ?color pale)
+       (eq ?color amber)
+       (eq ?color brown)
+       (eq ?color dark))
    =>
    (assert (attribute (name best-color) (value ?color) (certainty 0.2))))
 
@@ -143,6 +147,9 @@
 (defrule preferred-carbonation-is-any
    (declare (salience ?*medium-low-priority*))
    (preferred-carbonation ?carbonation)
+   (or (eq ?carbonation low)
+       (eq ?carbonation medium)
+       (eq ?carbonation high))
    =>
    (assert (attribute (name best-carbonation) (value ?carbonation) (certainty 0.2))))
 
