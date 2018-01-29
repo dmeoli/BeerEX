@@ -55,6 +55,8 @@
                      (relation-asserted which-season)
                      (valid-answers autumn spring summer winter))))
 
+; random questions for personal preferences recognition
+
 (defrule random-question-to-determine-preferred-color
    (start)
    (not (preferred-color ?color))

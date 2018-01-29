@@ -108,6 +108,8 @@
    (assert (attribute (name best-alcohol) (value noticeable) (certainty 0.05)))
    (assert (attribute (name best-carbonation) (value medium) (certainty 0.05))))
 
+; determine best beer attributes for personal preferences recognized
+
 (defrule preferred-color-is-any
    (declare (salience ?*medium-low-priority*))
    (preferred-color ?color)

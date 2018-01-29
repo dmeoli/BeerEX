@@ -141,7 +141,7 @@
    (test (neq ?f1 ?f2))
    =>
    (retract ?f1)
-   (modify ?f2 (certainty combine-certainty-factors (?certainty1 ?certainty2))))
+   (modify ?f2 (certainty (combine-certainty-factors ?certainty1 ?certainty2))))
 
 (defrule generate-beers
    (declare (salience ?*medium-low-priority*))
