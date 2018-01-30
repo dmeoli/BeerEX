@@ -405,7 +405,7 @@
       (color dark)
       (flavor dark-roasty)
       (fermentation top)
-      (carbonation low medium high) 
+      (carbonation low medium high)
       (link "www.craftbeer.com/styles/robust-porter"))
 
 (beer (style "Porter")
@@ -651,9 +651,9 @@
       (color brown dark)
       (flavor dark-roasty)
       (fermentation top bottom)
-      (carbonation low medium high) 
+      (carbonation low medium high)
       (link "www.craftbeer.com/styles/chocolate-beer"))
-      
+
 (beer (style "Specialty Beer")
       (name "Coffee Beer")
       (alcohol not-detectable mild noticeable harsh)
