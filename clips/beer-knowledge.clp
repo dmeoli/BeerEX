@@ -128,7 +128,7 @@
    (assert (attribute (name best-alcohol) (value noticeable) (certainty 0.05)))
    (assert (attribute (name best-carbonation) (value medium) (certainty 0.05)))
    (assert (attribute (name explanation-scenario) (value (str-cat "Beers with a cleaner flavor may be the good choice "
-           "while smoking, because the beer may alter the taste of tobacco. Also, stronger beers pair well with tobacco "
+           "while smoking, because the beer may alter the taste of tobacco. Anyway, strong beers pair well with tobacco "
            "flavor.")))))
 
 ; determine best beer attributes for personal preferences recognized
@@ -738,8 +738,8 @@
    (which-meat rich)
    =>
    (assert (attribute (name best-flavor) (value sour-tart-funky) (certainty 0.5)))
-   (assert (attribute (name explanation-main-meal) (value (str-cat "Moreover, rich meats comes together with beers that "
-           "presents pronounced acidity.")))))
+   (assert (attribute (name explanation-specific-meal) (value (str-cat "Moreover, rich meats comes together with beers "
+           "that presents pronounced acidity.")))))
 
 (defrule determine-best-beer-attributes-if-which-rich-is-roasted-beef-or-which-rich-is-lamb
    (declare (salience ?*medium-low-priority*))
@@ -895,7 +895,7 @@
    =>
    (assert (attribute (name best-flavor) (value hoppy-bitter) (certainty 0.5)))
    (assert (attribute (name best-flavor) (value malty-sweet) (certainty -0.5)))
-   (assert (attribute (name explanation-main-meal) (value (str-cat "Moreover, game birds pair excellently well with "
+   (assert (attribute (name explanation-specific-meal) (value (str-cat "Moreover, game birds pair excellently well with "
            "beers which presents medium to high hop bitterness, flavor and aroma in order to cleanse the mouth.")))))
 
 (defrule determine-best-beer-attributes-if-which-game-birds-is-roasted-duck

@@ -111,6 +111,8 @@
                      (bind ?explanation (str-cat ?explanation ?a:value " ")))
    (do-for-all-facts ((?a attribute)) (eq ?a:name explanation-main-meal)
                      (bind ?explanation (str-cat ?explanation ?a:value " ")))
+   (do-for-all-facts ((?a attribute)) (eq ?a:name explanation-specific-meal)
+                     (bind ?explanation (str-cat ?explanation ?a:value " ")))
    ?explanation)
 
 ;;*****************
