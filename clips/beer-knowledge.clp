@@ -342,7 +342,7 @@
    (assert (attribute (name best-name) (value "Belgian-Style Fruit Lambic") (certainty 0.8)))
    (assert (attribute (name best-name) (value "Belgian-Style Lambic/Gueuze") (certainty 0.8)))
    (assert (attribute (name explanation-main-meal) (value (str-cat "That's it because fresh cheeses are light cheeses "
-           "which pair excellently with naturally and spontaneously fermented beers with important sweetnees and "
+           "which pair excellently with naturally and spontaneously fermented beers with important sweetness and "
            "sourness characters.")))))
 
 (defrule determine-best-beer-attributes-if-which-fresh-cheese-is-Mascarpone
@@ -548,7 +548,7 @@
    (assert (attribute (name best-style) (value "India Pale Ale") (certainty 0.8)))
    (assert (attribute (name best-name) (value "American Black Ale") (certainty 0.8)))
    (assert (attribute (name explanation-main-meal) (value (str-cat "That's it because blue cheeses are stronger-flavored "
-           "cheeses which are most successfully balanced with stonger-flavored bolder beers with a roasty flavor, thanks "
+           "cheeses which are most successfully balanced with stronger-flavored bolder beers with a roasty flavor, thanks "
            "to the roast of the malt that comes through strong and can produce a delicate bitterness in these beers.")))))
 
 (defrule determine-best-beer-attributes-if-which-blue-or-natural-rind-cheese-is-Stilton
