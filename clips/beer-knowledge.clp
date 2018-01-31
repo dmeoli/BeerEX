@@ -140,7 +140,7 @@
    (assert (attribute (name best-color) (value pale) (certainty 0.2)))
    (assert (attribute (name best-color) (value brown) (certainty -0.1)))
    (assert (attribute (name best-color) (value dark) (certainty -0.2)))
-   (assert (attribute (name explanation-preference) (value "You prefere a pale beer."))))
+   (assert (attribute (name explanation-preference) (value "You prefer a pale beer."))))
 
 (defrule preferred-color-is-amber
    (declare (salience ?*medium-low-priority*))
@@ -148,7 +148,7 @@
    =>
    (assert (attribute (name best-color) (value amber) (certainty 0.2)))
    (assert (attribute (name best-color) (value dark) (certainty -0.1)))
-   (assert (attribute (name explanation-preference) (value "You prefere an amber beer."))))
+   (assert (attribute (name explanation-preference) (value "You prefer an amber beer."))))
 
 (defrule preferred-color-is-brown
    (declare (salience ?*medium-low-priority*))
@@ -156,7 +156,7 @@
    =>
    (assert (attribute (name best-color) (value brown) (certainty 0.2)))
    (assert (attribute (name best-color) (value pale) (certainty -0.1)))
-   (assert (attribute (name explanation-preference) (value "You prefere a brown beer."))))
+   (assert (attribute (name explanation-preference) (value "You prefer a brown beer."))))
 
 (defrule preferred-color-is-dark
    (declare (salience ?*medium-low-priority*))
@@ -165,7 +165,7 @@
    (assert (attribute (name best-color) (value dark) (certainty 0.2)))
    (assert (attribute (name best-color) (value amber) (certainty -0.1)))
    (assert (attribute (name best-color) (value pale) (certainty -0.2)))
-   (assert (attribute (name explanation-preference) (value "You prefere a dark beer."))))
+   (assert (attribute (name explanation-preference) (value "You prefer a dark beer."))))
 
 
 (defrule preferred-alcohol-is-low
@@ -987,7 +987,7 @@
    (assert (attribute (name best-flavor) (value hoppy-bitter) (certainty -0.5)))
    (assert (attribute (name best-flavor) (value fruity-spicy) (certainty -0.5)))
    (assert (attribute (name explanation-main-meal) (value (str-cat "That's it because chocolate pair well with beers "
-           "with a sweet flavor, thanks to the prevalent sense of maltiness on the palate, and also with beers wich "
+           "with a sweet flavor, thanks to the prevalent sense of maltiness on the palate, and also with beers which "
            "presents a roasty flavor, thanks to the roast of the malt that comes through strong and can produce a "
            "delicate bitterness in these beers.")))))
 
