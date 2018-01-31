@@ -103,10 +103,14 @@
 
 (deffunction get-explanation ()
    (bind ?explanation (format nil "%s %n%n" "*... for the following reasons:*"))
-   (do-for-all-facts ((?a attribute)) (eq ?a:name explanation-scenario) (bind ?explanation
-                                                                              (str-cat ?explanation ?a:value " ")))
-   (do-for-all-facts ((?a attribute)) (eq ?a:name explanation-preference) (bind ?explanation
-                                                                                (str-cat ?explanation ?a:value " ")))
+   (do-for-all-facts ((?a attribute))
+                     (eq ?a:name explanation-scenario)
+                     (bind ?explanation (str-cat ?explanation ?a:value " ")))
+   (do-for-all-facts ((?a attribute))
+                     (eq ?a:name explanation-preference)
+                     (bind ?explanation (str-cat ?explanation ?a:value " ")))
+   (do-for-all-facts ((?a attribute)) (eq ?a:name explanation-main-meal)
+                     (bind ?explanation (str-cat ?explanation ?a:value " ")))
    ?explanation)
 
 ;;*****************

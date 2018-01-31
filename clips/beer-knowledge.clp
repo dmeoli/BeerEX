@@ -15,7 +15,9 @@
    (assert (attribute (name best-color) (value dark) (certainty 0.05)))
    (assert (attribute (name best-flavor) (value dark-roasty) (certainty 0.05)))
    (assert (attribute (name best-flavor) (value hoppy-bitter) (certainty 0.05)))
-   (assert (attribute (name best-flavor) (value sour-tart-funky) (certainty 0.05))))
+   (assert (attribute (name best-flavor) (value sour-tart-funky) (certainty 0.05)))
+   (assert (attribute (name explanation-scenario) (value (str-cat "You're a man, so you'll appreciate more alcoholic "
+           "beers, maybe with a stronger flavor, such as bitter and sour.")))))
 
 (defrule determine-best-beer-attributes-if-which-sex-is-female
    (declare (salience ?*medium-low-priority*))
@@ -27,21 +29,27 @@
    (assert (attribute (name best-color) (value pale) (certainty 0.05)))
    (assert (attribute (name best-flavor) (value crisp-clean) (certainty 0.05)))
    (assert (attribute (name best-flavor) (value malty-sweet) (certainty 0.05)))
-   (assert (attribute (name best-flavor) (value fruity-spicy) (certainty 0.05))
+   (assert (attribute (name best-flavor) (value fruity-spicy) (certainty 0.05)))
+   (assert (attribute (name explanation-scenario) (value (str-cat "You're a woman, so you'll appreciate beers with less "
+           "noticeable alcohol, maybe with a cleaner or sweeter flavor.")))))
 
 (defrule determine-best-beer-attributes-if-which-age-is-18-23
    (declare (salience ?*medium-low-priority*))
    (which-age 18-23)
    =>
    (assert (attribute (name best-alcohol) (value mild) (certainty 0.05)))
-   (assert (attribute (name best-flavor) (value crisp-clean) (certainty 0.05))))
+   (assert (attribute (name best-flavor) (value crisp-clean) (certainty 0.05)))
+   (assert (attribute (name explanation-scenario) (value (str-cat "Being so young, you should not appreciate strong "
+           "flavors or high quantities of alcohol, so I bet you won't be disappointed with these beers.")))))
 
 (defrule determine-best-beer-attributes-if-which-age-is-24-29
    (declare (salience ?*medium-low-priority*))
    (which-age 24-29)
    =>
    (assert (attribute (name best-alcohol) (value noticeable) (certainty 0.03)))
-   (assert (attribute (name best-alcohol) (value mild) (certainty 0.03))))
+   (assert (attribute (name best-alcohol) (value mild) (certainty 0.03)))
+   (assert (attribute (name explanation-scenario) (value (str-cat "Your age let me choose between a variety of beers "
+           "with high tolerance in every aspect.")))))
 
 (defrule determine-best-beer-attributes-if-which-age-is-more-or-equal-than-30
    (declare (salience ?*medium-low-priority*))
@@ -51,7 +59,9 @@
    (assert (attribute (name best-flavor) (value hoppy-bitter) (certainty 0.03)))
    (assert (attribute (name best-flavor) (value sour-tart-funky) (certainty 0.03)))
    (assert (attribute (name best-alcohol) (value harsh) (certainty 0.04)))
-   (assert (attribute (name best-alcohol) (value noticeable) (certainty 0.05))))
+   (assert (attribute (name best-alcohol) (value noticeable) (certainty 0.05)))
+   (assert (attribute (name explanation-scenario) (value (str-cat "Your palate could be very demanding: I bet you would "
+           "try out something peculiar.")))))
 
 (defrule determine-best-beer-attributes-if-which-season-is-autumn
    (declare (salience ?*medium-low-priority*))
@@ -62,7 +72,9 @@
    (assert (attribute (name best-alcohol) (value noticeable) (certainty 0.035)))
    (assert (attribute (name best-alcohol) (value harsh) (certainty 0.04)))
    (assert (attribute (name best-flavor) (value sour-tart-funky) (certainty 0.04)))
-   (assert (attribute (name best-flavor) (value fruity-spicy) (certainty 0.05))))
+   (assert (attribute (name best-flavor) (value fruity-spicy) (certainty 0.05)))
+   (assert (attribute (name explanation-scenario) (value (str-cat "Cold and rainy days are perfect to taste a little "
+           "more alcoholic beer than the average, with a more particular flavor.")))))
 
 (defrule determine-best-beer-attributes-if-which-season-is-spring
    (declare (salience ?*medium-low-priority*))
@@ -73,7 +85,9 @@
    (assert (attribute (name best-alcohol) (value mild) (certainty 0.035)))
    (assert (attribute (name best-alcohol) (value not-detectable) (certainty 0.04)))
    (assert (attribute (name best-flavor) (value fruity-spicy) (certainty 0.04)))
-   (assert (attribute (name best-flavor) (value crisp-clean) (certainty 0.05))))
+   (assert (attribute (name best-flavor) (value crisp-clean) (certainty 0.05)))
+   (assert (attribute (name explanation-scenario) (value (str-cat "Spring days are perfect to taste beers with clean "
+           "or spicy flavor, without the clash of too much alcohol.")))))
 
 (defrule determine-best-beer-attributes-if-which-season-is-summer
    (declare (salience ?*medium-low-priority*))
@@ -82,7 +96,9 @@
    (assert (attribute (name best-alcohol) (value mild) (certainty 0.04)))
    (assert (attribute (name best-alcohol) (value not-detectable) (certainty 0.05)))
    (assert (attribute (name best-flavor) (value crisp-clean) (certainty 0.05)))
-   (assert (attribute (name best-flavor) (value hoppy-bitter) (certainty 0.05))))
+   (assert (attribute (name best-flavor) (value hoppy-bitter) (certainty 0.05)))
+   (assert (attribute (name explanation-scenario) (value (str-cat "Hotter days are perfect to taste beers with a slight "
+           "sense of alcohol, with a clean fresh flavor.")))))
 
 (defrule determine-best-beer-attributes-if-which-season-is-winter
    (declare (salience ?*medium-low-priority*))
@@ -91,13 +107,17 @@
    (assert (attribute (name best-alcohol) (value noticeable) (certainty 0.04)))
    (assert (attribute (name best-alcohol) (value harsh) (certainty 0.05)))
    (assert (attribute (name best-flavor) (value malty-sweet) (certainty 0.05)))
-   (assert (attribute (name best-flavor) (value dark-roasty) (certainty 0.05))))
+   (assert (attribute (name best-flavor) (value dark-roasty) (certainty 0.05)))
+   (assert (attribute (name explanation-scenario) (value (str-cat "Frosty days are perfect to taste something sweet or "
+           "roasty, that strongly change your palate. Also, high alcoholic beers can heat you up.")))))
 
 (defrule determine-best-beer-attributes-if-he-is-not-a-regular-beer-drinker
    (declare (salience ?*medium-low-priority*))
    (regular-beer-drinker no)
    =>
-   (assert (attribute (name best-flavor) (value crisp-clean) (certainty 0.08))))
+   (assert (attribute (name best-flavor) (value crisp-clean) (certainty 0.08)))
+   (assert (attribute (name explanation-scenario) (value (str-cat "You're supposed to start with standard aromas; "
+           "afterwards, you'll be ready for something more peculiar.")))))
 
 (defrule determine-best-beer-attributes-if-he-is-going-to-smoke
    (declare (salience ?*medium-low-priority*))
@@ -106,39 +126,46 @@
    (assert (attribute (name best-flavor) (value crisp-clean) (certainty 0.08)))
    (assert (attribute (name best-color) (value pale) (certainty 0.07)))
    (assert (attribute (name best-alcohol) (value noticeable) (certainty 0.05)))
-   (assert (attribute (name best-carbonation) (value medium) (certainty 0.05))))
+   (assert (attribute (name best-carbonation) (value medium) (certainty 0.05)))
+   (assert (attribute (name explanation-scenario) (value (str-cat "Beers with a cleaner flavor may be the good choice "
+           "while smoking, because the beer may alter the taste of tobacco. Also, stronger beers pair well with tobacco "
+           "flavor.")))))
 
 ; determine best beer attributes for personal preferences recognized
 
 (defrule preferred-color-is-pale
-  (declare (salience ?*medium-low-priority*))
-  (preferred-color pale)
-  =>
-  (assert (attribute (name best-color) (value pale) (certainty 0.2)))
-  (assert (attribute (name best-color) (value brown) (certainty -0.1)))
-  (assert (attribute (name best-color) (value dark) (certainty -0.2))))
+   (declare (salience ?*medium-low-priority*))
+   (preferred-color pale)
+   =>
+   (assert (attribute (name best-color) (value pale) (certainty 0.2)))
+   (assert (attribute (name best-color) (value brown) (certainty -0.1)))
+   (assert (attribute (name best-color) (value dark) (certainty -0.2)))
+   (assert (attribute (name explanation-preference) (value "You prefere a pale beer."))))
 
 (defrule preferred-color-is-amber
-  (declare (salience ?*medium-low-priority*))
-  (preferred-color amber)
-  =>
-  (assert (attribute (name best-color) (value amber) (certainty 0.2)))
-  (assert (attribute (name best-color) (value dark) (certainty -0.1))))
+   (declare (salience ?*medium-low-priority*))
+   (preferred-color amber)
+   =>
+   (assert (attribute (name best-color) (value amber) (certainty 0.2)))
+   (assert (attribute (name best-color) (value dark) (certainty -0.1)))
+   (assert (attribute (name explanation-preference) (value "You prefere an amber beer."))))
 
 (defrule preferred-color-is-brown
-  (declare (salience ?*medium-low-priority*))
-  (preferred-color brown)
-  =>
-  (assert (attribute (name best-color) (value brown) (certainty 0.2)))
-  (assert (attribute (name best-color) (value pale) (certainty -0.1))))
+   (declare (salience ?*medium-low-priority*))
+   (preferred-color brown)
+   =>
+   (assert (attribute (name best-color) (value brown) (certainty 0.2)))
+   (assert (attribute (name best-color) (value pale) (certainty -0.1)))
+   (assert (attribute (name explanation-preference) (value "You prefere a brown beer."))))
 
 (defrule preferred-color-is-dark
-  (declare (salience ?*medium-low-priority*))
-  (preferred-color dark)
-  =>
-  (assert (attribute (name best-color) (value dark) (certainty 0.2)))
-  (assert (attribute (name best-color) (value amber) (certainty -0.1)))
-  (assert (attribute (name best-color) (value pale) (certainty -0.2))))
+   (declare (salience ?*medium-low-priority*))
+   (preferred-color dark)
+   =>
+   (assert (attribute (name best-color) (value dark) (certainty 0.2)))
+   (assert (attribute (name best-color) (value amber) (certainty -0.1)))
+   (assert (attribute (name best-color) (value pale) (certainty -0.2)))
+   (assert (attribute (name explanation-preference) (value "You prefere a dark beer."))))
 
 
 (defrule preferred-alcohol-is-low
@@ -147,21 +174,24 @@
    =>
    (assert (attribute (name best-alcohol) (value not-detectable) (certainty 0.2)))
    (assert (attribute (name best-alcohol) (value noticeable) (certainty -0.1)))
-   (assert (attribute (name best-alcohol) (value harsh) (certainty -0.2))))
+   (assert (attribute (name best-alcohol) (value harsh) (certainty -0.2)))
+   (assert (attribute (name explanation-preference) (value "You chose a low alcoholic beer."))))
 
 (defrule preferred-alcohol-is-mild
    (declare (salience ?*medium-low-priority*))
    (preferred-alcohol mild)
    =>
    (assert (attribute (name best-alcohol) (value mild) (certainty 0.2)))
-   (assert (attribute (name best-alcohol) (value harsh) (certainty -0.1))))
+   (assert (attribute (name best-alcohol) (value harsh) (certainty -0.1)))
+   (assert (attribute (name explanation-preference) (value "You chose a medium alcoholic beer."))))
 
 (defrule preferred-alcohol-is-high
    (declare (salience ?*medium-low-priority*))
    (preferred-alcohol high)
    =>
    (assert (attribute (name best-alcohol) (value noticeable) (certainty 0.2)))
-   (assert (attribute (name best-alcohol) (value not-detectable) (certainty -0.1))))
+   (assert (attribute (name best-alcohol) (value not-detectable) (certainty -0.1)))
+   (assert (attribute (name explanation-preference) (value "You chose a high alcoholic beer."))))
 
 (defrule preferred-alcohol-is-very-high
    (declare (salience ?*medium-low-priority*))
@@ -169,54 +199,62 @@
    =>
    (assert (attribute (name best-alcohol) (value harsh) (certainty 0.2)))
    (assert (attribute (name best-alcohol) (value mild) (certainty -0.1)))
-   (assert (attribute (name best-alcohol) (value not-detectable) (certainty -0.2))))
+   (assert (attribute (name best-alcohol) (value not-detectable) (certainty -0.2)))
+   (assert (attribute (name explanation-preference) (value "You chose a very high alcoholic beer."))))
 
 (defrule preferred-carbonation-is-low
-  (declare (salience ?*medium-low-priority*))
-  (preferred-carbonation low)
-  =>
-  (assert (attribute (name best-carbonation) (value low) (certainty 0.2)))
-  (assert (attribute (name best-carbonation) (value high) (certainty -0.2))))
+   (declare (salience ?*medium-low-priority*))
+   (preferred-carbonation low)
+   =>
+   (assert (attribute (name best-carbonation) (value low) (certainty 0.2)))
+   (assert (attribute (name best-carbonation) (value high) (certainty -0.2)))
+   (assert (attribute (name explanation-preference) (value "It's a low carbonated beer."))))
 
 (defrule preferred-carbonation-is-medium
-  (declare (salience ?*medium-low-priority*))
-  (preferred-carbonation medium)
-  =>
-  (assert (attribute (name best-carbonation) (value medium) (certainty 0.2))))
+   (declare (salience ?*medium-low-priority*))
+   (preferred-carbonation medium)
+   =>
+   (assert (attribute (name best-carbonation) (value medium) (certainty 0.2)))
+   (assert (attribute (name explanation-preference) (value "It's a medium carbonated beer."))))
 
 (defrule preferred-carbonation-is-high
-  (declare (salience ?*medium-low-priority*))
-  (preferred-carbonation high)
-  =>
-  (assert (attribute (name best-carbonation) (value high) (certainty 0.2)))
-  (assert (attribute (name best-carbonation) (value low) (certainty -0.2))))
+   (declare (salience ?*medium-low-priority*))
+   (preferred-carbonation high)
+   =>
+   (assert (attribute (name best-carbonation) (value high) (certainty 0.2)))
+   (assert (attribute (name best-carbonation) (value low) (certainty -0.2)))
+   (assert (attribute (name explanation-preference) (value "It's a high carbonated beer."))))
 
 (defrule preferred-flavor-is-clean
    (declare (salience ?*medium-low-priority*))
    (preferred-flavor clean)
    =>
-   (assert (attribute (name best-flavor) (value crisp-clean) (certainty 0.2))))
+   (assert (attribute (name best-flavor) (value crisp-clean) (certainty 0.2)))
+   (assert (attribute (name explanation-preference) (value "You desire a beer with a clean flavor."))))
 
 (defrule preferred-flavor-is-sweet
    (declare (salience ?*medium-low-priority*))
    (preferred-flavor sweet)
    =>
    (assert (attribute (name best-flavor) (value malty-sweet) (certainty 0.2)))
-   (assert (attribute (name best-flavor) (value hoppy-bitter) (certainty -0.2))))
+   (assert (attribute (name best-flavor) (value hoppy-bitter) (certainty -0.2)))
+   (assert (attribute (name explanation-preference) (value "You desire a beer with a sweet flavor."))))
 
 (defrule preferred-flavor-is-bitter
    (declare (salience ?*medium-low-priority*))
    (preferred-flavor bitter)
    =>
    (assert (attribute (name best-flavor) (value hoppy-bitter) (certainty 0.2)))
-   (assert (attribute (name best-flavor) (value malty-sweet) (certainty -0.2))))
+   (assert (attribute (name best-flavor) (value malty-sweet) (certainty -0.2)))
+   (assert (attribute (name explanation-preference) (value "You desire a beer with a bitter flavor."))))
 
 (defrule preferred-flavor-is-roasty
    (declare (salience ?*medium-low-priority*))
    (preferred-flavor roasty)
    =>
    (assert (attribute (name best-flavor) (value dark-roasty) (certainty 0.2)))
-   (assert (attribute (name best-flavor) (value fruity-spicy) (certainty -0.2))))
+   (assert (attribute (name best-flavor) (value fruity-spicy) (certainty -0.2)))
+   (assert (attribute (name explanation-preference) (value "You desire a beer with a roasty flavor."))))
 
 (defrule preferred-flavor-is-fruity
    (declare (salience ?*medium-low-priority*))
@@ -224,13 +262,15 @@
        (preferred-flavor spicy))
    =>
    (assert (attribute (name best-flavor) (value fruity-spicy) (certainty 0.2)))
-   (assert (attribute (name best-flavor) (value dark-roasty) (certainty -0.2))))
+   (assert (attribute (name best-flavor) (value dark-roasty) (certainty -0.2)))
+   (assert (attribute (name explanation-preference) (value "You desire a beer with a fruity flavor."))))
 
 (defrule preferred-flavor-is-sour
    (declare (salience ?*medium-low-priority*))
    (preferred-flavor sour)
    =>
-   (assert (attribute (name best-flavor) (value sour-tart-funky) (certainty 0.2))))
+   (assert (attribute (name best-flavor) (value sour-tart-funky) (certainty 0.2)))
+   (assert (attribute (name explanation-preference) (value "You desire a beer with a sour flavor."))))
 
 ; determine best beer attributes for meal type recognized
 
@@ -238,41 +278,61 @@
    (declare (salience ?*medium-low-priority*))
    (pizza-topping classic)
    =>
-   (assert (attribute (name best-flavor) (value crisp-clean) (certainty 0.5))))
+   (assert (attribute (name best-flavor) (value crisp-clean) (certainty 0.5)))
+   (assert (attribute (name explanation-main-meal) (value (str-cat "You're eating a classic pizza: the best way to enjoy "
+           "it is pair that with beers that have a very delicate impact on the palate and can sometimes produce a "
+           "feeling of dryness in the mouth, creating an overall delicate outcome.")))))
 
 (defrule determine-best-beer-attributes-if-which-pizza-topping-is-meat
    (declare (salience ?*medium-low-priority*))
    (meat-topping-is-spicy no)
    =>
    (assert (attribute (name best-flavor) (value hoppy-bitter) (certainty 0.5)))
-   (assert (attribute (name best-flavor) (value malty-sweet) (certainty -0.5))))
+   (assert (attribute (name best-flavor) (value malty-sweet) (certainty -0.5)))
+   (assert (attribute (name explanation-main-meal) (value (str-cat "You're eating a pizza with meat: the best way to "
+           "enjoy it is pair that with beers with a bitter flavor, because of the bitterness of the hops that pleasantly "
+           "cleanses the mouth.")))))
+
 
 (defrule determine-best-beer-attributes-if-which-pizza-topping-is-spicy-meat
    (declare (salience ?*medium-low-priority*))
    (meat-topping-is-spicy yes)
    =>
    (assert (attribute (name best-flavor) (value malty-sweet) (certainty 0.5)))
-   (assert (attribute (name best-flavor) (value hoppy-bitter) (certainty -0.5))))
+   (assert (attribute (name best-flavor) (value hoppy-bitter) (certainty -0.5)))
+   (assert (attribute (name explanation-main-meal) (value (str-cat "You're eating a pizza with spicy meat: the best way "
+           "to enjoy it is pair that with beers with a sweet flavor, thanks to the prevalent sense of maltiness on the "
+           "palate.")))))
 
 (defrule determine-best-beer-attributes-if-which-pizza-topping-are-vegetables
   (declare (salience ?*medium-low-priority*))
   (vegetables-topping-are-roasted no)
   =>
-  (assert (attribute (name best-flavor) (value sour-tart-funky) (certainty 0.5))))
+  (assert (attribute (name best-flavor) (value sour-tart-funky) (certainty 0.5)))
+  (assert (attribute (name explanation-main-meal) (value (str-cat "You're eating a pizza with vegetables: the best way "
+          "to enjoy it is pair that with beers with a sour flavor, because of the pronounced acidity blended on the "
+          "palate with the addition of fruity aromas.")))))
 
 (defrule determine-best-beer-attributes-if-which-pizza-topping-are-roasted-vegetables
    (declare (salience ?*medium-low-priority*))
    (vegetables-topping-are-roasted yes)
    =>
    (assert (attribute (name best-flavor) (value dark-roasty) (certainty 0.5)))
-   (assert (attribute (name best-flavor) (value fruity-spicy) (certainty -0.5))))
+   (assert (attribute (name best-flavor) (value fruity-spicy) (certainty -0.5)))
+   (assert (attribute (name explanation-main-meal) (value (str-cat "You're eating a pizza with roasted vegetables: the "
+           "best way to enjoy it is pair that with beers with a roasty flavor, thanks to the roast of the malt that "
+           "comes through strong and can produce a delicate bitterness in these beers.")))))
 
 (defrule determine-best-beer-attributes-if-which-pizza-topping-is-cheese
    (declare (salience ?*medium-low-priority*))
    (pizza-topping cheese)
    =>
    (assert (attribute (name best-flavor) (value fruity-spicy) (certainty 0.5)))
-   (assert (attribute (name best-flavor) (value dark-roasty) (certainty -0.5))))
+   (assert (attribute (name best-flavor) (value dark-roasty) (certainty -0.5)))
+   (assert (attribute (name explanation-main-meal) (value (str-cat "You're eating a pizza with cheese: the best way to "
+           "enjoy it is pair that with beers with a spicy flavor, derived from the yeast and dominated by notes of fruit "
+           "and spice like tart apple, pear, peach, orange, lemon, apricot and clove, pepper, vanilla, coriander, "
+           "cinnamon, nutmeg, bay leaf.")))))
 
 (defrule determine-best-beer-attributes-if-which-cheese-style-is-fresh
    (declare (salience ?*medium-low-priority*))
@@ -280,7 +340,10 @@
    =>
    (assert (attribute (name best-style) (value "Wheat Beer") (certainty 0.8)))
    (assert (attribute (name best-name) (value "Belgian-Style Fruit Lambic") (certainty 0.8)))
-   (assert (attribute (name best-name) (value "Belgian-Style Lambic/Gueuze") (certainty 0.8))))
+   (assert (attribute (name best-name) (value "Belgian-Style Lambic/Gueuze") (certainty 0.8)))
+   (assert (attribute (name explanation-main-meal) (value (str-cat "That's it because fresh cheeses are light cheeses "
+           "which pair excellently with naturally and spontaneously fermented beers with important sweetnees and "
+           "sourness characters.")))))
 
 (defrule determine-best-beer-attributes-if-which-fresh-cheese-is-Mascarpone
    (declare (salience ?*medium-low-priority*))
@@ -323,7 +386,10 @@
    =>
    (assert (attribute (name best-style) (value "Pale Ale") (certainty 0.8)))
    (assert (attribute (name best-name) (value "German-Style Bock") (certainty 0.8)))
-   (assert (attribute (name best-name) (value "German-Style Kölsch") (certainty 0.8))))
+   (assert (attribute (name best-name) (value "German-Style Kölsch") (certainty 0.8)))
+   (assert (attribute (name explanation-main-meal) (value (str-cat "That's it because semi-soft cheeses can be paired "
+           "with many different craft beers, best of all beers which presents caramel or toasted malt flavor, and also "
+           "medium to high bitterness.")))))
 
 (defrule determine-best-beer-attributes-if-which-semi-soft-cheese-is-Mozzarella
    (declare (salience ?*medium-low-priority*))
@@ -359,7 +425,11 @@
    (assert (attribute (name best-style) (value "Brown Ale") (certainty 0.8)))
    (assert (attribute (name best-name) (value "Bohemian-Style Pilsener") (certainty 0.8)))
    (assert (attribute (name best-name) (value "German-Style Pilsener") (certainty 0.8)))
-   (assert (attribute (name best-name) (value "American Imperial Stout") (certainty 0.8))))
+   (assert (attribute (name best-name) (value "American Imperial Stout") (certainty 0.8)))
+   (assert (attribute (name explanation-main-meal) (value (str-cat "That's it because firm/hard cheeses are easily "
+           "paired with beers that typically have an extremely rich malty flavor and aroma with full, sweet malt "
+           "character. Perception of hop bitterness is medium to high; roasted malt, caramel-like and chocolate-like "
+           "characters could also be perceived.")))))
 
 (defrule determine-best-beer-attributes-if-which-firm-hard-cheese-is-Swiss
    (declare (salience ?*medium-low-priority*))
@@ -476,7 +546,10 @@
    (assert (attribute (name best-flavor) (value dark-roasty) (certainty 0.5)))
    (assert (attribute (name best-flavor) (value fruity-spicy) (certainty -0.5)))
    (assert (attribute (name best-style) (value "India Pale Ale") (certainty 0.8)))
-   (assert (attribute (name best-name) (value "American Black Ale") (certainty 0.8))))
+   (assert (attribute (name best-name) (value "American Black Ale") (certainty 0.8)))
+   (assert (attribute (name explanation-main-meal) (value (str-cat "That's it because blue cheeses are stronger-flavored "
+           "cheeses which are most successfully balanced with stonger-flavored bolder beers with a roasty flavor, thanks "
+           "to the roast of the malt that comes through strong and can produce a delicate bitterness in these beers.")))))
 
 (defrule determine-best-beer-attributes-if-which-blue-or-natural-rind-cheese-is-Stilton
    (declare (salience ?*medium-low-priority*))
@@ -494,7 +567,10 @@
    (assert (attribute (name best-name) (value "Belgian-Style Blonde Ale") (certainty 0.8)))
    (assert (attribute (name best-name) (value "Blonde Ale") (certainty 0.8)))
    (assert (attribute (name best-name) (value "American Barley Wine") (certainty 0.8)))
-   (assert (attribute (name best-name) (value "British-Style Barley Wine Ale") (certainty 0.8))))
+   (assert (attribute (name best-name) (value "British-Style Barley Wine Ale") (certainty 0.8)))
+   (assert (attribute (name explanation-main-meal) (value (str-cat "That's it because natural rind cheeses pair well "
+           "with many different craft beers, best of all beers which presents caramel or toffee malt character, and also "
+           "medium to high bitterness.")))))
 
 (defrule determine-best-beer-attributes-if-which-natural-rind-cheese-is-Brie
    (declare (salience ?*medium-low-priority*))
@@ -532,7 +608,10 @@
    (assert (attribute (name best-name) (value "Belgian-Style Golden Strong Ale") (certainty 0.8)))
    (assert (attribute (name best-name) (value "Belgian-Style Pale Ale") (certainty 0.8)))
    (assert (attribute (name best-name) (value "Belgian-Style Dubbel") (certainty 0.8)))
-   (assert (attribute (name best-name) (value "French-Style Biére de Garde") (certainty 0.8))))
+   (assert (attribute (name best-name) (value "French-Style Biére de Garde") (certainty 0.8)))
+   (assert (attribute (name explanation-main-meal) (value (str-cat "That's it because washed rind cheeses, while "
+           "potentially pungent, are often creamy and can be paired with beers that presents caramel or toasted malt "
+           "aromas, with fruity or spicy characters.")))))
 
 (defrule determine-best-beer-attributes-if-which-washed-rind-cheese-is-Taleggio
    (declare (salience ?*medium-low-priority*))
@@ -544,7 +623,10 @@
    (declare (salience ?*medium-low-priority*))
    (which-entrée grain)
    =>
-   (assert (attribute (name best-flavor) (value crisp-clean) (certainty 0.5))))
+   (assert (attribute (name best-flavor) (value crisp-clean) (certainty 0.5)))
+   (assert (attribute (name explanation-main-meal) (value (str-cat "That's it because grain pair generally well with "
+           "beers that have a very delicate impact on the palate and can sometimes produce a feeling of dryness in the "
+           "mouth, creating an overall delicate outcome.")))))
 
 (defrule determine-best-beer-attributes-if-which-grain-are-chips
    (declare (salience ?*medium-low-priority*))
@@ -573,14 +655,18 @@
    (which-entrée legumes)
    =>
    (assert (attribute (name best-flavor) (value malty-sweet) (certainty 0.5)))
-   (assert (attribute (name best-flavor) (value hoppy-bitter) (certainty -0.5))))
+   (assert (attribute (name best-flavor) (value hoppy-bitter) (certainty -0.5)))
+   (assert (attribute (name explanation-main-meal) (value (str-cat "That's it because legumes pair generally well with "
+           "a sweet flavor, thanks to the prevalent sense of maltiness on the palate.")))))
 
 (defrule determine-best-beer-attributes-if-which-which-entree-is-fish
    (declare (salience ?*medium-low-priority*))
    (which-entrée fish)
    =>
    (assert (attribute (name best-name) (value "English-Style Bitter") (certainty 0.8)))
-   (assert (attribute (name best-name) (value "English-Style Pale Ale (ESB)") (certainty 0.8))))
+   (assert (attribute (name best-name) (value "English-Style Pale Ale (ESB)") (certainty 0.8)))
+   (assert (attribute (name explanation-main-meal) (value (str-cat "That's it because fish pair generally well with "
+           "beers which presents medium to high hop bitterness, flavor and aroma in order to cleanse the mouth.")))))
 
 (defrule determine-best-beer-attributes-if-which-fish-is-shellfish
    (declare (salience ?*medium-low-priority*))
@@ -609,7 +695,9 @@
    (which-entrée meat)
    =>
    (assert (attribute (name best-name) (value "Scotch Ale/Wee Heavy") (certainty 0.8)))
-   (assert (attribute (name best-name) (value "Scottish-Style Ale") (certainty 0.8))))
+   (assert (attribute (name best-name) (value "Scottish-Style Ale") (certainty 0.8)))
+   (assert (attribute (name explanation-main-meal) (value (str-cat "That's it because meat pair well with beers that "
+           "typically have malt-forward character, with a rich and dominant sweet, caramel-like malt flavor and aroma.")))))
 
 (defrule determine-best-beer-attributes-if-meat-cooking-method-is-barbecue
    (declare (salience ?*medium-low-priority*))
@@ -617,10 +705,9 @@
    =>
    (assert (attribute (name best-name) (value "American Amber Ale") (certainty 0.9))))
 
-(defrule determine-best-beer-attributes-if-meat-cooking-method-is-braised-or-which-dessert-is-chocolate
+(defrule determine-best-beer-attributes-if-meat-cooking-method-is-braised
    (declare (salience ?*medium-low-priority*))
-   (or (meat-cooking-method braised)
-       (which-dessert chocolate))
+   (meat-cooking-method braised)
    =>
    (assert (attribute (name best-flavor) (value malty-sweet) (certainty 0.5)))
    (assert (attribute (name best-flavor) (value dark-roasty) (certainty 0.5)))
@@ -650,7 +737,9 @@
    (declare (salience ?*medium-low-priority*))
    (which-meat rich)
    =>
-   (assert (attribute (name best-flavor) (value sour-tart-funky) (certainty 0.5))))
+   (assert (attribute (name best-flavor) (value sour-tart-funky) (certainty 0.5)))
+   (assert (attribute (name explanation-main-meal) (value (str-cat "Moreover, rich meats comes together with beers that "
+           "presents pronounced acidity.")))))
 
 (defrule determine-best-beer-attributes-if-which-rich-is-roasted-beef-or-which-rich-is-lamb
    (declare (salience ?*medium-low-priority*))
@@ -805,7 +894,9 @@
    (which-game birds)
    =>
    (assert (attribute (name best-flavor) (value hoppy-bitter) (certainty 0.5)))
-   (assert (attribute (name best-flavor) (value malty-sweet) (certainty -0.5))))
+   (assert (attribute (name best-flavor) (value malty-sweet) (certainty -0.5)))
+   (assert (attribute (name explanation-main-meal) (value (str-cat "Moreover, game birds pair excellently well with "
+           "beers which presents medium to high hop bitterness, flavor and aroma in order to cleanse the mouth.")))))
 
 (defrule determine-best-beer-attributes-if-which-game-birds-is-roasted-duck
    (declare (salience ?*medium-low-priority*))
@@ -820,7 +911,10 @@
    =>
    (assert (attribute (name best-name) (value "American Amber Lager") (certainty 0.8)))
    (assert (attribute (name best-name) (value "Vienna-Style Lager") (certainty 0.8)))
-   (assert (attribute (name best-name) (value "American Brown Ale") (certainty 0.8))))
+   (assert (attribute (name best-name) (value "American Brown Ale") (certainty 0.8)))
+   (assert (attribute (name explanation-main-meal) (value (str-cat "That's it because vegetables pair generally well "
+           "with beers that are characterized by malty aroma and slight malt sweetness with caramel-like and "
+           "chocolate-like characters.")))))
 
 (defrule determine-best-beer-attributes-if-which-vegetables-is-root
    (declare (salience ?*medium-low-priority*))
@@ -859,7 +953,11 @@
    (assert (attribute (name best-flavor) (value hoppy-bitter) (certainty 0.5)))
    (assert (attribute (name best-flavor) (value dark-roasty) (certainty 0.5)))
    (assert (attribute (name best-flavor) (value malty-sweet) (certainty -0.5)))
-   (assert (attribute (name best-flavor) (value fruity-spicy) (certainty -0.5))))
+   (assert (attribute (name best-flavor) (value fruity-spicy) (certainty -0.5)))
+   (assert (attribute (name explanation-main-meal) (value (str-cat "That's it because fats pair generally well with "
+           "beers with a bitter flavor, because of the bitterness of the hops that pleasantly cleanses the mouth, and "
+           "also with beers characterized by a roasty flavor, thanks to the roast of the malt that comes through strong "
+           "and can produce a delicate bitterness in these beers.")))))
 
 (defrule determine-best-beer-attributes-if-which-fats-is-vegetable
    (declare (salience ?*medium-low-priority*))
@@ -875,7 +973,23 @@
    =>
    (assert (attribute (name best-name) (value "Scotch Ale/Wee Heavy") (certainty 0.9)))
    (assert (attribute (name best-name) (value "Scottish-Style Ale") (certainty 0.9)))
-   (assert (attribute (name best-name) (value "American Sour") (certainty 0.9))))
+   (assert (attribute (name best-name) (value "American Sour") (certainty 0.9)))
+   (assert (attribute (name explanation-main-meal) (value (str-cat "That's it because desserts pair particularly well "
+           "with beers that presents an overwhelmingly malty, rich and dominant sweet malt flavor and aroma and soft "
+           "and chewy mouthfeel.")))))
+
+(defrule determine-best-beer-attributes-if-which-dessert-is-chocolate
+   (declare (salience ?*medium-low-priority*))
+   (which-dessert chocolate)
+   =>
+   (assert (attribute (name best-flavor) (value malty-sweet) (certainty 0.5)))
+   (assert (attribute (name best-flavor) (value dark-roasty) (certainty 0.5)))
+   (assert (attribute (name best-flavor) (value hoppy-bitter) (certainty -0.5)))
+   (assert (attribute (name best-flavor) (value fruity-spicy) (certainty -0.5)))
+   (assert (attribute (name explanation-main-meal) (value (str-cat "That's it because chocolate pair well with beers "
+           "with a sweet flavor, thanks to the prevalent sense of maltiness on the palate, and also with beers wich "
+           "presents a roasty flavor, thanks to the roast of the malt that comes through strong and can produce a "
+           "delicate bitterness in these beers.")))))
 
 (defrule determine-best-beer-attributes-if-which-chocolate-is-white
    (declare (salience ?*medium-low-priority*))
