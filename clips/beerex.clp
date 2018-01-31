@@ -83,8 +83,8 @@
    (state-list))
 
 (defrule load-beer-styles-list
-  =>
-  (load-facts clips/beer-styles.fct))
+   =>
+   (load-facts clips/beer-styles.fct))
 
 ;;****************
 ;;* DEFFUNCTIONS *
@@ -94,26 +94,34 @@
    (< (fact-slot-value ?attribute1 certainty) (fact-slot-value ?attribute2 certainty)))
 
 (deffunction combine-certainty-factors (?x ?y)
-    (if (and (> ?x 0) (> ?y 0))
-     then (bind ?c (- (+ ?x ?y) (* ?x ?y)))
-     else (if (and (< ?x 0) (< ?y 0))
-           then (bind ?c (+ (+ ?x ?y) (* ?x ?y)))
-           else (bind ?c (/ (+ ?x ?y ) (- 1 (min (abs ?x) (abs ?y)))))))
-    ?c)
+   (if (and (> ?x 0) (> ?y 0))
+    then (bind ?c (- (+ ?x ?y) (* ?x ?y)))
+    else (if (and (< ?x 0) (< ?y 0))
+          then (bind ?c (+ (+ ?x ?y) (* ?x ?y)))
+          else (bind ?c (/ (+ ?x ?y ) (- 1 (min (abs ?x) (abs ?y)))))))
+   ?c)
+
+(deffunction get-explanation ()
+   (bind ?explanation (format nil "%s %n%n" "*... for the following reasons:*"))
+   (do-for-all-facts ((?a attribute)) (eq ?a:name explanation-scenario) (bind ?explanation
+                                                                              (str-cat ?explanation ?a:value " ")))
+   (do-for-all-facts ((?a attribute)) (eq ?a:name explanation-preference) (bind ?explanation
+                                                                                (str-cat ?explanation ?a:value " ")))
+   ?explanation)
 
 ;;*****************
 ;;* INITIAL STATE *
 ;;*****************
 
 (defrule start
-  =>
-  (set-strategy random)
-  (assert (UI-state (display (format nil "%n%s %n%n%s %n%n%s" "Welcome to the Beer EXpert system 🍻️"
-                                         (str-cat "⁉️ All I need is that you answer simple questions by choosing "
-                                                  "one of the responses that are offered to you.")
-                                         "To start, please press the /new button 😄"))
-                    (relation-asserted start)
-                    (state initial))))
+   =>
+   (set-strategy random)
+   (assert (UI-state (display (format nil "%n%s %n%n%s %n%n%s" "Welcome to the Beer EXpert system 🍻️"
+                                          (str-cat "⁉️ All I need is that you answer simple questions by choosing "
+                                                   "one of the responses that are offered to you.")
+                                          "To start, please press the /new button 😄"))
+                     (relation-asserted start)
+                     (state initial))))
 
 ;;***********************
 ;;* BEER QUESTION RULES *
@@ -169,7 +177,6 @@
    (UI-state (id ?id))
    (state-list (current ?id))
    =>
-   (do-for-all-facts ((?a attribute)) (neq ?a:name beer) (retract ?a))
    (bind ?beers "")
    (bind ?attributes (sort sort-certainties (find-all-facts ((?a attribute)) (eq ?a:name beer))))
    (progn$ (?a ?attributes)
@@ -178,9 +185,11 @@
                                                           (* (fact-slot-value ?a certainty) 100)))))
            (retract ?a))
    (if (neq ?beers "")
-    then (bind ?results (str-cat (format nil "%s %n%n" "*✅ Done. I have selected these beer styles for you.*") ?beers))
+    then (bind ?results (str-cat (format nil "%s %n%n%s %n%s" "*✅ Done. I have selected these beer styles for you...*"
+                                             ?beers (get-explanation))))
     else (bind ?results (format nil "%s %n%n%s" "*🚫 Sorry! I could not select any beer style for you. 😞"
                                                 "Please, try again! 💪🏻*")))
+   (do-for-all-facts ((?a attribute)) TRUE (retract ?a))
    (assert (UI-state (display ?results)
                      (state final))))
 
