@@ -1,13 +1,13 @@
 
-;;;==========================================================
+;;;===============================================
 ;;; BeerEX: the Beer EXpert system
 ;;;
-;;;   This expert system suggests a beer to drink with a meal.
+;;;   This expert system suggests a beer to drink.
 ;;;
 ;;;   CLIPS 6.30
 ;;;
 ;;;   Author: Donato Meoli
-;;;===========================================================
+;;;===============================================
 
 
 ;;**************
