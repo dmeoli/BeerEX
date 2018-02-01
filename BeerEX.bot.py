@@ -3,7 +3,7 @@
 
 """
 BeerEX: the Beer EXpert system bot.
-This expert system suggests a beer to drink with a meal.
+This expert system suggests a beer to drink.
 
 Author: Donato Meoli
 """
