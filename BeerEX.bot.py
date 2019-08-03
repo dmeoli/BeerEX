@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 # coding=utf-8
 
 """
@@ -9,7 +9,7 @@ Author: Donato Meoli
 """
 
 from telegram import ReplyKeyboardRemove, KeyboardButton, ReplyKeyboardMarkup, \
-                     InlineKeyboardMarkup, InlineKeyboardButton, ParseMode
+    InlineKeyboardMarkup, InlineKeyboardButton, ParseMode
 from telegram.ext import MessageHandler, CommandHandler, CallbackQueryHandler, Filters, Updater
 from emoji import emojize
 import logging
@@ -99,15 +99,15 @@ def handleEvent(bot, update):
         nextUIState(bot, update)
     elif response == emojize(':sos: Help', use_aliases=True):
         help = current_ui[0].Slots['help']
-        if not re.findall('_.+?_\(.*?\)', help):
+        if not re.findall(r'_.+?_\(.*?\)', help):
             update.message.reply_text(text=help,
                                       parse_mode=ParseMode.MARKDOWN)
         else:
             keyboard = list()
-            for pattern in re.findall('_.+?_\(.*?\)', help):
-                keyboard.append([InlineKeyboardButton(text=re.findall('_(.+?)_', pattern)[0],
-                                                      callback_data=re.findall('\((.*?)\)', pattern)[0])])
-            for link in re.findall('\(.*?\)', help):
+            for pattern in re.findall(r'_.+?_\(.*?\)', help):
+                keyboard.append([InlineKeyboardButton(text=re.findall(r'_(.+?)_', pattern)[0],
+                                                      callback_data=re.findall(r'\((.*?)\)', pattern)[0])])
+            for link in re.findall(r'\(.*?\)', help):
                 help = help.replace(link, '')
             update.message.reply_text(text=help,
                                       parse_mode=ParseMode.MARKDOWN,
