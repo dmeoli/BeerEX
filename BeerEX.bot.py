@@ -9,7 +9,7 @@ Author: Donato Meoli
 """
 
 from telegram import ReplyKeyboardRemove, KeyboardButton, ReplyKeyboardMarkup, \
-                     InlineKeyboardMarkup, InlineKeyboardButton, ParseMode
+    InlineKeyboardMarkup, InlineKeyboardButton, ParseMode
 from telegram.ext import MessageHandler, CommandHandler, CallbackQueryHandler, Filters, Updater
 from emoji import emojize
 import logging

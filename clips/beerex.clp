@@ -93,7 +93,7 @@
 (deffunction sort-certainties (?attribute1 ?attribute2)
    (< (fact-slot-value ?attribute1 certainty) (fact-slot-value ?attribute2 certainty)))
 
-(deffunction combine-certainty-factors (?x ?y)
+(deffunction combine-CFs (?x ?y)
    (if (and (> ?x 0) (> ?y 0))
     then (bind ?c (- (+ ?x ?y) (* ?x ?y)))
     else (if (and (< ?x 0) (< ?y 0))
@@ -155,7 +155,7 @@
    (test (neq ?f1 ?f2))
    =>
    (retract ?f1)
-   (modify ?f2 (certainty (combine-certainty-factors ?certainty1 ?certainty2))))
+   (modify ?f2 (certainty (combine-CFs ?certainty1 ?certainty2))))
 
 (defrule generate-beers
    (declare (salience ?*medium-low-priority*))
