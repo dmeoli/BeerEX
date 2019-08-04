@@ -1,5 +1,8 @@
 # JetBrains IDE PyCharm Professional
 .idea
 
+# Dropbox
+.dropbox
+
 # CraftBeer
 CraftBeer
