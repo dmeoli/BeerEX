@@ -135,7 +135,7 @@
 
 (defrule load-beer-question-rules
    =>
-   (load clips/beer-questions.clp))
+   (load clipsrc/beer-questions.clp))
 
 ;;************************
 ;;* BEER KNOWLEDGE RULES *
@@ -143,7 +143,7 @@
 
 (defrule load-beer-knowledge-rules
    =>
-   (load clips/beer-knowledge.clp))
+   (load clipsrc/beer-knowledge.clp))
 
 ;;********************************
 ;;* BEER SELECTION & PRINT RULES *

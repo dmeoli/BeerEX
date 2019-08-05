@@ -164,7 +164,7 @@ def main():
     sys.setdefaultencoding('utf-8')
 
     # Load the Beer EXpert system
-    clips.Load('clips/beerex.clp')
+    clips.Load('clipsrc/beerex.clp')
 
     # Get the Telegram Bot Authorization Token
     token = os.environ.get('TOKEN')

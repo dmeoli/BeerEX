@@ -1,11 +1,11 @@
 
-(load clips/beerex.clp)
+(load clipsrc/beerex.clp)
 
 (undefrule load-beer-question-rules)
-(load clips/beer-questions.clp)
+(load clipsrc/beer-questions.clp)
 
 (undefrule load-beer-knowledge-rules)
-(load clips/beer-knowledge.clp)
+(load clipsrc/beer-knowledge.clp)
 
 (deffunction ask-question (?display ?allowed-values)
    (bind ?answer "")
