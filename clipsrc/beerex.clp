@@ -4,7 +4,7 @@
 ;;;
 ;;;   This expert system suggests a beer to drink according to taste and meal.
 ;;;
-;;;   CLIPS 6.31
+;;;   CLIPS 6.30
 ;;;
 ;;;   Author: Donato Meoli
 ;;;===========================================================================
