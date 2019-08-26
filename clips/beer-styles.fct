@@ -5,7 +5,7 @@
 
 ; Pale Ales
 
-(beer (style "Pale Ale
+(beer (style "Pale Ale")
     (name "American Amber Ale")
     (alcohol mild noticeable)
     (color brown)
