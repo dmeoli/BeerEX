@@ -1,15 +1,4 @@
 
-;;;===========================================================================
-;;; BeerEX: the Beer EXpert system
-;;;
-;;;   This expert system suggests a beer to drink according to taste and meal.
-;;;
-;;;   CLIPS 6.30
-;;;
-;;;   Author: Donato Meoli
-;;;===========================================================================
-
-
 ;;**************
 ;;* DEFGLOBALS *
 ;;**************
@@ -84,7 +73,7 @@
 
 (defrule load-beer-styles-list
    =>
-   (load-facts clipsrc/beer-styles.fct))
+   (load-facts clips/beer-styles.fct))
 
 ;;****************
 ;;* DEFFUNCTIONS *
@@ -135,7 +124,7 @@
 
 (defrule load-beer-question-rules
    =>
-   (load clipsrc/beer-questions.clp))
+   (load clips/beer-questions.clp))
 
 ;;************************
 ;;* BEER KNOWLEDGE RULES *
@@ -143,7 +132,7 @@
 
 (defrule load-beer-knowledge-rules
    =>
-   (load clipsrc/beer-knowledge.clp))
+   (load clips/beer-knowledge.clp))
 
 ;;********************************
 ;;* BEER SELECTION & PRINT RULES *

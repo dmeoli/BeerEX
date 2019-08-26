@@ -1,11 +1,21 @@
 
-(load clipsrc/beerex.clp)
+;;;===========================================================================
+;;; BeerEX: the Beer EXpert system
+;;;
+;;;   This expert system suggests a beer to drink according to taste and meal.
+;;;
+;;;   CLIPS 6.31
+;;;
+;;;   Author: Donato Meoli
+;;;===========================================================================
+
+(load clips/beerex.clp)
 
 (undefrule load-beer-question-rules)
-(load clipsrc/beer-questions.clp)
+(load clips/beer-questions.clp)
 
 (undefrule load-beer-knowledge-rules)
-(load clipsrc/beer-knowledge.clp)
+(load clips/beer-knowledge.clp)
 
 (deffunction ask-question (?display ?allowed-values)
    (bind ?answer "")
