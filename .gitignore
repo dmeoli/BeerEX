@@ -2,7 +2,11 @@
 .idea
 
 # LaTeX
-latex
+*.synctex.gz
+*.out
+*.aux
+*.log
+*.toc
 
 # CraftBeer
 CraftBeer
