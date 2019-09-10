@@ -28,10 +28,6 @@ To run the expert system you just type into the terminal:
 $ clips -f BeerEX.clp
 ```
 
-## Contributors
-
-This software has been developed with the contribution of [**Fabio Murgese**](https://github.com/FabioMurgese).
-
 ## License [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 This software is released under the MIT License. See the [LICENSE](LICENSE) file for details.
