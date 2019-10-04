@@ -17,7 +17,7 @@ helps with the filling of the beers database and system knowledge through the in
 
 ## Prerequisites
 
-To run the expert system you must download [CLIPS 6.30](https://sourceforge.net/projects/clipsrules/files/CLIPS/6.30/) 
+To run the expert system you have to download [CLIPS 6.30](https://sourceforge.net/projects/clipsrules/files/CLIPS/6.30/) 
 for your operating system.
 
 ## Running the expert system
