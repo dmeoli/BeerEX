@@ -6,7 +6,7 @@ BeerEX is a rule-based expert system, available as [Telegram bot](https://t.me/B
 to drink according to taste and meal. This code was developed during the Knowledge Engineering course @ 
 [Department of Computer Science](http://www.uniba.it/ricerca/dipartimenti/informatica) @ 
 [University of Bari "Aldo Moro"](http://www.uniba.it/) under the supervision of prof. 
-[Floriana Esposito](http://lacam.di.uniba.it/people/FlorianaEsposito.html) and and then revised during the 
+[Floriana Esposito](http://lacam.di.uniba.it/people/FlorianaEsposito.html) and then revised during the 
 Artificial Intelligence Fundamentals course @ 
 [Department of Computer Science](https://www.di.unipi.it/en/) @ [University of Pisa](https://www.unipi.it/index.php/english).
 
