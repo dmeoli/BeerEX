@@ -2,7 +2,7 @@
 
 *"Beer is proof that God loves us and want us to be happy."* (Benjamin Franklin)
 
-BeerEX is a rule-based expert system, available as [Telegram bot](https://t.me/BeerEXpertBot), which suggests a beer 
+BeerEX is a rule-based expert system, available as a [Telegram bot](https://t.me/BeerEXpertBot), which suggests a beer 
 to drink according to taste and meal. This code was developed during the Knowledge Engineering course @ 
 [Department of Computer Science](http://www.uniba.it/ricerca/dipartimenti/informatica) @ 
 [University of Bari "Aldo Moro"](http://www.uniba.it/) under the supervision of prof. 
@@ -18,7 +18,11 @@ helps with the filling of the beers database and system knowledge through the in
 ## Prerequisites
 
 To run the expert system you have to download [CLIPS 6.30](https://sourceforge.net/projects/clipsrules/files/CLIPS/6.30/) 
-for your operating system.
+for your operating system. If you are under a Debian-like operating system, you just have to type in the terminal: 
+
+```
+$ sudo apt install clips
+```
 
 ## Running the expert system
 
