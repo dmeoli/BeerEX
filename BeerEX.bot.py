@@ -8,15 +8,16 @@ This expert system suggests a beer to drink according to taste and meal.
 Author: Donato Meoli
 """
 
-from telegram import ReplyKeyboardRemove, KeyboardButton, ReplyKeyboardMarkup, \
-    InlineKeyboardMarkup, InlineKeyboardButton, ParseMode
-from telegram.ext import MessageHandler, CommandHandler, CallbackQueryHandler, Filters, Updater
-from emoji import emojize
 import logging
-import clips
-import sys
-import re
 import os
+import re
+
+from emoji import emojize
+from telegram import (ReplyKeyboardRemove, KeyboardButton, ReplyKeyboardMarkup,
+                      InlineKeyboardMarkup, InlineKeyboardButton, ParseMode)
+from telegram.ext import MessageHandler, CommandHandler, CallbackQueryHandler, Filters, Updater
+
+import clips
 
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -24,17 +25,19 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 
 logger = logging.getLogger(__name__)
 
+env = clips.Environment()
+
 
 def start(bot, update):
     """
     Sends a welcome message when the command /start is issued.
     """
 
-    clips.Reset()
-    clips.Run()
+    env.reset()
+    env.run()
     update.message.reply_text(text='Hello %s! 🤖' % update.message.from_user.first_name,
                               reply_markup=ReplyKeyboardRemove())
-    update.message.reply_text(clips.Eval('(find-fact ((?u UI-state)) (eq ?u:state initial))')[0].Slots['display'])
+    update.message.reply_text(env.eval('(find-fact ((?u UI-state)) (eq ?u:state initial))')[0].Slots['display'])
 
 
 def new(bot, update):
@@ -42,8 +45,8 @@ def new(bot, update):
     Starts a new chat with the beer expert when the command /new is issued.
     """
 
-    clips.Reset()
-    clips.Run()
+    env.reset()
+    env.run()
     nextUIState(bot, update)
 
 
@@ -52,12 +55,12 @@ def nextUIState(bot, update):
     Re-creates the dialog window to match the current state in working memory.
     """
 
-    current_id = clips.Eval('(find-fact ((?s state-list)) TRUE)')[0].Slots['current']
-    current_ui = clips.Eval('(find-fact ((?u UI-state)) (eq ?u:id %s))' % current_id)
+    current_id = env.eval('(find-fact ((?s state-list)) TRUE)')[0].Slots['current']
+    current_ui = env.eval('(find-fact ((?u UI-state)) (eq ?u:id %s))' % current_id)
     state = current_ui[0].Slots['state']
     if state == 'initial':
-        clips.Assert('(next %s)' % current_id)
-        clips.Run()
+        env.Assert('(next %s)' % current_id)
+        env.run()
         nextUIState(bot, update)
     elif state == 'final':
         keyboard = [[KeyboardButton(text=emojize(':back: Previous', use_aliases=True))],
@@ -75,7 +78,7 @@ def nextUIState(bot, update):
             keyboard.append([KeyboardButton(text=emojize(':sos: Help', use_aliases=True))])
         if current_ui[0].Slots['why']:
             keyboard.append([KeyboardButton(text=emojize(':question: Why', use_aliases=True))])
-        if len(clips.Eval('(find-fact ((?s state-list)) TRUE)')[0].Slots['sequence']) > 2:
+        if len(env.eval('(find-fact ((?s state-list)) TRUE)')[0].Slots['sequence']) > 2:
             keyboard.append([KeyboardButton(text=emojize(':back: Previous', use_aliases=True))])
         keyboard.append([KeyboardButton(text=emojize(':x: Cancel', use_aliases=True))])
         update.message.reply_text(text=current_ui[0].Slots['display'],
@@ -87,15 +90,15 @@ def handleEvent(bot, update):
     Triggers the next state in working memory based on which button is pressed.
     """
 
-    current_id = clips.Eval('(find-fact ((?s state-list)) TRUE)')[0].Slots['current']
-    current_ui = clips.Eval('(find-fact ((?u UI-state)) (eq ?u:id %s))' % current_id)
+    current_id = env.eval('(find-fact ((?s state-list)) TRUE)')[0].Slots['current']
+    current_ui = env.eval('(find-fact ((?u UI-state)) (eq ?u:id %s))' % current_id)
     response = update.message.text
     if response in current_ui[0].Slots['valid-answers']:
         if len(response.split(' ')) > 1:
-            clips.Assert('(next %s "%s")' % (current_id, response))
+            env.Assert('(next %s "%s")' % (current_id, response))
         else:
-            clips.Assert('(next %s %s)' % (current_id, response))
-        clips.Run()
+            env.Assert('(next %s %s)' % (current_id, response))
+        env.Run()
         nextUIState(bot, update)
     elif response == emojize(':sos: Help', use_aliases=True):
         help = current_ui[0].Slots['help']
@@ -116,13 +119,13 @@ def handleEvent(bot, update):
         update.message.reply_text(text=current_ui[0].Slots['why'],
                                   parse_mode=ParseMode.MARKDOWN)
     elif response == emojize(':back: Previous', use_aliases=True):
-        clips.Assert('(prev %s)' % current_id)
-        clips.Run()
+        env.Assert('(prev %s)' % current_id)
+        env.Run()
         nextUIState(bot, update)
     elif response == emojize(':repeat: Restart', use_aliases=True):
         new(bot, update)
     elif response == emojize(':x: Cancel', use_aliases=True):
-        clips.Reset()
+        env.Reset()
         update.message.reply_text(text='Bye! I hope we can talk again some day. 👋🏻',
                                   reply_markup=ReplyKeyboardRemove())
 
@@ -159,12 +162,8 @@ def main():
     Run bot.
     """
 
-    # Set default encoding to utf-8
-    reload(sys)
-    sys.setdefaultencoding('utf-8')
-
     # Load the Beer EXpert system
-    clips.Load('clips/beerex.clp')
+    env.load('clips/beerex.clp')
 
     # Get the Telegram Bot Authorization Token
     token = os.environ.get('TOKEN')
