@@ -40,7 +40,7 @@
    (not (smoker ?smoker))
    =>
    (set-strategy random)
-   (assert (UI-state (display "Are you going to smoke while you drink? 🚬")
+   (assert (UI-state (display "Do you usually smoke while drinking? 🚬")
    					 (why "Beer may alter the taste of tobacco. Also, stronger beers pair well with tobacco flavor.")
                      (relation-asserted smoker)
                      (valid-answers yes no))))
@@ -50,7 +50,7 @@
    (not (which-season ?season))
    =>
    (set-strategy random)
-   (assert (UI-state (display "It is autumn, spring, summer or winter? 🍁🌱🏖❄️")
+   (assert (UI-state (display "Is it autumn, spring, summer or winter? 🍁🌱🏖❄️")
                      (why "Weather conditions influence our perceptions and needs. The choice of a beer is among these.")
                      (relation-asserted which-season)
                      (valid-answers autumn spring summer winter))))
