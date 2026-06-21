@@ -1,0 +1,134 @@
+%==============================================================================
+%  BeerEX - the Beer EXpert system
+%  Technical report (English edition)
+%==============================================================================
+\documentclass[11pt,a4paper,oneside]{report}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage{lmodern}
+\usepackage[a4paper,margin=2.6cm]{geometry}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{caption}
+\usepackage{fancyhdr}
+\usepackage[hidelinks,colorlinks=true,linkcolor=darkblue,citecolor=darkblue,urlcolor=darkblue]{hyperref}
+
+\definecolor{darkblue}{RGB}{20,40,110}
+\definecolor{codegray}{RGB}{120,120,120}
+\definecolor{codekw}{RGB}{160,30,90}
+\definecolor{codestr}{RGB}{20,110,60}
+\definecolor{codebg}{RGB}{248,248,248}
+
+% ---- CLIPS listing style ----------------------------------------------------
+\lstdefinelanguage{CLIPS}{
+  morekeywords={defrule,deftemplate,deffacts,deffunction,defglobal,defmodule,
+    assert,retract,modify,bind,slot,multislot,test,and,or,not,if,then,else,
+    do-for-fact,do-for-all-facts,find-fact,find-all-facts,progn,loop-for-count,
+    str-cat,format,create,nth,length,member,sort,run,reset,load},
+  sensitive=true,
+  morecomment=[l]{;},
+  morestring=[b]",
+}
+\lstset{
+  language=CLIPS,
+  backgroundcolor=\color{codebg},
+  basicstyle=\ttfamily\footnotesize,
+  keywordstyle=\color{codekw}\bfseries,
+  commentstyle=\color{codegray}\itshape,
+  stringstyle=\color{codestr},
+  numbers=left,
+  numberstyle=\tiny\color{codegray},
+  numbersep=8pt,
+  frame=single,
+  rulecolor=\color{codegray!40},
+  breaklines=true,
+  breakatwhitespace=true,
+  showstringspaces=false,
+  columns=fullflexible,
+  tabsize=2,
+  captionpos=b,
+  xleftmargin=14pt,
+  framexleftmargin=14pt,
+}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\itshape BeerEX --- the Beer EXpert system}
+\fancyhead[R]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\raggedbottom
+
+\newcommand{\cf}{\textit{CF}}
+\newcommand{\code}[1]{\texttt{#1}}
+
+%==============================================================================
+\begin{document}
+
+\begin{titlepage}
+  \centering
+  \vspace*{1.5cm}
+  {\scshape\LARGE University of Pisa\par}
+  \vspace{0.3cm}
+  {\scshape\large Department of Computer Science\par}
+  \vspace{0.2cm}
+  {\itshape Fundamentals of Artificial Intelligence\par}
+  \vfill
+  {\Huge\bfseries BeerEX\par}
+  \vspace{0.4cm}
+  {\Large the Beer EXpert system\par}
+  \vspace{0.8cm}
+  {\large A rule-based expert system that recommends a beer by taste and meal,\\
+   reasoning under uncertainty with certainty factors and fuzzy logic\par}
+  \vfill
+  {\large\bfseries Donato Meoli\par}
+  \vspace{0.5cm}
+  {\large Technical report\par}
+  \vfill
+\end{titlepage}
+
+\pagenumbering{roman}
+\begin{abstract}
+\noindent
+BeerEX (\emph{the Beer EXpert system}) is a rule-based expert system, written in
+CLIPS, that recommends a beer style to drink according to the user's taste and
+meal. Through a guided dialogue it recognises the user scenario and preferences
+and, when relevant, the dish to be paired, and then ranks the most suitable beer
+styles. The system reasons under uncertainty through two interchangeable
+backends: a classic \emph{certainty-factor} calculus and a \emph{fuzzy-logic}
+engine whose membership functions are grounded in real style data
+(alcohol content, colour, bitterness) extracted from the CraftBeer.com 2017 Beer
+Styles Study Guide. The knowledge base further models, for every style, a full
+qualitative and serving profile and the authoritative food pairings published by
+the Brewers Association. The system can justify its behaviour ---explaining
+\emph{why} a question is asked and \emph{how}, factor by factor, each
+recommendation was reached--- and it is delivered both as a command-line program
+and as an asynchronous Telegram bot that keeps an isolated reasoning environment
+per user. This report covers the theoretical background, the analysis and
+conceptualization of the beer domain, the certainty-factor and fuzzy calculi, the
+modular CLIPS implementation, the validation against an authentic FuzzyCLIPS
+engine, and the usage and deployment of the system.
+\end{abstract}
+
+\tableofcontents
+\clearpage
+\pagenumbering{arabic}
+
+\input{sections/introduction}
+\input{sections/domain}
+\input{sections/identification}
+\input{sections/conceptualization}
+\input{sections/implementation}
+\input{sections/usage}
+\input{sections/validation}
+
+\input{sections/bibliography}
+
+\end{document}

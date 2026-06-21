@@ -1,0 +1,144 @@
+\chapter{Validation}
+\label{chap:validation}
+
+BeerEX is validated with a small regression suite that exercises every layer of
+the system: the pure-CLIPS fuzzy library is checked against an authentic
+FuzzyCLIPS engine used as an oracle; the beer fuzzy backend is exercised end to
+end by a self-checking CLIPS suite; the two uncertainty backends are compared on
+a single fixed profile; and the production engine path is driven through a full
+dialogue. All suites are reproducible from the repository root and are wired into
+continuous integration.
+
+\section{Method}
+
+The validation rests on four complementary activities.
+
+\paragraph{(a) Fuzzy library vs the original engine.}
+The pure-CLIPS fuzzy library (\code{third\_party/FuzzyCLIPS/fuzzy.clp}) is
+validated by \emph{differential testing} against the authentic
+FuzzyCLIPS~6.10d engine, built from source and used as an oracle. The runner
+\code{diff\_test.sh} computes each quantity twice ---once with the library on
+stock CLIPS~6.4.x, once with the native engine--- and compares the two. Four
+families are covered: centroid \emph{defuzzification} on piecewise-linear sets,
+the \emph{set operators} (union, intersection, complement), full \emph{Mamdani}
+aggregation and defuzzification reproducing the canonical tipper consequents,
+and the curved (sampled) membership functions (S, Z and $\pi$). Piecewise-linear
+cases are required to match to a tight tolerance ($\varepsilon = 10^{-4}$); the
+sampled curves are allowed a small grid tolerance ($\varepsilon = 0.2$).
+
+\paragraph{(b) Scoring and integration suite.}
+The CLIPS suite \code{tests/test-scoring.clp} loads the real fuzzy backend
+(\code{beer-ranges.clp}, \code{beer-data.clp}, \code{beer-fuzzy.clp}) over the
+authentic beer-style facts and runs a sequence of self-checking assertions on
+the data-grounded scoring: that a ``pale'' query ranks pale styles first and
+``dark'' ranks dark styles; that the worked example
+\emph{pale\,(0.8)+bitter\,(0.6)} yields the expected exact scores and ordering;
+that catch-all styles with no characteristic profile are not rewarded; that the
+\cf{}-to-fuzzy bridge turns \code{best-*} attributes into ranked beer
+attributes; that a direct suggestion boosts the suggested beer; and that an
+authoritative meal pairing boosts a beer matched to a named food, with a serving
+hint attached.
+
+\paragraph{(c) Certainty factors vs fuzzy.}
+The differential script \code{tests/test-cf-vs-fuzzy.sh} drives the real
+selection rules end to end, once per backend, on a \emph{single fixed profile}:
+a preference for pale colour and bitter flavour (\cf{}~$0.2$ each) together with
+a direct pairing suggestion for American IPA (\cf{}~$0.9$). The dialogue rules
+are removed so a controlled end-state can be injected, and the recommendations
+of the \code{cf} and \code{fuzzy} backends are printed side by side, exposing
+the qualitative difference between the two ranking strategies.
+
+\paragraph{(d) Engine smoke test and CI.}
+The Python test \code{tests/test\_engine.py} drives the bot's per-user CLIPS
+\code{Session} over \code{clipspy} ---the real production engine path--- through
+a full dialogue, answering the first valid option at each step until a
+recommendation is reached. It checks that both backends conclude, that the fuzzy
+recommendation carries a data-grounded explanation, that the Italian overlay
+resolves while English remains the base, and that two sessions never share a
+CLIPS environment. Continuous integration runs the linter and these tests on
+every push.
+
+\section{Cases and results}
+
+Table~\ref{tab:cf-vs-fuzzy} reports the recommendation rankings produced by the
+two backends on the fixed profile of activity~(c). The \cf{} backend produces a
+single strong top hit followed by a flat tie ---three styles at $20\%$--- whereas
+the fuzzy backend grades the candidates finely, because its membership values are
+data-grounded.
+
+\begin{table}[h]
+\centering
+\caption{Certainty-factor vs fuzzy ranking on the fixed pale\,+\,bitter profile.}
+\label{tab:cf-vs-fuzzy}
+\small
+\begin{tabular}{@{}lcc@{}}
+\toprule
+\textbf{Style} & \textbf{cf} & \textbf{fuzzy} \\
+\midrule
+American IPA                     & 92\% & 84\% \\
+American Pale Ale                & 20\% & --- \\
+English-Style Bitter            & 20\% & --- \\
+English-Style IPA               & 20\% & --- \\
+Bohemian-Style Pilsener         & ---  & 100\% \\
+Belgian-Style Golden Strong Ale & ---  & 87\% \\
+German-Style Pilsener           & ---  & 75\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Table~\ref{tab:suites} summarises the four validation suites and their measured
+outcome. All suites pass.
+
+\begin{table}[h]
+\centering
+\caption{Validation suites and results.}
+\label{tab:suites}
+\small
+\begin{tabular}{@{}llc@{}}
+\toprule
+\textbf{Suite} & \textbf{What it checks} & \textbf{Result} \\
+\midrule
+\code{diff\_test.sh}        & fuzzy library vs FuzzyCLIPS~6.10d oracle   & 12/12 \\
+\code{test-scoring.clp}     & beer fuzzy backend, scoring \& integration & 16/16 \\
+\code{test-cf-vs-fuzzy.sh}  & cf vs fuzzy on the fixed profile           & 6/6 \\
+\code{test\_engine.py}      & clipspy dialogue + session isolation       & PASS \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Findings}
+
+\begin{itemize}
+  \item On the piecewise-linear cases the library reproduces the FuzzyCLIPS
+  oracle \emph{exactly} ---to about thirteen significant digits--- on
+  defuzzification (e.g.\ a left triangle at $16.66667$, a centred one at
+  $50.00000$, a trapezoid at $30.00000$), the set operators ($50.97826$ union,
+  $40.83333$ intersection, $58.88889$ complement) and the full Mamdani pipeline
+  ($21.53419$ on the tipper). The curved (sampled) membership functions converge
+  to the oracle within the grid tolerance (e.g.\ $S(20,80)$ at $73.498$ vs
+  $73.406$). The whole suite reports 12/12 matches.
+  \item The scoring suite confirms the data-grounded behaviour end to end
+  (16/16): ``pale'' ranks a pale style first and ``dark'' a dark one; the worked
+  example \emph{pale\,(0.8)+bitter\,(0.6)} yields the exact scores
+  ($0.7857$ for German-Style Pilsener, $0.4286$ for Imperial IPA) with Pilsener
+  correctly ahead; catch-all styles with no characteristic axis score $0$ and
+  are not rewarded; a direct suggestion boosts the suggested beer; and an
+  authoritative pairing boosts a beer matched to a named food, with a serving
+  hint (temperature and glassware) attached.
+  \item The cf-vs-fuzzy run makes the qualitative difference concrete. The \cf{}
+  backend collapses into a strong leader (American IPA at $92\%$) followed by a
+  coarse tie of three styles at $20\%$, providing no basis to order them.
+  The fuzzy backend instead grades the field finely
+  ($100\,/\,87\,/\,84\,/\,75\%$) and surfaces the per-beer rationale (e.g.\
+  ``pale colour $\mu1.00$, high bitterness $\mu1.00$''). Fuzzy ranking is
+  preferred wherever the source beer guides specify \emph{quantitative} style
+  ranges but not certainty-factor weights: the membership values are computed
+  from those ranges, so they are data-grounded rather than hand-tuned, and they
+  break ties the \cf{} backend cannot.
+  \item The engine smoke test confirms that the production path
+  (\code{clipspy}) drives a complete dialogue to a recommendation under both
+  backends, that the fuzzy recommendation carries its data-grounded explanation,
+  and that per-user sessions are isolated ---each holds a distinct CLIPS
+  environment, so concurrent consultations cannot interfere. The same tests gate
+  every push through continuous integration.
+\end{itemize}

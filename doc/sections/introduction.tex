@@ -1,0 +1,273 @@
+\chapter{Introduction}
+
+The aim of this work is to present a study concerning the development of an
+expert system, built in a rule-based programming environment, for the
+recommendation of a beer style according to the user's taste and to the meal to
+be paired.
+
+Throughout the report we document the various design choices adopted during the
+definition phase, as well as the behaviour that the expert system exhibits
+during its execution.
+
+Before discussing the project in detail, we provide a brief introduction to the
+features that characterise an expert system, to expert systems applied to the
+recommendation task, and to the handling of uncertain knowledge.
+
+
+\section{Expert Systems}
+
+One of the most actively developed areas in Artificial Intelligence is the study
+and design of expert systems, also referred to as \emph{Expert Systems} or
+\emph{Knowledge-Based Systems}. In the following sections we illustrate the
+features and the components that characterise an expert system.
+
+
+\subsection{Definition}
+
+The term \emph{expert system} was introduced in 1977 by Feigenbaum, who also
+provided a precise definition:
+
+\begin{quotation}
+An expert system is a computer program that uses knowledge and reasoning
+techniques to solve problems that would normally require the help of a human
+expert. An expert system must be able to justify or explain why a particular
+solution was reached for a given problem.
+\end{quotation}
+
+An expert system must be capable of emulating the work of a human expert in a
+given domain. In particular, an expert system must be able to perform the same
+actions, provide the same judgements, and offer the same explanations as a
+human. This feature, however, should not obscure the ultimate goal of an expert
+system. Indeed, contrary to what one might think, its purpose is not to replace
+the expert, but rather to assist and help the user improve their performance.
+
+A distinctive trait of this paradigm is the clear separation between
+\emph{knowledge} ---the facts and rules that describe the domain--- and the
+\emph{inference} mechanism that applies them. Conventional programming is
+designed for procedural data manipulation, whereas humans solve many problems
+through abstract, symbolic reasoning. Expert systems capture such reasoning by
+encoding it declaratively, so that the body of knowledge can be inspected,
+maintained and extended independently of the control flow.
+
+The fundamental features of an expert system are the following:
+
+\begin{itemize}
+    \item \emph{Possession of specific knowledge}: it is important that an expert
+    system possesses enough domain-specific knowledge. The quality of an expert
+    system, in fact, does not depend only on the formalism or the inference
+    technique adopted, but also on the knowledge that the program possesses;
+
+    \item \emph{Adherence of the domain to reality}: the domain in which an
+    expert system operates must not be a simplified model of the real domain, but
+    must represent it as it is, of course within certain limits, yet never
+    resorting to excessively abstract models;
+
+    \item \emph{Reasoning capability}: an expert system must draw inferences and
+    make decisions by exploiting the available knowledge base;
+
+    \item \emph{Capability of interacting with the external world}: an expert
+    system must have a communication protocol with the external world. Such
+    communication is necessary in order to retrieve the information required to
+    carry on the reasoning and to provide explanations to the user;
+
+    \item \emph{Capability of explaining its own operation}: a good expert system
+    must be able to make explicit and explain the decisions taken and the
+    reasoning by which it reached a conclusion. This capability strengthens the
+    degree of trust that the user places in the system;
+
+    \item \emph{Learning capability}: a feature that, while not common to all
+    expert systems, is very interesting to consider. Just as a human expert
+    learns new experiences and broadens their knowledge over time, an expert
+    system should likewise be able to learn new knowledge.
+\end{itemize}
+
+A widely adopted way of representing declarative knowledge is the
+\emph{production rule}, an \code{if-then} construct whose left-hand side states
+the conditions under which the right-hand side actions must be taken. Production
+systems are typically driven by \emph{forward chaining}: the engine starts from
+the known facts and repeatedly fires the rules whose conditions are satisfied,
+deriving new facts until no further rule applies. CLIPS, the environment adopted
+in this work, implements this strategy efficiently by means of the
+\emph{Rete} pattern-matching algorithm, which incrementally tracks which rules
+match the current contents of the working memory and thus avoids re-evaluating
+every rule on each cycle.
+
+
+\subsection{Components}
+
+Within an expert system it is possible to identify four fundamental components:
+the knowledge base, the inference engine, the user interface, and the working
+memory.
+
+\subsubsection*{Knowledge Base}
+
+The knowledge base represents the set of information needed to address and solve
+a problem in a specific domain.
+
+Such information is called \emph{knowledge}, and it must be represented by means
+of a formalism that the machine can interpret (for example, Horn logic,
+description logic, modal logic, and so on).
+
+Typically, the knowledge base is organised into two blocks:
+
+\begin{itemize}
+    \item \emph{Block of assertions or facts}: it represents the declarative
+    knowledge related to a particular problem to be solved, that is, true facts
+    introduced at the beginning of the consultation. In CLIPS the shape of a
+    fact is declared through a \code{deftemplate}, while sets of initial facts
+    are conveniently grouped within a \code{deffacts} construct;
+
+    \item \emph{Block of relations or rules}: it contains the relations among the
+    elementary facts that are useful for building the body of knowledge. These
+    are usually expressed in the form of production rules ---the \code{defrule}
+    construct in CLIPS--- or according to other types of representation such as
+    semantic networks, frames, scripts, and so on.
+\end{itemize}
+
+\subsubsection*{Inference Engine}
+
+The inference engine is a program able to deduce, starting from the knowledge
+base, the conclusions that constitute the solution of the problem in the domain
+in which the expert system operates.
+
+The inference engine is able to identify the set of rules that are applicable at
+a given moment, to select the rule to apply among the candidate ones, and to
+execute the action indicated by the selected rule. In CLIPS the rules whose
+conditions are satisfied are placed on the \emph{agenda}; when more than one rule
+is eligible, a \emph{conflict resolution} strategy (based, for instance, on rule
+salience) decides the order in which they are fired.
+
+\subsubsection*{User Interface}
+
+The user interface is responsible for facilitating the interaction between the
+user and the expert system. It can be built using user-friendly graphical
+interfaces or command-line interfaces. It is important that the interface makes
+the dialogue with the user as close as possible to a natural one.
+
+\subsubsection*{Working Memory}
+
+The working memory is the component that allows the storage of newly observed
+evidence or of data useful for solving the problem during a specific working
+session. The content of this memory will therefore change throughout the entire
+execution session of the expert system, as facts are asserted and retracted in
+response to the user's answers and to the firing of rules.
+
+
+\subsection{Roles}
+
+In general, the roles that interact with an expert system are three:
+
+\begin{itemize}
+    \item \emph{Domain expert}: the actor who holds the knowledge and experience
+    about a specific domain and is able to solve the problem at hand ---in our
+    case, the sommelier-like expertise that relates beer styles to tastes,
+    occasions and food;
+
+    \item \emph{Knowledge engineer}: the actor who encodes the knowledge,
+    provided by the domain expert, into a formalism that the expert system can
+    understand;
+
+    \item \emph{User}: the individual who consults the expert system in order to
+    benefit from it.
+\end{itemize}
+
+
+\subsection{Building Environments}
+
+The construction of an expert system can be carried out using two different types
+of environment:
+
+\begin{itemize}
+    \item \emph{Skeleton environments}: these are environments derived from
+    existing expert systems, from which the knowledge related to the application
+    domain has been removed. Examples include Emycin, Kas, Expert, and so on;
+
+    \item \emph{Environment-type environments}: these are environments that
+    provide a language for representing knowledge. Examples include Clips,
+    Prolog, and so on.
+\end{itemize}
+
+Comparing the two types of environment, one can state that ``Skeleton'' systems
+are more immediate, but less flexible, since they are affected by the
+specialised architecture of the original product; ``Environment''-type systems,
+on the other hand, have flexibility as their strength, while their weakness is
+the greater complexity.
+
+BeerEX is built on CLIPS, a forward-chaining production-system tool that acts as
+a general-purpose shell for rule-based reasoning. Because knowledge is kept
+declarative, new styles, questions or food pairings can be added without
+touching the control flow, which is a decisive advantage for the maintainability
+of the system.
+
+
+\section{Expert Systems for Recommendation}
+
+A second field, beyond the classical diagnostic ones, in which the expert-system
+paradigm proves effective is that of \emph{recommendation} and advisory tasks,
+and in particular within the food-and-beverage domain.
+
+The craft-beer market is vast and fast-growing: in the United States alone there
+are thousands of breweries and well over a hundred recognised beer styles, with
+tens of thousands of brands. For the consumer this abundance translates into
+uncertainty: choosing a beer that suits one's taste, the season, or ---above
+all--- the food on the table requires expertise that most drinkers do not have.
+BeerEX addresses exactly this gap, acting as a pocket beer sommelier that, by
+asking a few simple questions, recommends in real time the most appropriate beer
+\emph{style} for the situation, together with an explanation of the choice.
+
+Such a task is a natural fit for an expert system. The domain is a bounded,
+symbolic one: the styles, their qualitative and serving profiles and the
+recommended food pairings can be enumerated and described declaratively. The
+knowledge involved is genuine expertise, comparable to that of a sommelier,
+which a non-expert user typically lacks. Finally, a recommendation is far more
+valuable when it is accompanied by an \emph{explanation}: an expert system can
+make explicit \emph{why} a question is asked and \emph{how}, factor by factor, a
+particular style came to be suggested, thereby strengthening the user's trust in
+the advice. As with other advisory expert systems, the consultation allows a
+non-expert person to reach a decision that would otherwise lie beyond their level
+of knowledge and experience, while preserving and reusing the encoded expertise
+consistently across every consultation.
+
+
+\section{Handling Uncertain Knowledge}
+
+The cognitive mechanism of the human expert often relies on empirical rules
+acquired from their own experience and on data that are not completely certain.
+
+An expert is able to reason even when the available information is uncertain or
+incomplete. This implies that conclusions obtained from knowledge held to be
+generally true, and by means of approximate reasoning, are not always absolutely
+correct.
+
+This is precisely the case for a beer recommendation, which is rarely a
+black-or-white matter: tastes are graded, occasions overlap, and a given style
+may suit a dish more or less well rather than perfectly or not at all. The need
+therefore emerges for approaches that are able to replicate this approximate
+reasoning within the expert system.
+
+There are several ways to represent and formalise uncertainty: they range from
+quantitative methods (certainty factors, Bayesian networks, belief functions,
+the fuzzy approach) to symbolic methods (non-monotonic logics). All these
+methods share the common feature of having to deal with the combination of
+evidence and the propagation of uncertainty from facts to conclusions.
+
+BeerEX offers two interchangeable calculi for reasoning under uncertainty. The
+first is the classic \emph{certainty-factor} model introduced by MYCIN, in which
+each piece of evidence and each conclusion carries a degree of belief, a \cf,
+and the rules combine and propagate these factors. The second is a
+\emph{fuzzy-logic} engine whose membership functions are data-grounded, that is,
+derived from measurable beer parameters ---alcohol content, colour and
+bitterness--- so that linguistic judgements correspond to real style data. The
+user (or the deployer) can switch between the two backends, and the two can be
+compared on the same session. The details of both calculi are deferred to later
+chapters.
+
+
+\section{Scope of this report}
+
+The report follows the knowledge-engineering lifecycle: the analysis of the
+domain (Chapter~2), the identification of the task (Chapter~3), the
+conceptualization of the knowledge and of the two uncertainty models
+(Chapter~4), the CLIPS implementation and the Telegram delivery (Chapter~5), the
+ways to run the system (Chapter~6) and its validation against an authentic
+FuzzyCLIPS engine (Chapter~7).

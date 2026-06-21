@@ -1,0 +1,3 @@
+clipspy>=1.0          # embeds CLIPS 6.4.x (the reasoning engine bridge)
+emoji>=2              # emojize(..., language="alias")
+python-telegram-bot>=21   # async Application API

@@ -1,0 +1,24 @@
+# JetBrains IDE PyCharm Professional
+.idea
+
+# LaTeX (build artifacts; the compiled doc/BeerEX.pdf is committed)
+*.synctex.gz
+*.out
+*.aux
+*.log
+*.toc
+*.fls
+*.fdb_latexmk
+
+# CraftBeer
+CraftBeer
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+/install
+
+# Secrets / local env
+.env

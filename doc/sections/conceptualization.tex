@@ -1,0 +1,346 @@
+\chapter{Knowledge conceptualization}
+
+In this chapter we present an analysis of the process that led to expressing the
+domain knowledge in logical form. In particular, we discuss the objects that were
+identified, together with the relations and properties of those objects, and we
+give a conceptual overview of the two complementary models through which the
+system reasons under uncertainty. The detailed calculus that underpins the two
+models---the certainty-factor combination, the trapezoidal membership functions,
+the centroid defuzzification and the weighted-mean scoring---is deferred to the
+Implementation chapter, which owns the equations and their derivations; here we
+remain at the conceptual level.
+
+The conceptualization is organised around the following steps, which structure
+the reasoning from the elementary dialogue with the user up to the final
+recommendation:
+
+\begin{enumerate}[label=(\Roman*)]
+    \item \emph{Domain objects} ---the beer styles and the named beers the system
+    can recommend, each carrying the symbolic descriptors (colour, alcohol,
+    flavour, fermentation, carbonation) over which the qualitative reasoning is
+    performed, encoded by the \code{beer} template;
+    \item \emph{Data-grounded descriptions} ---the authoritative per-style sensory
+    profiles, numeric ranges and food pairings extracted from the CraftBeer~2017
+    Beer Styles Study Guide, encoded by the \code{beer-profile},
+    \code{beer-range} and \code{pairing} templates;
+    \item \emph{Attributes and evidence} ---the graded pieces of evidence about
+    the user's ideal profile, accumulated on the colour, alcohol, flavour,
+    fermentation and carbonation \emph{axes}, encoded by the \code{attribute}
+    template in the canonical \emph{best-*} form;
+    \item \emph{The dialogue / evidence model} ---the conversational machinery
+    that elicits the user's desires through scenario, preference and meal
+    questions, tracks the conversation and overlays localised labels, encoded by
+    the \code{UI-state}, \code{state-list}, \code{translation} and
+    \code{meal-keyword} templates;
+    \item \emph{The two uncertainty models} ---the MYCIN certainty-factor model
+    and the data-grounded fuzzy-logic model, the latter introducing linguistic
+    variables, desires and direct suggestions, encoded by the \code{ling-var},
+    \code{ling-term}, \code{desire}, \code{desire-cat}, \code{suggest-name} and
+    \code{suggest-style} templates;
+    \item \emph{The output} ---the ranked beer recommendations and their
+    data-grounded rationale, encoded by the \code{attribute} \emph{beer} facts and
+    the \code{beer-why} template.
+\end{enumerate}
+
+
+\section{Objects}
+
+The conceptualization phase brought several objects to light. In
+Table~\ref{tab:objects} we report them as the \emph{deftemplates} through which
+they are represented in working memory, describing what each represents and
+listing its real slots together with their type, so as not to weigh down the
+discussion with the enumeration of every individual fact.
+
+\begin{longtable}{p{0.20\linewidth} p{0.42\linewidth} p{0.30\linewidth}}
+\caption{Objects identified during the conceptualization phase, with their
+real slots.}\label{tab:objects}\\
+\toprule
+\textbf{Object} & \textbf{Description} & \textbf{Attributes (slots / type)} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Object} & \textbf{Description} & \textbf{Attributes (slots / type)} \\
+\midrule
+\endhead
+\midrule
+\multicolumn{3}{r}{\footnotesize\itshape continued on next page}\\
+\endfoot
+\bottomrule
+\endlastfoot
+
+\code{beer} &
+A named beer belonging to one of fifteen recognised styles, described by the
+symbolic descriptors over which the qualitative reasoning matches. &
+\code{style} (STRING, allowed-strings); \code{name} (STRING);
+\code{alcohol}, \code{color}, \code{flavor}, \code{fermentation},
+\code{carbonation} (multislot SYMBOL, each with allowed-symbols);
+\code{link} (STRING). \\
+\addlinespace
+
+\code{beer-profile} &
+The authoritative per-style sensory profile extracted from the CraftBeer~2017
+guide: descriptors, palate, hop/malt character and serving advice. &
+\code{name} (STRING); \code{alcohol}, \code{colour}, \code{clarity},
+\code{body}, \code{palate-carbonation}, \code{finish}, \code{hop}, \code{malt},
+\code{glass}, \code{temperature}, \code{country} (STRING). \\
+\addlinespace
+
+\code{beer-range} &
+The per-style numeric ranges extracted from the same guide; these data ground
+the fuzzy membership functions on the measurable axes. &
+\code{name} (STRING); \code{abv}, \code{ibu}, \code{srm}, \code{og},
+\code{fg}, \code{co2} (multislot). \\
+\addlinespace
+
+\code{pairing} &
+The authoritative food pairing for a style (cheese, entr\'ee and dessert),
+matched against the foods named by the user. &
+\code{style} (STRING); \code{cheese}, \code{entree}, \code{dessert} (STRING). \\
+\addlinespace
+
+\code{attribute} &
+A graded piece of evidence about the desired profile, in the canonical
+\emph{best-*} form (e.g. \code{best-color}, \code{best-alcohol},
+\code{best-flavor}, \code{best-style}, \code{best-name}), and the final
+recommendation facts (\code{name beer}). &
+\code{name}; \code{value}; \code{certainty} (FLOAT, range $[-1,1]$,
+default $1.0$). \\
+\addlinespace
+
+\code{ling-var} &
+A linguistic variable: one measurable axis together with the bounds of its
+universe of discourse. &
+\code{axis}; \code{from}; \code{to}. \\
+\addlinespace
+
+\code{ling-term} &
+A linguistic term of an axis, represented as a trapezoidal membership function
+$a\le b\le c\le d$ (shoulders when $a{=}b$ or $c{=}d$), with breakpoints derived
+from the data distributions. &
+\code{axis}; \code{term}; \code{a}, \code{b}, \code{c}, \code{d}. \\
+\addlinespace
+
+\code{desire} &
+A weighted preference for a linguistic term on a continuous axis, derived from
+the \emph{best-*} evidence in fuzzy mode. &
+\code{axis}; \code{term}; \code{weight} (default $1.0$). \\
+\addlinespace
+
+\code{desire-cat} &
+A weighted preference for a value on a categorical (symbolic) slot of a beer,
+such as \code{flavor} or \code{carbonation}. &
+\code{slot}; \code{value}; \code{weight} (default $1.0$). \\
+\addlinespace
+
+\code{suggest-name} &
+A direct, weighted suggestion of a specific beer name (e.g. produced by a meal
+pairing). &
+\code{name}; \code{weight} (default $1.0$). \\
+\addlinespace
+
+\code{suggest-style} &
+A direct, weighted suggestion of a specific beer style. &
+\code{style}; \code{weight} (default $1.0$). \\
+\addlinespace
+
+\code{UI-state} &
+A single turn of the dialogue: the message shown to the user, its help/why
+text, the admissible answers and the recorded response, together with the
+relation it asserts and its position in the conversation. &
+\code{id} (gensym default); \code{display}; \code{help}; \code{why};
+\code{relation-asserted} (default \code{none}); \code{valid-answers}
+(multislot); \code{response} (default \code{none}); \code{state}
+(default \code{middle}); \code{translated} (default \code{FALSE}). \\
+\addlinespace
+
+\code{state-list} &
+The bookkeeping of the conversation: the current turn and the sequence of turns
+visited, enabling navigation and clean-up. &
+\code{current}; \code{sequence} (multislot). \\
+\addlinespace
+
+\code{translation} &
+A gettext-style localisation overlay: the English string is the source key, the
+Italian string is the optional overlay (with English fallback). &
+\code{en} (STRING); \code{it} (STRING). \\
+\addlinespace
+
+\code{meal-keyword} &
+A food the user mentioned during the dialogue, matched against the authoritative
+\code{pairing} facts. &
+\code{text}. \\
+\addlinespace
+
+\code{beer-why} &
+The per-beer rationale produced by the fuzzy backend (which factors matched and
+how strongly), used to build a data-grounded explanation. &
+\code{name}; \code{text}. \\
+\end{longtable}
+
+
+\section{Relations and Properties}
+
+Table~\ref{tab:relations} reports the relations among the objects and the
+properties that link them. The first group describes how the data-grounded
+descriptions qualify a beer or style; the second how evidence is accumulated and
+turned into desires; the third how the dialogue is modelled and localised.
+
+\begin{longtable}{p{0.46\linewidth} p{0.46\linewidth}}
+\caption{Relations and properties of the objects.}\label{tab:relations}\\
+\toprule
+\textbf{Relation} & \textbf{Description} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Relation} & \textbf{Description} \\
+\midrule
+\endhead
+\midrule
+\multicolumn{2}{r}{\footnotesize\itshape continued on next page}\\
+\endfoot
+\bottomrule
+\endlastfoot
+
+A \code{beer} \emph{belongs to} a \code{style} &
+Each beer carries a \code{style} drawn from the fifteen recognised styles and is
+described by its symbolic \emph{axes} (colour, alcohol, flavour, fermentation,
+carbonation), over which both backends match candidates. \\
+\addlinespace
+
+A \code{beer-profile} \emph{describes} a beer &
+Joined by \code{name}, the profile supplies the authoritative sensory
+description and the serving hints (glass, temperature) appended to a
+recommendation. \\
+\addlinespace
+
+A \code{beer-range} \emph{measures} a beer &
+Joined by \code{name}, the numeric ranges (ABV, IBU, SRM, \dots) provide the
+crisp value---the midpoint of the range---fed to the fuzzy membership functions
+on the colour, alcohol and bitterness axes. \\
+\addlinespace
+
+A \code{pairing} \emph{recommends} a style &
+Joined by \code{style}, the authoritative cheese/entr\'ee/dessert pairing is
+matched against the \code{meal-keyword} facts to grant a pairing bonus. \\
+\addlinespace
+
+An \code{attribute} \emph{carries best-* evidence with a certainty} &
+Each \emph{best-*} attribute records a desired value on one axis (or a direct
+style/name suggestion) together with its certainty in $[-1,1]$; rules that assert
+the same value on the same axis are merged into a single accumulated certainty. \\
+\addlinespace
+
+A \code{ling-var} \emph{spans} an axis; a \code{ling-term} \emph{partitions} it &
+Each measurable axis (colour~$\leftarrow$~SRM, alcohol~$\leftarrow$~ABV\%,
+bitterness~$\leftarrow$~IBU) has a universe of discourse and is covered by
+overlapping trapezoidal terms whose breakpoints are derived from the data
+distributions. \\
+\addlinespace
+
+A \code{desire} / \code{desire-cat} \emph{weights} a preference &
+In fuzzy mode the \emph{best-*} evidence is translated into desires: a
+\code{desire} weights a linguistic term on a continuous axis, while a
+\code{desire-cat} weights a value on a categorical slot; both carry a weight in
+$[-1,1]$. \\
+\addlinespace
+
+A \code{suggest-name} / \code{suggest-style} \emph{points to} a candidate &
+A direct, weighted suggestion of a specific beer name or style, typically
+produced by a meal pairing, contributing to that candidate's score. \\
+\addlinespace
+
+A \code{beer-why} \emph{explains} a recommendation &
+Joined by \code{name}, it records which desires the beer satisfied and how
+strongly, so that the final explanation is data-grounded. \\
+\addlinespace
+
+A \code{UI-state} \emph{asserts} a relation and \emph{advances} the dialogue &
+Each turn shows a message, offers \code{valid-answers}, records the
+\code{response} and asserts the corresponding fact; its \code{state}
+(initial / middle / final) marks the phase of the conversation. \\
+\addlinespace
+
+A \code{state-list} \emph{orders} the conversation &
+It keeps the \code{current} turn and the \code{sequence} of visited turns,
+enabling navigation through the dialogue and final clean-up. \\
+\addlinespace
+
+A \code{translation} \emph{overlays} a label &
+Keyed on the English source string, it provides the localised (Italian) text,
+falling back to English when no overlay exists. \\
+\addlinespace
+
+A \code{meal-keyword} \emph{matches} a pairing &
+Each food named by the user is compared against the cheese/entr\'ee/dessert text
+of the \code{pairing} facts to reward styles whose authoritative pairing matches
+the user's meal. \\
+\end{longtable}
+
+
+\section{The two reasoning models (overview)}
+
+Both backends---selected by the \code{?*backend*} global (\code{cf} or
+\code{fuzzy})---consume the same \emph{best-*} evidence accumulated on the
+colour, alcohol, flavour, fermentation and carbonation axes during the dialogue.
+They differ only in how that evidence is combined and matched against the
+candidate beers. We give here a conceptual overview; the formal calculus is
+detailed in the Implementation chapter.
+
+\subsection{Certainty factors}
+
+The first model is the classical MYCIN scheme. Every piece of evidence is a
+graded judgement carrying a certainty factor in $[-1,1]$, ranging from full
+disbelief through ignorance to full belief. When several rules independently
+assert the same value on the same axis, their certainties are merged by the MYCIN
+combination function, which accumulates concordant evidence towards the extremes
+while letting discordant evidence cancel. A beer is then scored by accumulating
+the certainties of the axes whose symbolic value it matches, and the highest-%
+scoring candidates are returned. The model is transparent and faithful to expert
+practice, but the weights are assigned by the expert and are not quantified by
+the source guides; this intrinsic arbitrariness, and the coarse ties it produces,
+is precisely what motivates the fuzzy alternative.
+
+\subsection{Fuzzy logic}
+
+The second model replaces the hand-assigned certainties on the \emph{measurable}
+axes with objective, data-grounded memberships. The measurable axes are modelled
+as \emph{linguistic variables}---colour over SRM, alcohol over ABV\% and a new
+bitterness axis over IBU---each covered by overlapping linguistic terms encoded
+as trapezoidal membership functions. Crucially, the breakpoints are
+\emph{derived from data}: crossing the symbolic labels of the dataset with the
+numeric ranges of the guide yields the empirical distribution of each term
+(validated against the p25 / median / p75 quantiles), from which the trapezoids
+are built. The breakpoints currently in use are summarised in
+Table~\ref{tab:trapezoids} as a forward reference.
+
+\begin{table}[ht]
+\centering\small
+\caption{Data-grounded trapezoidal breakpoints of the linguistic terms (forward
+reference; derivation in the Implementation chapter).}\label{tab:trapezoids}
+\begin{tabular}{llcccc}
+\toprule
+axis & source & \multicolumn{4}{c}{terms (trapezoid breakpoints $a,b,c,d$)}\\
+\midrule
+colour & SRM & pale\,(0,0,6,9) & amber\,(6,9,11,14) & brown\,(11,14,21,27) & dark\,(21,27,50,50)\\
+alcohol & ABV\% & n.d.\,(2,2,4.5,5.2) & mild\,(4.5,5,6,6.6) & noticeable\,(6,6.6,8,8.6) & harsh\,(8,8.6,15,15)\\
+bitterness & IBU & low\,(0,0,20,25) & medium\,(20,25,30,35) & high\,(30,35,70,70) &\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Carbonation, by contrast, stays symbolic: the guide's CO\textsubscript{2} volumes
+do not separate \emph{medium} from \emph{high}, so a data-driven membership
+function would not be justified. In fuzzy mode the \emph{best-*} evidence is
+translated into \emph{desires}---weighted preferences on the linguistic axes---
+categorical flavour and carbonation desires, and direct style/name suggestions
+arising from the meal. Each beer is then ranked by a normalised weighted-mean
+satisfaction score: the membership of the beer's measured value in each desired
+term, weighted by the desire and normalised by the total weight, with a beer
+missing data on a desired axis penalised rather than exempted. A further term
+boosts styles whose authoritative CraftBeer pairing matches a food named by the
+user. Here the gain is real: the memberships are objective, so the fuzzy ranking
+grades the candidates finely where the certainty-factor model can only produce
+coarse ties. Membership evaluation, the fuzzy set operations and the centroid
+defuzzification are provided by a reusable, agnostic pure-CLIPS fuzzy library; the
+corresponding equations and the equivalence with the original FuzzyCLIPS
+primitives are given in the Implementation chapter.

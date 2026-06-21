@@ -1,0 +1,273 @@
+\chapter{Task identification}
+
+In this chapter we describe the phases that led to the acquisition of the domain
+knowledge, the identification of the requirements to be implemented, and the
+definition of the reasoning strategy.
+
+The task of BeerEX is, given a user, to recommend the beer style(s) that best
+suit that user in the current situation. The recommendation is grounded on three
+layers of information, acquired through a guided dialogue: the \emph{scenario} of
+the user, their personal \emph{preferences}, and the \emph{meal} they are about
+to enjoy. From the answers, the expert rules infer a desired beer profile, and a
+selection stage ranks the candidate styles by how well they match it, reasoning
+under uncertainty through one of two interchangeable calculi.
+
+
+\section{Knowledge Acquisition}
+
+The acquisition of the knowledge of the application domain was carried out by
+drawing on two complementary kinds of source:
+
+\begin{itemize}
+    \item \emph{Authoritative guides}: the beer-style and food-pairing material
+    published by CraftBeer.com on behalf of the Brewers
+    Association~\cite{craftbeer-styles,craftbeer-food}, namely the \emph{Beer Styles
+    Study Guide} (the descriptive and numeric characterisation of each style:
+    colour, alcohol, bitterness, fermentation, flavour) and the food-pairing
+    tables (the recommended style for each food).
+
+    \item \emph{Domain heuristics}: the rules of thumb that relate the user's
+    scenario---age, drinking habit, smoking habit, season---to the strength
+    and flavour profile of an enjoyable beer, distilled into the \emph{why}
+    rationales attached to the corresponding questions.
+\end{itemize}
+
+Unlike the descriptive guides, which characterise the styles, the recommendation
+task requires eliciting the \emph{user's} situation. The system therefore
+acquires the knowledge needed to advise the user through a dialogue organised in
+three layers:
+
+\begin{enumerate}[nosep]
+    \item the \textbf{user scenario}---age, whether a regular beer drinker,
+    whether smoking, and the season---factors that shift, weakly, the expected
+    strength and flavour of an enjoyable beer;
+    \item the \textbf{personal preferences}---preferred colour, alcohol level,
+    carbonation and flavour;
+    \item the \textbf{meal}, when the user is about to eat---main component, type
+    and cooking method, refined through increasingly specific questions down to a
+    single dish.
+\end{enumerate}
+
+Each answer asserts a fact in working memory, from which the expert rules infer
+\emph{evidence} for the desired beer profile. The questions handled by the
+system, grouped by layer, together with the attribute each elicits and the set
+of admissible answers, are classified in Table~\ref{tab:questions}.
+
+\begin{longtable}{p{0.27\linewidth} p{0.27\linewidth} p{0.38\linewidth}}
+\caption{Classification of the question groups handled by the expert system, with
+the attribute each elicits and its admissible answers.}\label{tab:questions}\\
+\toprule
+\textbf{Layer / group} & \textbf{Attribute elicited} & \textbf{Admissible
+answers} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Layer / group} & \textbf{Attribute elicited} & \textbf{Admissible
+answers} \\
+\midrule
+\endhead
+\midrule
+\multicolumn{3}{r}{\footnotesize\itshape continued on next page}\\
+\endfoot
+\bottomrule
+\endlastfoot
+
+\multicolumn{3}{l}{\itshape Scenario (asked in random order)}\\
+\addlinespace
+Age & \code{which-age} & 18--23, 24--29, $\geq$30. \\
+Regular drinker & \code{regular-beer-drinker} & yes, no. \\
+Smoking habit & \code{smoker} & yes, no. \\
+Season & \code{which-season} & autumn, spring, summer, winter. \\
+\addlinespace
+\midrule
+\multicolumn{3}{l}{\itshape Preferences (asked in random order)}\\
+\addlinespace
+Colour & \code{preferred-color} & pale, amber, brown, dark, don't mind. \\
+Alcohol & \code{preferred-alcohol} & low, mild, high, very high, don't mind. \\
+Carbonation & \code{preferred-carbonation} & low, medium, high, don't mind. \\
+Flavour & \code{preferred-flavor} & clean, sweet, bitter, roasty, fruity,
+spicy, sour, don't mind. \\
+\addlinespace
+\midrule
+\multicolumn{3}{l}{\itshape Meal (depth-first chain)}\\
+\addlinespace
+Main meal & \code{main-meal} & pizza, entrée, cheese, dessert, other. \\
+\addlinespace
+Pizza topping & \code{pizza-topping} & classic, meat, vegetables, cheese,
+other. \\
+Spicy meat & \code{meat-topping-is-spicy} & yes, no. \\
+Roasted vegetables & \code{vegetables-topping-are-roasted} & yes, no. \\
+\addlinespace
+Entrée component & \code{which-entrée} & grain, legumes, fish, meat,
+vegetables, fats, other. \\
+Fish type & \code{which-fish} & shellfish, other. \\
+Mild shellfish & \code{shellfish-is-mild} & yes, no. \\
+Shellfish type & \code{which-shellfish} & mussels, oysters, other. \\
+Meat type & \code{which-meat} & rich, poultry, game, other. \\
+Meat cooking method & \code{meat-cooking-method} & braised, grilled, roasted, other. \\
+Rich meat & \code{which-rich} & beef, lamb, pork, other. \\
+Beef type & \code{which-beef} & bresaola, other. \\
+Pork cut & \code{which-pork} & loin, prosciutto, speck, mortadella, sausage, other. \\
+Sausage type & \code{which-sausage} & capocollo, soppressata, salame piccante,
+other. \\
+Poultry type & \code{which-poultry} & chicken, other. \\
+Game type & \code{which-game} & wild, birds. \\
+Vegetables type & \code{which-vegetables} & root, other. \\
+Vegetables cooking method & \code{vegetables-cooking-method} & grilled, other. \\
+Other vegetables & \code{which-other-vegetables} & mushrooms, other. \\
+Fats type & \code{which-fats} & vegetable, other. \\
+\addlinespace
+Cheese style & \code{which-cheese-style} & fresh, semi-soft, firm/hard, blue,
+natural rind, washed rind, don't know. \\
+Fresh cheese & \code{which-fresh-cheese} & Mascarpone, Chèvre, Feta,
+Cream Cheese, other. \\
+Semi-soft cheese & \code{which-semi-soft-cheese} & Mozzarella, Colby, Havarti,
+Monterey Jack, other. \\
+Firm/hard cheese & \code{which-firm/hard-cheese} & Gouda, Cheddar, Swiss,
+Parmesan, other. \\
+Gouda type & \code{which-type-of-Gouda} & aged, smoked, other. \\
+Cheddar colour & \code{which-color-of-Cheddar} & white, other. \\
+Cheddar seasoning & \code{which-Cheddar-seasoning} & mild, medium, aged,
+other. \\
+Swiss type & \code{which-type-of-Swiss} & Emmental, Gruyère, other. \\
+Blue cheese & \code{which-blue-cheese} & Stilton, other. \\
+Natural-rind cheese & \code{which-natural-rind-cheese} & Brie, Camembert,
+Triple Crème, Mimolette, Stilton, other. \\
+Washed-rind cheese & \code{which-washed-rind-cheese} & Taleggio, other. \\
+\addlinespace
+Dessert type & \code{which-dessert} & creamy, fruit, chocolate, other. \\
+Fruity creamy dessert & \code{creamy-dessert-with-fruit} & yes, no. \\
+Chocolate type & \code{which-chocolate} & white, milk, semisweet, bittersweet,
+unsweetened/bitter, don't know. \\
+\end{longtable}
+
+
+\section{Requirements}
+
+In the following sections we provide a brief description of the requirements that
+the system must satisfy and of the features to be implemented.
+
+
+\subsubsection{Programming Language}
+
+The expert system is implemented in CLIPS (the \emph{C Language Integrated
+Production System}), a forward-chaining production-system tool well suited to
+rule-based expert systems.
+
+By using CLIPS as the programming language, the knowledge about the identified
+objects and relations can be expressed declaratively, in the form of facts and
+production rules, while the questions to be posed to the user---needed to derive
+further information useful to the inference process---are themselves encoded as
+rules that assert the dialogue state. The inference engine matches the rules
+against working memory by means of the \emph{Rete} algorithm, which makes the
+pattern matching efficient even as the number of facts and rules grows.
+
+We rely on a stock, modern CLIPS (the 6.4.x line), without forking the engine,
+so that the knowledge base remains portable. For the deployment as a Telegram
+bot, the engine is driven from Python through \code{clipspy}, the official CLIPS
+bindings, which embed the very same engine used by the command-line interpreter,
+so that the behaviour of the bot and of the CLI coincide.
+
+Two behavioural features required by the system deserve a dedicated discussion:
+the handling of uncertainty and an explanation module. They are discussed below.
+
+
+\subsubsection{Handling of Uncertainty}
+
+The first behavioural feature concerns the handling of uncertainty.
+
+A categorical kind of reasoning, in which every element can only be either true
+or false, turns out to be too restrictive for the task at hand. The suitability
+of a beer is a matter of degree: a given scenario, preference or dish does not
+single out one style, but rather makes a whole profile---a colour, an alcohol
+level, a flavour---\emph{more or less} desirable. The evidence supporting the
+desired profile is therefore inherently graded, and the system must be able to
+accumulate it and to weigh it against the measured characteristics of each
+candidate style.
+
+From these premises, the need emerges to move away from the categorical nature of
+assertions and to attach a degree of confidence to every piece of evidence and to
+every recommendation derived from it.
+
+BeerEX provides two interchangeable calculi for reasoning with this graded
+evidence, selectable through a single backend flag. The first is the
+\emph{certainty-factor} (CF) calculus of MYCIN, in which each piece of evidence
+carries a certainty factor in $[-1,1]$ and contributions to the same conclusion
+are merged with the MYCIN combination function. The CF weights, however, are
+assigned by the expert and the source guides do \emph{not} quantify them; this
+intrinsic arbitrariness is precisely what motivates the second calculus, a
+\emph{fuzzy-logic} backend whose membership functions are derived from data---by
+crossing the symbolic labels of the dataset with the numeric ranges of the
+guide---so that the matching of the candidate styles against the desired profile
+rests on objective, data-grounded quantities rather than on hand-assigned
+weights.
+
+The two backends are described in depth in the chapter devoted to knowledge
+conceptualisation; here it suffices to note that both consume the same evidence
+and differ only in how they combine it and match it to the styles.
+
+
+\subsubsection{Explanation Module}
+
+The second behavioural feature concerns the implementation of an explanation
+module.
+
+In an expert system, the explanation capability is of fundamental importance.
+Users tend not to trust an artificial system slavishly, nor to accept blindly a
+recommendation produced in an uncontrollable way. The capability to justify both
+the questions and the result increases the trust the user places in the advice of
+the system and enables them to discover a possible flaw in the reasoning.
+
+In keeping with this requirement, the expert system provides explanations on two
+distinct occasions. During the dialogue, at every question the user may ask for
+\emph{help}---an explanation of the question, sometimes with illustrative
+images---or for \emph{why} the question is being asked, so as to suit different
+levels of expertise. At the end of the consultation, the system returns a
+twofold explanation of the result: a narrative that recounts how the user
+scenario, the preferences and the meal shaped the desired profile, and---in fuzzy
+mode---a per-beer rationale that lists the factors that matched each
+recommendation and how strongly.
+
+
+\section{Reasoning Strategy}
+
+As far as the type of inference is concerned, the choice fell on forward
+chaining, the inference natively provided by CLIPS: starting from the known facts
+contained in working memory, the production rules are applied forward in order to
+deduce new facts, until no further rule is applicable.
+
+The dialogue drives the inference in three layers. The \emph{scenario} and
+\emph{preference} questions are independent of one another and are therefore
+asked in random order, by setting the conflict-resolution strategy to
+\code{random} while their rules are eligible to fire. The \emph{meal} questions,
+on the contrary, form a depth-first chain: each answer enables the next, more
+specific question, narrowing the dialogue from the main course down to a single
+dish---so the strategy is switched to \code{depth} once the meal phase begins.
+
+Each answer asserts a fact in working memory through the \code{relation-asserted}
+of the question. The knowledge rules, which sit at a medium-low salience, then
+fire on these facts and assert the \emph{evidence} for the desired profile, in
+the form \code{(attribute (name best-\textit{X}) (value \textit{v}) (certainty
+\textit{w}))}, for the colour, alcohol, carbonation, flavour and fermentation
+axes, together with direct suggestions of a specific style or beer name and the
+narrative fragments of the explanation.
+
+Because the dialogue allows the user to go \emph{back} and revise a previous
+answer, the working memory must be kept consistent with the answers actually
+given. When the user goes back, the dialogue state machine retracts the fact
+asserted by the revised question and refreshes the affected rules, so that
+everything inferred from the superseded answer is removed and re-derived from the
+new one; in random mode the question rules are refreshed so they may be asked
+again, and if the consultation had already reached its final state the selection
+rules are refreshed as well.
+
+Finally, once all the evidence has been gathered, a selection stage at low
+salience ranks the styles. Contributions to the same \code{best-*} value are
+merged with the certainty-factor combination function; each candidate style is
+then scored against the desired profile---by accumulating the certainties of the
+matching axes in CF mode, or by a data-grounded weighted-mean satisfaction in
+fuzzy mode---and the most appropriate styles are returned, each with its
+confidence and a serving hint, followed by the explanation.
+
+The reasoning strategy introduced here is taken up again and documented in depth
+in the chapters devoted to the description of the inference engine.

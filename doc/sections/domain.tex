@@ -1,0 +1,374 @@
+\chapter{The beer domain}
+
+The following sections present the analysis of the domain over which BeerEX
+reasons, the dimensions along which beer is described, the taxonomy adopted to
+organize the styles, and the principles that govern the association between beer
+and food. A brief introduction to the notion of a beer \emph{style} is followed
+by the distinction between styles and commercial brands; the measurable and
+perceptual parameters of a style are then defined and tabulated; the styles are
+classified into families; the three mechanisms of food pairing are described; and,
+finally, the documentary sources and the reproducible extraction pipeline that
+keep the knowledge base faithful to those sources are presented.
+
+\section{Beer styles versus brands}
+
+The domain modelled by BeerEX is that of beer \emph{styles} rather than that of
+individual commercial \emph{brands}. A style is an abstract, bounded category
+---``German-Style Pilsener'', ``Irish-Style Dry Stout'', ``Belgian-Style
+Tripel''--- defined by a characteristic range of measurable parameters and a
+recognizable sensory profile, and codified by an authoritative body. A brand, by
+contrast, is a single product of a single brewery: an instance of a style, often
+itself drifting from batch to batch, and numbering in the tens of thousands
+worldwide. Choosing the style as the unit of the domain has three advantages.
+First, it is \emph{finite and stable}: the catalogue of recognized styles changes
+slowly and is published, whereas the catalogue of brands is unbounded and
+volatile. Second, it is \emph{described by data}: each style is associated with
+numeric ranges (alcohol, bitterness, colour, gravity, carbonation) and with a
+qualitative profile, so that the rules of the system have a firm, quantifiable
+substrate on which to operate. Third, it is the \emph{level at which food pairing
+is meaningful}: the pairing guides associate dishes with styles, not with
+particular labels, because it is the style's flavour architecture, and not a
+brand's marketing, that determines whether a beer complements or clashes with a
+dish.
+
+The original version of BeerEX encoded only a handful of symbolic attributes per
+style (alcohol, colour, flavour, fermentation, carbonation). The current
+knowledge base, defined in \code{clips/beer-styles.fct}, retains that symbolic
+backbone but enumerates \textbf{79} styles, each assigned to one of fifteen
+families and described by the symbolic slots \code{alcohol}, \code{color},
+\code{flavor}, \code{fermentation}, \code{carbonation} and a reference
+\code{link} to the CraftBeer.com style page. This symbolic dataset is then
+enriched, style by style, by two further fact bases extracted directly from the
+source documents: the numeric ranges of \code{clips/beer-ranges.clp}
+(\textbf{73} of the 79 styles carry characteristic ranges; the remaining six are
+catch-all specialty or wild categories whose values span the entire scale and are
+therefore not informative) and the comprehensive qualitative, serving and pairing
+profiles of \code{clips/beer-data.clp} (\textbf{79} profiles and \textbf{73}
+food pairings). Throughout this report, ``style'' and ``beer'' are used
+interchangeably to denote one such entry.
+
+\section{Beer parameters}
+
+Each style is described along two complementary kinds of dimension: a set of
+\emph{quantitative} parameters, which are continuous physical or chemical
+quantities measured during brewing or analysis, and a set of \emph{qualitative}
+parameters, which are the perceptual descriptors recorded by tasters. To these is
+added the \emph{serving} information ---temperature and glassware--- that
+completes the practical profile of a style.
+
+\subsection{Quantitative parameters}
+
+The quantitative parameters are the seven continuous quantities listed in
+Table~\ref{tab:quant}. They are extracted as per-style closed intervals
+(a lower and an upper bound) from the source guide and stored in the
+\code{beer-range} deftemplate as the multislots \code{abv}, \code{ibu},
+\code{srm}, \code{og}, \code{fg} and \code{co2}. The three of them that also
+serve as the system's principal linguistic axes ---\emph{colour} (SRM),
+\emph{alcohol} (ABV) and \emph{bitterness} (IBU)--- are the ones along which the
+user expresses a preference and along which the fuzzy backend builds its
+membership functions.
+
+\begin{itemize}[leftmargin=2em]
+  \item \textbf{Alcohol by volume (ABV)} is the fraction of the beverage's volume
+        that is ethanol, the most familiar measure of strength.
+  \item \textbf{International Bitterness Units (IBU)} quantify bitterness by the
+        concentration of isomerized alpha-acids derived from the hops.
+  \item \textbf{Standard Reference Method (SRM)} measures colour by light
+        absorbance: low values denote pale, straw-coloured beers and high values
+        deep brown to black ones.
+  \item \textbf{Original gravity (OG)} is the density of the wort relative to
+        water before fermentation; it reflects the amount of fermentable sugar
+        available and hence the potential strength and body.
+  \item \textbf{Final gravity (FG)} is the density after fermentation; the
+        residual sugar it represents contributes to sweetness and body.
+  \item \textbf{Apparent attenuation} is the proportion of the original extract
+        consumed by the yeast, derived from OG and FG as
+        $(\mathrm{OG}-\mathrm{FG})/(\mathrm{OG}-1)$; it expresses how dry or how
+        sweet the finished beer is.
+  \item \textbf{Carbonation (CO\textsubscript{2} volumes)} is the amount of
+        dissolved carbon dioxide, measured in volumes of gas per volume of beer;
+        it governs the perceived effervescence.
+\end{itemize}
+
+Table~\ref{tab:quant} also reports, for each parameter, the overall extent
+actually spanned by the dataset, that is, the lowest lower bound and the highest
+upper bound observed across the styles that carry that parameter in
+\code{beer-ranges.clp}.
+
+\begin{longtable}{@{}p{0.26\textwidth}p{0.40\textwidth}p{0.12\textwidth}p{0.14\textwidth}@{}}
+  \caption{The quantitative parameters of a beer style, with the overall range
+  spanned by the dataset.}\label{tab:quant}\\
+  \toprule
+  \textbf{Parameter} & \textbf{What it measures} & \textbf{Unit} &
+  \textbf{Dataset range} \\
+  \midrule
+  \endfirsthead
+  \multicolumn{4}{@{}l}{\small\itshape Table~\ref{tab:quant} (continued)}\\
+  \toprule
+  \textbf{Parameter} & \textbf{What it measures} & \textbf{Unit} &
+  \textbf{Dataset range} \\
+  \midrule
+  \endhead
+  \midrule
+  \multicolumn{4}{r}{\small\itshape continued on next page}\\
+  \endfoot
+  \bottomrule
+  \endlastfoot
+  Alcohol by volume (ABV) &
+    ethanol content, i.e.\ strength &
+    \% vol & 2.8--14.2 \\
+  Bitterness (IBU) &
+    isomerized alpha-acid concentration from hops &
+    IBU & 3--100 \\
+  Colour (SRM) &
+    colour by light absorbance, pale to black &
+    SRM & 2--50 \\
+  Original gravity (OG) &
+    wort density before fermentation (fermentable sugar) &
+    s.g. & 1.028--1.140 \\
+  Final gravity (FG) &
+    density after fermentation (residual sugar) &
+    s.g. & 1.000--1.032 \\
+  Apparent attenuation &
+    fraction of extract fermented, derived from OG and FG &
+    \% & derived \\
+  Carbonation &
+    dissolved CO\textsubscript{2}, perceived effervescence &
+    CO\textsubscript{2} vol. & 1.0--4.5 \\
+\end{longtable}
+
+\subsection{Qualitative parameters}
+
+The qualitative parameters are the perceptual descriptors recorded, per style, in
+the \code{beer-profile} deftemplate of \code{clips/beer-data.clp}. Unlike the
+numeric ranges, they are free-text sensory characterizations taken verbatim from
+the source guide. The slots are the following.
+
+\begin{itemize}[leftmargin=2em]
+  \item \textbf{Perceived alcohol} (\code{alcohol}): how evident the alcohol is on
+        the palate, on a scale running through ``Not Detectable'', ``Mild'',
+        ``Noticeable'', ``Hot'' and ``Harsh'' (e.g.\ ``Not Detectable to Mild''
+        for a Bohemian-Style Pilsener, ``Noticeable to Hot'' for an American
+        Barley Wine).
+  \item \textbf{Colour} (\code{colour}): the visual colour described in words
+        (e.g.\ ``Straw to Pale'', ``Copper to Reddish Brown'', ``Black''),
+        complementing the numeric SRM range.
+  \item \textbf{Clarity} (\code{clarity}): the transparency of the beer, from
+        ``Brilliant'' and ``Clear'' through ``Slight Haze'' to ``Hazy'' and
+        ``Opaque''.
+  \item \textbf{Body} (\code{body}): the palate weight or mouthfeel, from
+        ``Drying'' and ``Soft'' to ``Moderate'', ``Mouth-Coating'' and
+        ``Sticky''.
+  \item \textbf{Palate carbonation} (\code{palate-carbonation}): the perceived
+        effervescence on the palate (e.g.\ ``Low'', ``Medium'', ``Medium to
+        High''), the sensory counterpart of the numeric CO\textsubscript{2}
+        parameter.
+  \item \textbf{Finish} (\code{finish}): the length and character of the
+        aftertaste, from ``Short'' to ``Long''.
+  \item \textbf{Hop aroma and flavour} (\code{hop}): the contribution of the hops
+        to aroma, flavour and bitterness.
+  \item \textbf{Malt aroma and flavour} (\code{malt}): the contribution of the
+        malt, including the characteristic descriptors of the style (caramel,
+        toast, biscuit, chocolate, coffee, and so on).
+\end{itemize}
+
+The yeast character, finally, is captured indirectly through the symbolic
+\code{fermentation} slot of \code{beer-styles.fct}, which records whether the
+style is \emph{top}-fermented (ale), \emph{bottom}-fermented (lager),
+spontaneously or mixed (\emph{wild}), or a combination thereof. The profile also
+records the style's \code{country} of origin.
+
+\subsection{Serving}
+
+Two further slots of \code{beer-profile} describe how a style is meant to be
+served, and so complete its practical profile.
+
+\begin{itemize}[leftmargin=2em]
+  \item \textbf{Temperature} (\code{temperature}): the recommended serving
+        temperature, given as a Fahrenheit range. Lighter styles are served
+        cooler ---several pale and wheat styles at ``40--45\,\textdegree
+        F''--- and stronger, darker styles warmer (typically ``50--55\,\textdegree
+        F''), so that their aromatics open up.
+  \item \textbf{Glassware} (\code{glass}): the glass that best presents the style,
+        drawn from a small vocabulary of vessels ---among them the Tulip, the
+        Nonic Pint, the Flute, the Snifter, the Goblet, the Vase and the
+        Thistle--- each suited to the style's strength, carbonation and aromatic
+        intensity.
+\end{itemize}
+
+\section{Beer style families}
+
+The 79 styles are organized into the \textbf{fifteen} families recorded in the
+\code{style} slot of \code{beer-styles.fct}. The classification follows the
+CraftBeer.com grouping, which combines the fundamental fermentation distinction
+(ale versus lager) with colour and strength: the families range from the pale,
+lightly fermented \emph{Pilsener \& Pale Lager} and \emph{Pale Ale} groups,
+through the malt-forward \emph{Brown Ale}, \emph{Dark Lager}, \emph{Bock},
+\emph{Porter} and \emph{Stout} groups, to the high-strength \emph{Strong Ale} and
+the aromatic \emph{Belgian Style} and \emph{Wild/Sour} groups, with the
+\emph{India Pale Ale}, \emph{Wheat Beer}, \emph{Scottish-Style Ale} and
+\emph{Hybrid Beer} families and a residual \emph{Specialty Beer} family that
+collects flavoured, barrel-aged and otherwise non-canonical beers.
+Table~\ref{tab:families} lists the fifteen families, their cardinality in the
+dataset, and a representative style for each, with that style's symbolic
+descriptors and the numeric ABV, IBU and SRM ranges actually recorded for it.
+
+\begin{longtable}{@{}p{0.18\textwidth}p{0.04\textwidth}p{0.24\textwidth}p{0.14\textwidth}p{0.09\textwidth}p{0.09\textwidth}p{0.07\textwidth}@{}}
+  \caption{The fifteen beer families, with a representative style and its recorded
+  ABV (\% vol), IBU and SRM ranges.}\label{tab:families}\\
+  \toprule
+  \textbf{Family} & \textbf{\#} & \textbf{Representative style} &
+  \textbf{Colour / flavour} & \textbf{ABV} & \textbf{IBU} & \textbf{SRM} \\
+  \midrule
+  \endfirsthead
+  \multicolumn{7}{@{}l}{\small\itshape Table~\ref{tab:families} (continued)}\\
+  \toprule
+  \textbf{Family} & \textbf{\#} & \textbf{Representative style} &
+  \textbf{Colour / flavour} & \textbf{ABV} & \textbf{IBU} & \textbf{SRM} \\
+  \midrule
+  \endhead
+  \midrule
+  \multicolumn{7}{r}{\small\itshape continued on next page}\\
+  \endfoot
+  \bottomrule
+  \endlastfoot
+  Pale Ale & 5 & American Pale Ale & amber, hoppy-bitter & 4.4--5.4 & 30--50 & 6--14 \\
+  India Pale Ale & 3 & American IPA & amber, hoppy-bitter & 6.3--7.6 & 50--70 & 6--14 \\
+  Pilsener \& Pale Lager & 5 & German-Style Pilsener & pale, crisp-clean & 4.6--5.3 & 25--40 & 3--4 \\
+  Dark Lager & 5 & German-Style Dunkel & brown, dark-roasty & 4.8--5.3 & 16--25 & 15--17 \\
+  Brown Ale & 3 & American Brown Ale & brown, malty-sweet & 4.2--6.3 & 25--45 & 15--26 \\
+  Wheat Beer & 6 & German-Style Hefeweizen & pale, fruity-spicy & 4.9--5.6 & 10--15 & 3--9 \\
+  Belgian Style & 7 & Belgian-Style Tripel & pale/amber, fruity-spicy & 7.1--10.1 & 20--45 & 4--9 \\
+  Strong Ale & 4 & American Barley Wine & brown, hoppy-bitter & 8.5--12.2 & 60--100 & 11--18 \\
+  Bock & 4 & German-Style Doppelbock & brown/dark, malty-sweet & 6.6--7.9 & 17--27 & 12--30 \\
+  Porter & 5 & Robust Porter & dark, dark-roasty & 5.1--6.6 & 25--40 & 30--50 \\
+  Stout & 5 & Irish-Style Dry Stout & dark, dark-roasty & 4.2--5.3 & 30--40 & 40--50 \\
+  Scottish-Style Ale & 2 & Scotch Ale/Wee Heavy & brown/dark, malty-sweet & 6.6--8.5 & 25--35 & 15--30 \\
+  Hybrid Beer & 6 & California Common & amber/brown, hoppy-bitter & 4.6--5.7 & 35--45 & 8--15 \\
+  Wild/Sour & 6 & Contemporary Gose & pale, sour-tart-funky & 4.4--5.4 & 10--15 & 3--3 \\
+  Specialty Beer & 13 & American Black Ale & dark, hoppy-bitter & 6.3--7.6 & 50--70 & 35--50 \\
+\end{longtable}
+
+The table makes the structuring role of the three linguistic axes apparent.
+Colour (SRM) separates the pale families (Pilsener, Pale Ale, Wheat) from the
+dark ones (Porter, Stout) almost completely; alcohol (ABV) singles out the Strong
+Ale and Belgian families; and bitterness (IBU) distinguishes the hop-forward
+India Pale Ale and Strong Ale families from the malt-forward Bock, Dark Lager and
+Brown Ale families. These are precisely the gradients along which BeerEX's fuzzy
+membership functions are calibrated.
+
+\section{Food pairing}
+
+Beer-and-food pairing, as codified by the Brewers Association, is not arbitrary
+but rests on three complementary mechanisms, which the system encodes as the
+principles by which a dish is matched to a style.
+
+\begin{itemize}[leftmargin=2em]
+  \item \textbf{Complement.} Shared or harmonious flavours reinforce one another,
+        as when the roasted, coffee-like notes of a stout echo those of a
+        chocolate dessert.
+  \item \textbf{Contrast.} Opposing flavours balance one another, as when the
+        sweetness of a malty beer offsets a savoury or spicy dish.
+  \item \textbf{Cut.} The carbonation and bitterness of the beer cleanse the
+        palate of fat and intensity, refreshing it between bites of a rich dish.
+\end{itemize}
+
+On the basis of these mechanisms, the source guides associate each style with the
+\emph{cheese}, \emph{entrée} and \emph{dessert} that best match it. BeerEX records
+these associations in the \code{pairing} deftemplate of
+\code{clips/beer-data.clp}, with \textbf{73} of the styles carrying a triple of
+authoritative pairings. The system can therefore reason from a meal or dish back
+to a style: a request centred on a particular cheese, a particular entrée
+(roasted or grilled meats, seafood, sausages, spicy dishes) or a dessert is
+matched against these triples, and the matching styles are scored together with
+the measured attributes. Representative pairings drawn directly from the
+knowledge base are shown in Table~\ref{tab:pairings}.
+
+\begin{longtable}{@{}p{0.27\textwidth}p{0.20\textwidth}p{0.24\textwidth}p{0.21\textwidth}@{}}
+  \caption{Representative food pairings, one per family, from
+  \code{beer-data.clp}.}\label{tab:pairings}\\
+  \toprule
+  \textbf{Style} & \textbf{Cheese} & \textbf{Entrée} & \textbf{Dessert} \\
+  \midrule
+  \endfirsthead
+  \multicolumn{4}{@{}l}{\small\itshape Table~\ref{tab:pairings} (continued)}\\
+  \toprule
+  \textbf{Style} & \textbf{Cheese} & \textbf{Entrée} & \textbf{Dessert} \\
+  \midrule
+  \endhead
+  \midrule
+  \multicolumn{4}{r}{\small\itshape continued on next page}\\
+  \endfoot
+  \bottomrule
+  \endlastfoot
+  American Pale Ale & Mild or Medium Cheddar & Roasted or Grilled Meats & Apple Pie \\
+  American IPA & Blue Cheeses & Spicy Tuna Roll & Persimmon Rice Pudding \\
+  German-Style Pilsener & White Cheddar & Salads & Shortbread Cookies \\
+  German-Style Dunkel & Washed-Rind Munster & Sausages & Candied Ginger Beer Cake \\
+  American Brown Ale & Aged Gouda & Vegetables & Pear Fritters \\
+  German-Style Hefeweizen & Ch\`evre & Seafood & Key Lime Pie \\
+  Belgian-Style Tripel & Triple Creme & Roasted Turkey & Caramelized Banana Creme Brulee \\
+  American Barley Wine & Strong Blue Cheeses & Beef Cheek & Rich Desserts \\
+  German-Style Doppelbock & Strong Cheeses & Ham & German Chocolate Cake \\
+  Robust Porter & Gruy\`ere & Roasted or Grilled Meats & Chocolate Peanut Butter Cookies \\
+  Irish-Style Dry Stout & Irish Cheddar & Ham & Chocolate Desserts \\
+  Scotch Ale/Wee Heavy & Pungent Cheeses & Game & Creamy Desserts with Fruit \\
+  California Common & Feta & Pork Loin & Bread Pudding \\
+  Contemporary Gose & Queso Fresco & Watermelon Salad & Greek Yogurt Lemon Mousse \\
+  American Black Ale & Blue Cheeses and Aged Gouda & Grits & Chocolate Truffles \\
+\end{longtable}
+
+The pairings illustrate the three mechanisms at work: the roasted Irish-Style Dry
+Stout matched to chocolate desserts \emph{complements} like with like; the malty
+German-Style Doppelbock matched to ham \emph{contrasts} sweet against savoury;
+and the highly carbonated, bitter American IPA matched to a spicy tuna roll
+\emph{cuts} through heat and fat. The same data also support meal- and
+dish-oriented reasoning of the kind a user typically begins from ---for instance
+pizza, or a cheese course--- since dishes such as roasted or grilled meats,
+seafood, sausages and the various cheeses recur across families and can be used
+as entry points into the style space.
+
+\section{Sources and extraction}
+
+The knowledge base is built entirely from authoritative material published by
+CraftBeer.com and the Brewers Association, so that every fact in the system is
+traceable to a published source.
+
+\begin{itemize}[leftmargin=2em]
+  \item the \emph{2017 Beer Styles Study Guide}, which provides, per style, the
+        numeric ranges (ABV, IBU, SRM, OG, FG, CO\textsubscript{2} volumes) and
+        the full qualitative and serving profile;
+  \item the \emph{Beer \& Food Course} and the accompanying food-pairing chart,
+        which provide the three pairing mechanisms (complement, contrast, cut)
+        and the authoritative cheese / entrée / dessert associations.
+\end{itemize}
+
+Rather than transcribing this material by hand, BeerEX mines it with two
+reproducible scripts, so that the knowledge base stays faithful to ---and is
+regenerable from--- the documents.
+
+\begin{itemize}[leftmargin=2em]
+  \item \code{scripts/extract\_ranges.py} parses the Study Guide PDF (via
+        \code{pdftotext}), locates each style page, reads off the six numeric
+        ranges, and matches each guide entry against the 79 styles of
+        \code{beer-styles.fct} by fuzzy string matching. It deliberately discards
+        catch-all spans ---ranges too wide to be characteristic, as listed by the
+        specialty and wild categories--- so that only informative ranges enter
+        the engine. It writes the auditable table \code{data/beer-style-ranges.csv}
+        and the CLIPS facts \code{clips/beer-ranges.clp}.
+  \item \code{scripts/extract\_kb.py} parses both the Study Guide PDF, for the
+        eleven qualitative, serving and origin fields, and the pairings
+        spreadsheet, for the cheese / entrée / dessert triples, again aligning
+        every record to the 79 styles. It writes the comprehensive table
+        \code{data/beer-styles.csv} and the CLIPS facts \code{clips/beer-data.clp}
+        (the \code{beer-profile} and \code{pairing} deftemplates and their
+        deffacts).
+\end{itemize}
+
+Because the source documents are kept outside version control, the generated CSV
+tables and \code{.clp} fact bases serve as the auditable, committed record of the
+extraction; re-running the scripts against the same documents reproduces them
+exactly. This pipeline is what allows BeerEX to replace the hand-assigned weights
+of its first version with a data-grounded knowledge base, and it is on this
+foundation that the certainty-factor rules and the fuzzy backend described in the
+following chapters are built.

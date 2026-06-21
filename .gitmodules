@@ -1,0 +1,4 @@
+[submodule "third_party/FuzzyCLIPS"]
+	path = third_party/FuzzyCLIPS
+	url = git@github.com:dmeoli/FuzzyCLIPS.git
+	ignore = dirty

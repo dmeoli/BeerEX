@@ -1,0 +1,31 @@
+# Self-contained deploy stack for the BeerEX bot, with automatic updates.
+#
+# Continuous deployment:
+#   git push master  ->  CI builds and publishes ghcr.io/dmeoli/beerex:latest
+#                    ->  Watchtower notices the new image and pulls + restarts the
+#                        bot automatically (within the poll interval below).
+#   A push is all it takes for the running bot to update — no SSH, no manual pull.
+#
+# One-time host setup is in deploy/README.md. Put the token in a .env file next to
+# this compose file (see .env.example), then: docker compose up -d
+services:
+  beerex-bot:
+    image: ghcr.io/dmeoli/beerex:latest
+    container_name: beerex-bot
+    restart: unless-stopped              # survive crashes and host reboots
+    environment:
+      - TOKEN=${TOKEN}
+      - BEEREX_BACKEND=fuzzy
+
+  watchtower:
+    image: containrrr/watchtower:latest
+    container_name: beerex-watchtower    # unique name: lets other stacks coexist
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      # GHCR credentials, needed only if the package is PRIVATE (see README).
+      - ${HOME}/.docker/config.json:/config.json:ro
+    environment:
+      - WATCHTOWER_CLEANUP=true          # delete the old image after each update
+      - WATCHTOWER_POLL_INTERVAL=120     # check GHCR every 2 minutes
+    command: beerex-bot                  # watch only this bot

@@ -1,0 +1,74 @@
+name,ABV_lo,ABV_hi,IBU_lo,IBU_hi,SRM_lo,SRM_hi,OG_lo,OG_hi,FG_lo,FG_hi,CO2_lo,CO2_hi,matched,score
+American Amber Ale,4.4,6.1,25.0,45.0,11.0,18.0,1.048,1.058,1.012,1.018,2.0,2.5,American Amber Ale,1.0
+American Pale Ale,4.4,5.4,30.0,50.0,6.0,14.0,1.044,1.05,1.008,1.014,2.0,2.5,American Pale Ale,1.0
+English-Style Bitter,3.0,4.2,20.0,35.0,5.0,12.0,1.033,1.038,1.006,1.012,1.0,1.5,English-Style Bitter,1.0
+Blonde Ale,4.1,5.1,15.0,25.0,3.0,7.0,1.045,1.054,1.008,1.016,2.0,2.5,Blonde Ale,1.0
+English-Style Pale Ale (ESB),4.4,5.3,20.0,40.0,5.0,12.0,1.04,1.056,1.008,1.016,1.5,2.0,English-Style Pale Ale (ESB),1.0
+American Amber Lager,4.8,5.4,18.0,30.0,6.0,14.0,1.042,1.056,1.01,1.018,2.5,2.5,American Amber Lager,1.0
+German-Style Dunkel,4.8,5.3,16.0,25.0,15.0,17.0,1.048,1.056,1.014,1.018,2.0,2.5,German-Style Dunkel,1.0
+German-Style Märzen/Oktoberfest,5.1,6.0,18.0,25.0,4.0,15.0,1.05,1.06,1.012,1.02,2.0,2.5,German-Style Marzen / Oktoberfest,0.98
+German-Style Schwarzbier,3.8,4.9,22.0,30.0,25.0,30.0,1.044,1.052,1.01,1.016,2.0,2.5,German-Style Schwarzbier,1.0
+Vienna-Style Lager,4.8,5.4,22.0,28.0,12.0,26.0,1.046,1.056,1.012,1.018,2.0,2.5,Vienna-Style Lager,1.0
+American Brown Ale,4.2,6.3,25.0,45.0,15.0,26.0,1.04,1.06,1.01,1.018,2.0,2.5,American Brown Ale,1.0
+English-Style Brown Ale,4.2,6.0,15.0,25.0,12.0,17.0,1.04,1.05,1.008,1.014,1.0,1.5,English-Style Brown Ale,1.0
+English-Style Mild,3.4,4.4,10.0,24.0,17.0,34.0,1.03,1.036,1.004,1.008,1.0,1.5,English-Style Mild,1.0
+American IPA,6.3,7.6,50.0,70.0,6.0,14.0,1.06,1.075,1.012,1.018,2.0,2.5,American IPA,1.0
+English-Style IPA,5.1,7.1,35.0,63.0,6.0,14.0,1.05,1.064,1.012,1.018,2.0,2.5,English-Style IPA,1.0
+Imperial IPA,6.3,7.6,50.0,70.0,6.0,14.0,1.06,1.075,1.012,1.018,2.0,2.5,American IPA,0.73
+American-Style Wheat Wine Ale,8.5,12.2,45.0,85.0,5.0,15.0,1.088,1.12,1.024,1.032,2.0,2.5,American-Style Wheat Wine Ale,1.0
+American Wheat,3.5,5.6,10.0,35.0,2.0,10.0,1.036,1.056,1.004,1.018,2.5,2.5,American Wheat,1.0
+Belgian-Style Witbier,4.8,5.6,10.0,17.0,2.0,4.0,1.044,1.05,1.006,1.01,2.0,2.5,Belgian-Style Witbier,1.0
+Berliner-Style Weisse,2.8,3.4,3.0,6.0,2.0,4.0,1.028,1.032,1.004,1.006,3.5,4.0,Berliner-Style Weisse,1.0
+German-Style Dunkelweizen,4.8,5.4,10.0,15.0,10.0,25.0,1.048,1.056,1.008,1.016,2.5,3.0,German-Style Dunkelweizen,1.0
+German-Style Hefeweizen,4.9,5.6,10.0,15.0,3.0,9.0,1.047,1.056,1.008,1.016,2.5,3.0,German-Style Hefeweizen,1.0
+American Barley Wine,8.5,12.2,60.0,100.0,11.0,18.0,1.09,1.12,1.024,1.028,2.0,2.5,American Barley Wine,1.0
+American Imperial Red Ale,8.0,10.6,55.0,85.0,10.0,17.0,1.08,1.1,1.02,1.028,2.0,2.5,American Imperial Red Ale,1.0
+British-Style Barley Wine Ale,8.5,12.0,40.0,60.0,14.0,22.0,1.085,1.12,1.024,1.028,1.5,2.0,British-Style Barley Wine Ale,1.0
+English-Style Old Ale,6.3,9.1,30.0,65.0,12.0,30.0,1.058,1.088,1.014,1.03,2.0,2.0,English-Style Old Ale,1.0
+Belgian-Style Blonde Ale,6.3,7.9,15.0,30.0,4.0,7.0,1.054,1.068,1.008,1.015,3.0,4.0,Belgian-Style Blonde Ale,1.0
+Belgian-Style Dubbel,6.3,7.6,20.0,35.0,16.0,36.0,1.06,1.075,1.012,1.016,3.0,4.0,Belgian-Style Dubbel,1.0
+Belgian-Style Golden Strong Ale,7.1,11.2,20.0,50.0,3.5,10.0,1.064,1.096,1.008,1.024,4.0,4.0,Belgian-Style Golden Strong Ale,1.0
+Belgian-Style Pale Ale,4.1,6.3,20.0,30.0,6.0,12.0,1.044,1.054,1.008,1.014,2.5,2.5,Belgian-Style Pale Ale,1.0
+Belgian-Style Quadrupel,9.1,14.2,25.0,50.0,8.0,20.0,1.084,1.12,1.014,1.02,2.5,3.0,Belgian-Style Quadrupel,1.0
+Belgian-Style Saison,4.4,8.4,20.0,38.0,4.0,14.0,1.04,1.08,1.01,1.014,3.0,3.5,Belgian-Style Saison,1.0
+Belgian-Style Tripel,7.1,10.1,20.0,45.0,4.0,9.0,1.07,1.092,1.008,1.018,3.0,4.0,Belgian-Style Tripel,1.0
+American Cream Ale,4.3,5.7,10.0,22.0,2.0,5.0,1.044,1.052,1.004,1.01,2.5,2.5,American Cream Ale,1.0
+French-Style Biére de Garde,4.4,8.0,20.0,30.0,7.0,16.0,1.06,1.08,1.012,1.024,2.5,3.0,French-Style Biere de Garde,0.98
+California Common,4.6,5.7,35.0,45.0,8.0,15.0,1.045,1.056,1.01,1.018,2.5,3.0,California Common,1.0
+German-Style Brown/Altbier,4.6,5.6,25.0,52.0,11.0,19.0,1.044,1.052,1.008,1.014,1.5,2.5,German-Style Brown/Altbier,1.0
+German-Style Kölsch,4.8,5.3,18.0,28.0,3.0,6.0,1.042,1.048,1.006,1.01,2.5,2.5,German-Style Kolsch,0.97
+Irish-Style Red,4.1,4.6,20.0,28.0,11.0,18.0,1.04,1.048,1.01,1.014,2.0,2.5,Irish-Style Red,1.0
+American Imperial Porter,7.0,12.0,35.0,50.0,40.0,50.0,1.08,1.1,1.02,1.03,2.0,2.5,American Imperial Porter,1.0
+Baltic-Style Porter,7.6,9.3,35.0,40.0,40.0,50.0,1.072,1.092,1.016,1.022,2.0,2.5,Baltic-Style Porter,1.0
+English-Style Brown Porter,4.4,6.0,20.0,30.0,30.0,35.0,1.04,1.05,1.006,1.014,1.5,2.0,English-Style Brown Porter,1.0
+Robust Porter,5.1,6.6,25.0,40.0,30.0,50.0,1.045,1.06,1.008,1.016,2.0,2.5,Robust Porter,1.0
+Smoke Porter,5.1,8.9,20.0,40.0,,,1.05,1.065,1.01,1.018,,,Smoke Porter,1.0
+American Imperial Stout,7.0,12.0,50.0,80.0,40.0,50.0,1.08,1.1,1.02,1.03,2.0,2.5,American Imperial Stout,1.0
+American Stout,5.7,8.9,35.0,60.0,40.0,50.0,1.05,1.075,1.01,1.022,2.5,3.0,American Stout,1.0
+English-Style Oatmeal Stout,3.8,6.1,20.0,40.0,,,1.038,1.056,1.008,1.02,2.0,2.5,English-Style Oatmeal Stout,1.0
+English-Style Sweet Stout (Milk Stout),3.2,6.3,15.0,25.0,40.0,50.0,1.045,1.056,1.012,1.02,1.5,2.0,English-Style Sweet Stout (Milk Stout),1.0
+Irish-Style Dry Stout,4.2,5.3,30.0,40.0,40.0,50.0,1.038,1.048,1.008,1.012,1.0,1.5,Irish-Style Dry Stout,1.0
+German-Style Bock,6.3,7.6,20.0,30.0,20.0,30.0,1.066,1.074,1.018,1.024,2.5,2.5,German-Style Bock,1.0
+German-Style Doppelbock,6.6,7.9,17.0,27.0,12.0,30.0,1.074,1.08,1.014,1.02,2.5,2.5,German-Style Doppelbock,1.0
+German-Style Maibock,6.3,8.1,20.0,38.0,4.0,9.0,1.066,1.074,1.012,1.02,2.5,2.5,German-Style Maibock,1.0
+German-Style Weizenbock,7.0,9.5,15.0,35.0,,,1.066,1.08,1.016,1.028,2.5,3.0,German-Style Weizenbock,1.0
+Scotch Ale/Wee Heavy,6.6,8.5,25.0,35.0,15.0,30.0,1.072,1.085,1.016,1.028,2.0,2.5,Scotch Ale/Wee Heavy,1.0
+Scottish-Style Ale,2.8,5.3,9.0,25.0,6.0,15.0,1.03,1.05,1.006,1.018,1.5,2.0,Scottish-Style Ale,1.0
+Belgian-Style Flanders,4.8,6.6,5.0,18.0,12.0,25.0,1.044,1.056,1.008,1.016,2.0,2.5,Belgian-Style Flanders,1.0
+Belgian-Style Fruit Lambic,5.0,8.9,15.0,21.0,,,1.04,1.072,1.008,1.016,4.0,4.0,Belgian-Style Fruit Lambic,1.0
+Belgian-Style Lambic/Gueuze,6.3,8.9,9.0,23.0,6.0,13.0,1.044,1.056,1.0,1.01,1.0,1.5,Belgian-Style Lambic/Gueuze,1.0
+Contemporary Gose,4.4,5.4,10.0,15.0,3.0,3.0,1.036,1.056,1.008,1.012,3.3,4.5,Contemporary Gose,1.0
+American Lager,4.1,5.1,5.0,15.0,2.0,6.0,1.04,1.048,1.006,1.014,2.2,2.7,American Lager,1.0
+Bohemian-Style Pilsener,4.1,5.1,30.0,45.0,3.0,7.0,1.044,1.056,1.014,1.02,2.0,2.5,Bohemian-Style Pilsener,1.0
+European-Style Export,5.1,6.1,23.0,29.0,3.0,6.0,1.048,1.056,1.01,1.014,2.0,2.5,European-Style Export,1.0
+German-Style Helles,4.8,5.6,18.0,25.0,4.0,5.5,1.044,1.05,1.008,1.012,2.0,2.5,German-Style Helles,1.0
+German-Style Pilsener,4.6,5.3,25.0,40.0,3.0,4.0,1.044,1.055,1.006,1.012,2.0,2.5,German-Style Pilsener,1.0
+American Black Ale,6.3,7.6,50.0,70.0,35.0,50.0,1.056,1.075,1.012,1.018,2.0,2.5,American Black Ale,1.0
+Chocolate Beer,,,15.0,40.0,,,1.03,1.11,1.006,1.03,,,Chocolate Beer,1.0
+Coffee Beer,,,15.0,45.0,,,1.03,1.11,1.006,1.03,,,Coffee Beer,1.0
+Fruit and Field Beer,,,5.0,45.0,,,1.03,1.11,1.006,1.03,,,Fruit and Field Beer,1.0
+Herb and Spice Beer,,,5.0,40.0,,,1.03,1.11,1.006,1.03,,,Herb and Spice Beer,1.0
+Honey Beer,,,,,,,1.03,1.11,1.006,1.03,,,Honey Beer,1.0
+Pumpkin Beer,,,,,,,1.03,1.11,1.006,1.03,,,Pumpkin Beer,1.0
+Session Beer,4.0,5.0,10.0,35.0,,,1.034,1.04,1.004,1.01,,,Session Beer,1.0
+Specialty Beer,,,,,,,1.03,1.14,1.006,1.03,,,Specialty Beer,1.0

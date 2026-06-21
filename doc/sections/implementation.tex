@@ -1,0 +1,383 @@
+\chapter{Implementation}
+
+This chapter describes how BeerEX is realised: the tools adopted, the modular
+architecture of the system, the representation of the knowledge base, the
+mechanisms of the inference engine ---knowledge acquisition, the management of
+uncertainty under the two backends, and the explanation of the reasoning--- and
+the bilingual user interface shared by the command-line program and the Telegram
+bot. The formal calculus introduced conceptually in the previous chapter
+---the MYCIN certainty-factor combination, the trapezoidal membership functions,
+the centroid defuzzification and the weighted-mean scoring--- is owned here,
+together with its grounding in the source files.
+
+\section{Tools Used}
+
+BeerEX is implemented in \emph{CLIPS}, the C Language Integrated Production
+System (NASA/Johnson Space Center), a mature and free forward-chaining
+production-rule language. CLIPS was chosen because the recommendation knowledge
+is naturally expressed as \emph{rules} that fire on asserted facts, and because
+its \code{deftemplate}/\code{deffacts} machinery provides a clean working-memory
+model for the data-grounded knowledge base. The features that CLIPS does not
+provide natively ---reasoning under uncertainty and fuzzy inference--- are
+implemented explicitly on top of the language, as described below.
+
+The system is delivered in two forms, sharing the same \code{.clp} sources:
+
+\begin{itemize}[nosep]
+  \item a \textbf{command-line program} (\code{BeerEX.clp}), run by a CLIPS
+        6.4.2 interpreter built locally from source by \code{scripts/build-clips.sh}
+        (which fetches and compiles the official CLIPS sources into
+        \code{\textasciitilde/.local/bin}). The same interpreter runs the
+        \code{.clp}-based tests;
+  \item an asynchronous \textbf{Telegram bot} (\code{BeerEX.bot.py}), built on
+        \emph{python-telegram-bot}~v21, that reaches the engine through
+        \emph{clipspy}. clipspy bundles its own CLIPS~6.4.x, so the bot needs no
+        separately built interpreter.
+\end{itemize}
+
+The fuzzy mathematics is supplied by a reusable, domain-agnostic pure-CLIPS
+library (\code{dmeoli/FuzzyCLIPS}), vendored as a \emph{git submodule} under
+\code{third\_party/}; this keeps BeerEX on stock, modern CLIPS while still
+offering genuine fuzzy reasoning (Section~\ref{sec:cf-vs-fuzzy}). The project
+ships a \code{Dockerfile} and a \code{docker-compose} file, and a CI workflow
+that lints, runs the test suite and publishes the image to the GitHub Container
+Registry (GHCR).
+
+\section{System Architecture}
+
+The system is organised by \emph{responsibility} rather than as a single
+monolithic file. This separation mirrors the conceptual architecture of an
+expert system (knowledge base, inference engine, user interface) and keeps each
+concern independently readable and testable. Table~\ref{tab:modules} lists the
+modules; \code{BeerEX.clp} (CLI) and the \code{CORE\_FILES} list of
+\code{BeerEX.bot.py} (bot) collect them and fix the load order.
+
+\begin{table}[h]
+\centering
+\caption{Modular organisation of BeerEX (file \(\to\) responsibility).}
+\label{tab:modules}
+\small
+\begin{tabular}{@{}lp{8.6cm}@{}}
+\toprule
+\textbf{Module} & \textbf{Responsibility} \\
+\midrule
+\code{BeerEX.clp} & CLI bootstrap: load order, the \code{ask-question} /
+\code{next-UI-state} REPL driver, \code{(reset)}\,/\,\code{(run)}. \\
+\code{beerex.clp} & Core: templates (\code{UI-state}, \code{attribute},
+\code{beer}, \dots), globals (\code{?*backend*}, \code{?*lang*}, salience),
+\code{combine-CFs}, the \cf{} selection rule and the print/clean-up rule,
+\code{get-explanation}, the \code{T} localisation function. \\
+\code{dialog.clp} & Dialogue state machine: \code{ask-question} halt,
+\code{handle-next}/\code{handle-prev} navigation and retraction,
+\code{translate-ui}. \\
+\code{beer-questions.clp} & The questions posed to the user (scenario,
+preference and meal questions). \\
+\code{beer-knowledge.clp} & Expert rules that turn answers into \emph{best-*}
+evidence with certainties. \\
+\code{beer-styles.fct} & Symbolic style/beer dataset (the \code{beer} facts). \\
+\code{beer-ranges.clp} & Per-style numeric ranges (ABV, IBU, SRM, \dots) ---the
+data behind the fuzzy memberships. \\
+\code{beer-data.clp} & Full per-style sensory profile and the food pairings. \\
+\code{beer-fuzzy.clp} & Fuzzy backend: linguistic variables/terms, membership,
+scoring/ranking, the per-beer rationale and the \cf{}\(\to\)fuzzy bridge. \\
+\code{beerex-fuzzy.clp} & Wires the fuzzy backend into the selection stage
+(\code{generate-beers-fuzzy}). \\
+\code{labels-it.clp} & Optional Italian overlay (gettext-style
+\code{translation} facts). \\
+\code{third\_party/FuzzyCLIPS/fuzzy.clp} & Reusable pure-CLIPS fuzzy library
+(submodule): membership constructors, set operators, defuzzifiers, Mamdani. \\
+\code{BeerEX.bot.py} & Telegram bot: one isolated \code{clips.Environment} per
+chat, dialogue driver, inline keyboards, \code{/cf} \code{/fuzzy} \code{/en}
+\code{/it}. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+A single global, \code{?*backend*} (\code{cf}\,|\,\code{fuzzy}), selects the
+reasoning strategy at the low-salience selection stage, leaving the dialogue and
+the knowledge rules untouched; both backends emit the same
+\code{(attribute (name beer) \dots)} result facts, so printing and explanation
+are shared.
+
+\section{Knowledge Base}
+
+The knowledge base is represented through CLIPS \code{deftemplate}s and
+\code{deffacts}, split across the data files of Table~\ref{tab:modules}. Three
+families of facts coexist:
+
+\begin{enumerate}[label=(\Roman*)]
+  \item \textbf{Domain facts} ---the \code{beer} facts in
+  \code{beer-styles.fct} carry the symbolic descriptors over which the
+  qualitative reasoning matches: \code{style}, \code{name} and the multislot
+  axes \code{alcohol}, \code{color}, \code{flavor}, \code{fermentation},
+  \code{carbonation} (each constrained by \code{allowed-symbols});
+  \item \textbf{Data-grounded descriptions} ---the \code{beer-range} facts
+  (\code{beer-ranges.clp}: ABV, IBU, SRM, OG, FG, CO\textsubscript{2} ranges)
+  and the \code{beer-profile} and \code{pairing} facts (\code{beer-data.clp});
+  \item \textbf{Evidence} ---the \code{attribute} facts asserted during the
+  dialogue, in the canonical \emph{best-*} form (\code{best-color},
+  \code{best-alcohol}, \code{best-flavor}, \code{best-style}, \code{best-name},
+  \dots), each with a certainty in \([-1,1]\).
+\end{enumerate}
+
+The questions (\code{beer-questions.clp}) and the knowledge rules
+(\code{beer-knowledge.clp}) are organised in parallel: each question asserts a
+\code{UI-state} whose \code{relation-asserted} names the relation it elicits
+(e.g. \code{which-season}), and the corresponding knowledge rule fires on that
+relation to assert the \emph{best-*} evidence.
+
+The data-grounded facts are not written by hand but produced by two reproducible
+Python scripts that mine the CraftBeer~2017 sources, so the knowledge base can
+be regenerated from the documents and audited:
+
+\begin{itemize}[nosep]
+  \item \code{scripts/extract\_ranges.py} parses the numeric style ranges from
+  the \emph{Beer Styles Study Guide} PDF and maps them onto the named beers,
+  emitting both an auditable \code{data/beer-style-ranges.csv} and the engine
+  fact file \code{clips/beer-ranges.clp};
+  \item \code{scripts/extract\_kb.py} parses the qualitative descriptors,
+  palate, hop/malt and serving profile, and the cheese/entr\'ee/dessert food
+  pairings (from the spreadsheet), emitting \code{data/beer-styles.csv} and
+  \code{clips/beer-data.clp}.
+\end{itemize}
+
+\section{Inference Engine}
+
+The inference engine derives the recommendation from the facts stated by the
+user. It comprises four concerns: the acquisition of evidence, the management of
+uncertainty under the \cf{} backend, its fuzzy alternative, and the explanation
+of the reasoning.
+
+\paragraph{Knowledge Acquisition.}
+Evidence is gathered through a uniform pipeline: question~$\to$~fact~$\to$~rule~$\to$~%
+\emph{best-*} evidence. A question rule asserts a \code{UI-state} that records
+the relation it elicits; when the user answers, the dialogue machinery
+(Section~\ref{sec:ui}) asserts the relation as a plain fact (e.g.
+\code{(which-season winter)}); a knowledge rule then matches that fact and asserts
+the graded \emph{best-*} attributes. For instance the winter-scenario rule
+contributes several weighted preferences across the axes:
+
+\begin{lstlisting}
+(defrule determine-best-beer-attributes-if-which-season-is-winter
+   (declare (salience ?*medium-low-priority*))
+   (which-season winter)
+   =>
+   (assert (attribute (name best-color)   (value dark)        (certainty .05)))
+   (assert (attribute (name best-alcohol) (value harsh)       (certainty .05)))
+   (assert (attribute (name best-flavor)  (value malty-sweet) (certainty .05)))
+   ...)
+\end{lstlisting}
+
+Many rules assert the same value on the same axis; these duplicate attributes
+are folded into one before selection by the \code{combine-certainties} rule,
+which merges any two \code{attribute} facts that agree on \code{name} and
+\code{value} using the MYCIN combination function below.
+
+\paragraph{Uncertainty Management.}
+Reasoning under uncertainty is implemented with \emph{certainty factors}
+(\cf{}~$\in[-1,1]$). When two independent pieces of evidence assert the same
+value on the same axis with certainties $x$ and $y$, they are combined by the
+classical MYCIN parallel-combination function:
+\begin{equation}
+\cf(x,y)=
+\begin{cases}
+x+y-x\,y & x>0,\ y>0,\\[4pt]
+x+y+x\,y & x<0,\ y<0,\\[6pt]
+\dfrac{x+y}{1-\min(|x|,|y|)} & \text{otherwise.}
+\end{cases}
+\label{eq:mycin}
+\end{equation}
+Concordant positive evidence accumulates towards $+1$, concordant negative
+towards $-1$, and discordant evidence partially cancels. This is exactly the
+\code{combine-CFs} deffunction in \code{beerex.clp}:
+
+\begin{lstlisting}
+(deffunction combine-CFs (?x ?y)
+   (if (and (> ?x 0) (> ?y 0))
+    then (bind ?c (- (+ ?x ?y) (* ?x ?y)))
+    else (if (and (< ?x 0) (< ?y 0))
+          then (bind ?c (+ (+ ?x ?y) (* ?x ?y)))
+          else (bind ?c (/ (+ ?x ?y) (- 1 (min (abs ?x) (abs ?y)))))))
+   ?c)
+\end{lstlisting}
+
+In the \cf{} backend the recommendation is then scored by \emph{accumulation}:
+the low-salience \code{generate-beers} rule matches each candidate beer's
+symbolic slots against the combined \emph{best-*} evidence and, for every match
+on \code{best-style}, \code{best-name}, \code{best-alcohol}, \code{best-color},
+\code{best-flavor}, \code{best-fermentation} or \code{best-carbonation}, asserts
+a result \code{(attribute (name beer) \dots)} carrying that piece of evidence's
+certainty. The final rule sorts the results by certainty and reports the top
+five.
+
+\paragraph{Certainty factors versus fuzzy logic.}
+\label{sec:cf-vs-fuzzy}
+The certainty-factor weights are assigned by the expert and are not quantified by
+the source guides; this arbitrariness, and the coarse ties it produces, motivate
+the fuzzy alternative, which replaces the hand-assigned certainties on the
+\emph{measurable} axes with objective, data-grounded memberships.
+
+\emph{Linguistic variables.} The measurable axes are modelled as linguistic
+variables ---colour over SRM, alcohol over ABV\%, and a new bitterness axis over
+IBU--- declared as \code{ling-var} facts with their universe of discourse, and
+each covered by overlapping linguistic terms encoded as \code{ling-term} facts.
+Each term is a \emph{trapezoidal} membership function $a\le b\le c\le d$:
+\begin{equation}
+\mu_{a,b,c,d}(x)=
+\begin{cases}
+0 & x\le a \ \text{or}\ x\ge d,\\[3pt]
+\dfrac{x-a}{b-a} & a<x<b,\\[8pt]
+1 & b\le x\le c,\\[3pt]
+\dfrac{d-x}{d-c} & c<x<d,
+\end{cases}
+\label{eq:trap}
+\end{equation}
+with $a{=}b$ giving a left shoulder and $c{=}d$ a right shoulder. The
+breakpoints are \emph{derived from data}: crossing the dataset's symbolic labels
+with the guide's numeric ranges yields each term's empirical distribution,
+validated against the p25/median/p75 quantiles. Table~\ref{tab:trapezoids}
+records the breakpoints currently in use (the \code{ling-term} facts of
+\code{beer-fuzzy.clp}).
+
+\begin{table}[ht]
+\centering\small
+\caption{Data-grounded trapezoidal breakpoints $(a,b,c,d)$ of the linguistic
+terms.}\label{tab:trapezoids}
+\begin{tabular}{llcccc}
+\toprule
+axis & source & \multicolumn{4}{c}{terms (breakpoints $a,b,c,d$)}\\
+\midrule
+colour & SRM & pale\,(0,0,6,9) & amber\,(6,9,11,14) & brown\,(11,14,21,27) & dark\,(21,27,50,50)\\
+alcohol & ABV\% & n.d.\,(2,2,4.5,5.2) & mild\,(4.5,5,6,6.6) & noticeable\,(6,6.6,8,8.6) & harsh\,(8,8.6,15,15)\\
+bitterness & IBU & low\,(0,0,20,25) & medium\,(20,25,30,35) & high\,(30,35,70,70) &\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Carbonation, by contrast, stays symbolic: the guide's CO\textsubscript{2} volumes
+do not separate \emph{medium} from \emph{high}, so a data-driven membership
+function would not be justified.
+
+\emph{Defuzzification.} Membership evaluation and defuzzification are provided by
+the reusable \code{fuzzy.clp} library, whose centroid (centre-of-gravity)
+routine integrates a piecewise-linear membership function \emph{analytically},
+segment by segment. For each trapezoidal segment between consecutive breakpoints
+$(x_1,y_1)$ and $(x_2,y_2)$, with $\mathrm dx=x_2-x_1$, the area and the abscissa
+of its centroid are
+\begin{equation}
+A_i=\mathrm dx\,\frac{y_1+y_2}{2},\qquad
+\bar x_i=x_1+\mathrm dx\,\frac{y_1+2y_2}{3\,(y_1+y_2)},
+\label{eq:segcentroid}
+\end{equation}
+and the defuzzified value is the area-weighted mean of the segment centroids,
+\begin{equation}
+x^\star=\frac{\sum_i A_i\,\bar x_i}{\sum_i A_i}.
+\label{eq:centroid}
+\end{equation}
+This is the \code{fuzzy-centroid} deffunction, and it reproduces the
+\code{moment-defuzzify} primitive of the original FuzzyCLIPS exactly:
+
+\begin{lstlisting}
+(bind ?area (* ?dx (/ ?sy 2)))
+(bind ?cx (+ ?x1 (* ?dx (/ (+ ?y1 (* 2 ?y2)) (* 3 ?sy)))))
+(bind ?num (+ ?num (* ?area ?cx)))
+(bind ?den (+ ?den ?area))
+\end{lstlisting}
+
+\emph{Scoring.} In fuzzy mode the \code{beer-generate-fuzzy} bridge translates
+the combined \emph{best-*} evidence into weighted \code{desire} facts on the
+linguistic axes, \code{desire-cat} facts on the categorical slots and direct
+\code{suggest-name}/\code{suggest-style} suggestions. Each beer is ranked by a
+\emph{normalised weighted-mean} satisfaction score: writing $w_k$ for the weight
+of desire $k$ and $m_k(\text{beer})$ for the beer's satisfaction of it ---the
+trapezoidal membership $\mu(x)$ of the beer's measured value $x$ for a continuous
+axis, or $1/0$ for a categorical match---
+\begin{equation}
+S(\text{beer})=\frac{\sum_k w_k\,m_k(\text{beer})}{\sum_k |w_k|}.
+\label{eq:score}
+\end{equation}
+The denominator uses $|w_k|$ so that a beer with \emph{missing data} on a desired
+axis is \emph{penalised} (contributes $0$ to the numerator while still counting
+in the denominator) rather than exempted. A further term boosts styles whose
+authoritative CraftBeer pairing matches a food named by the user: when the user
+named any food, a half-weighted \code{pairing-bonus} (1.0 on a textual hit, 0.0
+otherwise) is added to both sums. The crisp value $x$ fed to $\mu$ is the
+midpoint of the beer's measured range (\code{beer-axis-value}). Because the
+memberships are objective and continuous, the fuzzy ranking grades the candidates
+\emph{finely} where the certainty-factor model can only produce coarse ties.
+
+\paragraph{Explanation Module.}
+A good expert system must justify its behaviour, and BeerEX does so in two
+complementary ways. The \code{get-explanation} deffunction builds a narrative
+from the \code{explanation-scenario}, \code{explanation-preference} and
+\code{explanation-*-meal} attributes accumulated during the dialogue, explaining
+\emph{why} the chosen profile was inferred. When the fuzzy backend is active it
+appends a per-beer, data-grounded rationale: \code{beer-rationale} reports, for
+each recommended beer, which desires it satisfied and how strongly (e.g.
+``\emph{noticeable alcohol (\(\mu\)0.82), hoppy-bitter, matches its CraftBeer
+pairing}''), stored in \code{beer-why} facts. During the dialogue the user may
+additionally ask \emph{why} a question is being posed (each \code{UI-state}
+carries a \code{why} text) or request \emph{help}. All explanatory text is base
+English passed through the \code{T} deffunction, which overlays the optional
+Italian translation when \code{?*lang*}~$\ne$~\code{en} (Section~\ref{sec:ui}).
+
+\section{User Interface}
+\label{sec:ui}
+
+The dialogue is a state machine, encoded in \code{dialog.clp} and shared by the
+CLI and the bot. A \code{UI-state} fact represents the current screen ---its
+\code{display}, admissible \code{valid-answers}, \code{help}/\code{why} text and
+the \code{relation-asserted}--- and a \code{state-list} keeps the current turn
+and the ordered \code{sequence} of visited turns. The \code{ask-question} rule
+presents a screen and \emph{halts} the engine, returning control to the caller:
+
+\begin{lstlisting}
+(defrule ask-question
+   (declare (salience ?*medium-high-priority*))
+   (UI-state (id ?id))
+   ?f <- (state-list (sequence $?s&:(not (member$ ?id ?s))))
+   =>
+   (modify ?f (current ?id) (sequence ?id ?s))
+   (halt))
+\end{lstlisting}
+
+Answering asserts a \code{(next ?id ?response)} fact; the \code{handle-next}
+rules advance the conversation, and \code{handle-prev} rewinds it ---retracting
+the relation asserted at the revised turn (and refreshing the affected
+\code{random-question} / selection rules) so that working memory stays
+consistent after the user changes an earlier answer. The \code{translate-ui}
+rule localises each screen in place before it is shown when a non-English
+language is active.
+
+The same machinery drives both front ends. The CLI (\code{BeerEX.clp})
+implements a textual REPL with \code{ask-question}/\code{next-UI-state}
+deffunctions. The Telegram bot (\code{BeerEX.bot.py}) is built on
+python-telegram-bot~v21 (async) and reaches the engine through clipspy. Crucially,
+each chat owns an \emph{isolated} \code{clips.Environment}, fixing a serious flaw
+of the original single-environment bot in which concurrent users shared working
+memory:
+
+\begin{lstlisting}[language=Python,numbers=none]
+class Session:
+    """An isolated CLIPS environment driving one user's dialogue."""
+    def __init__(self, backend=DEFAULT_BACKEND, lang=DEFAULT_LANG):
+        self.backend = backend
+        self.lang = lang
+        self.env = clips.Environment()
+        for f in CORE_FILES:
+            self.env.load(_p(f))
+        ...
+        self.reset()
+\end{lstlisting}
+
+Sessions are kept in a \code{chat\_id}\,$\to$\,\code{Session} map (with a
+bounded, oldest-first eviction policy). Each turn renders the screen's
+\code{valid-answers} as inline keyboard buttons, with optional \emph{Previous},
+\emph{Help}, \emph{Why}, \emph{Restart} and \emph{Cancel} controls; help text
+embedding \code{\_Label\_(image-url)} links is turned into inline image buttons.
+The bot also exposes commands to switch the reasoning backend at runtime
+(\code{/cf}, \code{/fuzzy}) and the output language (\code{/en}, \code{/it}),
+each re-applying the corresponding global on \code{(reset)}; bot-side messages
+are localised through \code{Session.tr}, which calls the same \code{T} catalogue
+used by the engine. Adding a new language amounts to providing a new overlay file
+of \code{translation} facts, with no change to the engine or the knowledge base.

@@ -1,0 +1,8 @@
+services:
+  beerex:
+    build: .
+    image: ghcr.io/dmeoli/beerex:latest
+    environment:
+      TOKEN: ${TOKEN:?set TOKEN in your .env}
+      BEEREX_BACKEND: ${BEEREX_BACKEND:-fuzzy}
+    restart: unless-stopped

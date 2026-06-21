@@ -1,0 +1,21 @@
+# Keep the build context small: the image only needs BeerEX.bot.py, clips/
+# and the single fuzzy library file (see Dockerfile).
+.git
+.github
+.idea
+**/__pycache__
+*.pyc
+.venv
+.env
+# Heavy / dev-only, not needed at runtime:
+CraftBeer
+doc
+data
+tests
+scripts
+# Vendored fuzzy repo: the Dockerfile copies only fuzzy.clp, so drop the rest
+# (the 12 MB nested oracle, the library's own tests/examples/scripts).
+third_party/FuzzyCLIPS/third_party
+third_party/FuzzyCLIPS/tests
+third_party/FuzzyCLIPS/examples
+third_party/FuzzyCLIPS/scripts

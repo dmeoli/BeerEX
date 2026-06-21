@@ -1,0 +1,382 @@
+\chapter{Usage}
+
+This chapter describes how \cf{} is started and how it is used in practice. The
+system exposes the same reasoning engine through two interfaces: a command-line
+REPL, useful for development and testing, and a Telegram bot, which is
+the intended everyday interface ---usable at the pub, not in front of a computer.
+Both interfaces drive the same dialogue state machine and the same knowledge
+base, so a consultation conducted from the terminal and one conducted from the
+bot ask the very same questions and reach the very same recommendations. The
+chapter first explains how to start each interface, then enumerates the available
+commands, and finally walks through a number of worked sessions ---a full
+consultation, a meal-pairing consultation, a comparison of the two reasoning
+backends, the \emph{Help} and \emph{Why} facilities, and the revision and
+cancellation of answers--- each illustrated with a faithful transcript.
+
+
+\section{Starting the system}
+
+The reasoning engine runs from the terminal with a CLIPS~6.4.x interpreter. The
+project does not assume a system-wide CLIPS: the helper script
+\code{scripts/build-clips.sh} builds CLIPS~6.4.2 locally into \code{\~{}/.local/bin},
+after which the engine is launched by loading its start-up file
+\code{BeerEX.clp}:
+
+\begin{lstlisting}[language=bash,numbers=none]
+bash scripts/build-clips.sh    # builds CLIPS 6.4.2 into ~/.local/bin
+clips -f BeerEX.clp
+\end{lstlisting}
+
+The start-up file loads the core templates and globals, the fuzzy backend, the
+per-style numeric ranges and profiles, the dialogue state machine and, finally,
+the question and knowledge rule files; it then performs a \code{(reset)} and
+\code{(run)} and hands control to the dialogue loop, which prints the first
+question and waits for the user's answer. From then on the program asks the
+questions one at a time, accepting either one of the displayed options or one of
+the \emph{help}, \emph{why}, \emph{prev} (back) and \emph{cancel} control words.
+
+The Telegram bot, by contrast, needs no system CLIPS: the \code{clipspy} binding
+bundles its own interpreter. The bot is built on \emph{python-telegram-bot}~v21
+and keeps one isolated CLIPS environment per chat, so that concurrent users never
+share working memory. With a token obtained from \emph{@BotFather}, the bot is
+started either through Docker or directly with Python~3.12:
+
+\begin{lstlisting}[language=bash,numbers=none]
+cp .env.example .env                   # put your @BotFather TOKEN in .env
+docker compose up --build              # recommended
+
+# or, for a local run:
+git submodule update --init            # fetch the fuzzy library
+python3.12 -m venv .venv && . .venv/bin/activate
+pip install -r requirements.txt
+export TOKEN=<your-telegram-bot-token>
+python BeerEX.bot.py
+\end{lstlisting}
+
+Once the process is polling, the user opens the chat and types \code{/start}. The
+bot greets the user by name and prints a short presentation, after which a
+consultation can be started with \code{/new}. The options for each question are
+offered as a reply keyboard, together with the \emph{Help}, \emph{Why},
+\emph{Previous} and \emph{Cancel} buttons where applicable; when a recommendation
+has been produced, the keyboard offers instead the \emph{Previous},
+\emph{Restart} and \emph{Cancel} buttons.
+
+
+\section{Commands}
+
+The bot recognises a small set of slash commands, which control the session as a
+whole, and a set of in-dialogue buttons, which drive the question/answer
+interaction. The slash commands are the following:
+
+\begin{itemize}
+  \item \code{/start} --- greets the user and prints a short description of how
+        the system works;
+  \item \code{/new} --- starts a new consultation, resetting the working memory
+        and asking the first question;
+  \item \code{/cf} --- selects the Certainty-Factors reasoning backend (the
+        classic MYCIN-style evidence combination);
+  \item \code{/fuzzy} --- selects the fuzzy-logic reasoning backend, which scores
+        every style with data-grounded membership functions;
+  \item \code{/en} --- sets the output language to English (the base language);
+  \item \code{/it} --- sets the output language to the Italian overlay, which
+        falls back to English wherever a string is not yet translated.
+\end{itemize}
+
+The \code{/cf}, \code{/fuzzy}, \code{/en} and \code{/it} commands do not affect
+the consultation already in progress: they record the requested backend or
+language on the session and take effect at the next \code{/new}. English is
+always the base; the commands themselves are control tokens and are never
+localised, only the questions, recommendations and explanations that the user
+reads are.
+
+During a consultation the following in-dialogue controls are available, exposed
+as keyboard buttons (and as the corresponding control words \code{help},
+\code{why}, \code{prev}, \code{restart} and \code{cancel} on the command line):
+
+\begin{itemize}
+  \item \emph{Help} --- shows an extended description of the current question's
+        options; offered only when the question carries a help text;
+  \item \emph{Why} --- explains why the current question is being asked; offered
+        only when the question carries a rationale;
+  \item \emph{Previous} --- goes back to the preceding question, retracting the
+        last answer so that it can be revised; offered only once at least one
+        question has been answered;
+  \item \emph{Restart} --- abandons the current line of questioning and begins a
+        fresh consultation; offered on the final recommendation screen;
+  \item \emph{Cancel} --- closes the consultation and clears the working memory.
+\end{itemize}
+
+
+\subsection{A worked consultation}
+
+A full consultation begins with a block of profiling questions ---asked in random
+order, since they are independent of one another--- covering the drinker's
+profile (age, regular-drinker status, smoking habit, season) and their
+personal preferences (colour, alcohol, carbonation, flavour). Once these are
+known, the dialogue switches to a depth-first chain of meal questions. The
+following command-line transcript drives the profiling questions to the point
+where a recommendation is produced; the questions and their options are exactly
+those defined in the knowledge base.
+
+\begin{lstlisting}[numbers=none]
+How old are you?
+1.18-23 2.24-29 3.>=30 4.why 5.cancel
+Answer: 3
+
+Are you a regular beer drinker?
+1.yes 2.no 3.why 4.cancel 5.prev
+Answer: yes
+
+Do you usually smoke while drinking?
+1.yes 2.no 3.why 4.cancel 5.prev
+Answer: no
+
+Is it autumn, spring, summer or winter?
+1.autumn 2.spring 3.summer 4.winter 5.why 6.cancel 7.prev
+Answer: winter
+
+Do you generally prefer pale, amber, brown or dark beer?
+1.pale 2.amber 3.brown 4.dark 5.don't mind 6.cancel 7.prev
+Answer: dark
+
+Do you generally prefer to drink low, mild, high or very high alcoholic drinks?
+1.low 2.mild 3.high 4.very high 5.don't mind 6.cancel 7.prev
+Answer: high
+
+Do you generally prefer to drink low, medium or high carbonated drinks?
+1.low 2.medium 3.high 4.don't mind 5.cancel 6.prev
+Answer: medium
+
+What kind of flavor do you generally prefer?
+1.clean 2.sweet 3.bitter 4.roasty 5.fruity 6.spicy 7.sour 8.don't mind 9.cancel 10.prev
+Answer: roasty
+\end{lstlisting}
+
+At this point the drinker's profile is complete and the dialogue moves on to the
+meal. For the purposes of this example the drinker declares that no particular
+dish is involved; the engine combines the accumulated evidence and prints the
+recommendation. With the fuzzy backend active, the result block names each style,
+its serving hint and its graded certainty, and is followed by the narrative
+explanation of the inferred profile together with a per-beer rationale:
+
+\begin{lstlisting}[numbers=none]
+Is the main meal pizza, entrée, cheese or dessert?
+1.pizza 2.entrée 3.cheese 4.dessert 5.other 6.cancel 7.prev
+Answer: other
+
+✅ Done. I have selected these beer styles for you...
+
+🍺 German-Style Schwarzbier — 🌡 45-50°F · 🥃 Flute    with certainty 71%
+🍺 German-Style Dunkel — 🌡 45-50°F · 🥃 Vase          with certainty 66%
+🍺 American Stout — 🌡 50-55°F · 🥃 Tulip              with certainty 63%
+
+... for the following reasons:
+
+Your palate could be very demanding: I bet you would try out something
+peculiar. Frosty days are perfect to taste something sweet or roasty, that
+strongly change your palate. Also, high alcoholic beers can heat you up.
+You prefer a dark beer. You chose a high alcoholic beer. It's a medium
+carbonated beer. You desire a beer with a roasty flavor.
+
+🔎 Why these beers:
+🍺 German-Style Schwarzbier: dark colour (μ1.00), noticeable alcohol
+(μ0.85), medium carbonation, dark-roasty flavour.
+\end{lstlisting}
+
+The narrative explanation is assembled, in order, from the scenario, preference,
+main-meal and specific-meal rationales accumulated during the consultation, so
+the user can always trace the recommendation back to the answers that produced
+it. Under the fuzzy backend a final \emph{Why these beers} paragraph reports, for
+each recommended style, the data-grounded membership values that earned it its
+place in the ranking.
+
+
+\subsection{Meal pairing}
+
+When the drinker names a dish, the dialogue descends a meal-specific chain of
+questions and the recommendation becomes pairing-driven: the authoritative
+CraftBeer food pairings stored in the knowledge base are consulted, and styles
+whose pairing matches one of the foods the user named are rewarded. The
+transcript below assumes the profiling questions have already been answered as in
+the previous session, and picks up at the main-meal question, following the
+\emph{pizza} branch to a specific topping:
+
+\begin{lstlisting}[numbers=none]
+Is the main meal pizza, entrée, cheese or dessert?
+1.pizza 2.entrée 3.cheese 4.dessert 5.other 6.cancel 7.prev
+Answer: pizza
+
+Is the pizza topping classic, meat, vegetables, cheese or other?
+1.classic 2.meat 3.vegetables 4.cheese 5.other 6.why 7.cancel 8.prev
+Answer: meat
+
+Is the meat spicy?
+1.yes 2.no 3.why 4.cancel 5.prev
+Answer: no
+
+✅ Done. I have selected these beer styles for you...
+
+🍺 American IPA — 🌡 50-55°F · 🥃 Tulip               with certainty 78%
+🍺 English-Style IPA — 🌡 45-50°F · 🥃 Nonic Pint     with certainty 74%
+🍺 Imperial IPA — 🌡 50-55°F · 🥃 Tulip               with certainty 70%
+
+... for the following reasons:
+
+You're eating a pizza with meat: the best way to enjoy it is pair that with
+beers with a bitter flavor, because of the bitterness of the hops that
+pleasantly cleanses the mouth.
+\end{lstlisting}
+
+The non-spicy meat topping makes the knowledge base assert a strong preference
+for a \emph{hoppy-bitter} flavour, which the fuzzy backend translates into a
+desire for high bitterness on the IBU axis; the hop-forward styles
+therefore rise to the top of the ranking. Had the meat been declared spicy, the
+opposite evidence would have been asserted ---a malty-sweet flavour to neutralise
+the capsaicin--- and the ranking would have shifted towards the malt-forward
+styles instead.
+
+
+\subsection{Switching the backend}
+
+The same profile can be evaluated under either reasoning backend, and the two
+produce visibly different rankings. The Certainty-Factors backend combines the
+discrete evidence asserted by the knowledge base in the MYCIN style: a style is
+scored by the certainty factors that vote for it, which yields a coarse ranking
+in which several styles frequently share the same certainty and so tie. The fuzzy
+backend, by contrast, scores every style by a normalised weighted mean of
+data-grounded membership values ---colour against SRM, alcohol against
+ABV, bitterness against IBU--- so that ties are broken by how
+well each style actually fits the desired profile, and the certainties come out
+as graded percentages rather than as a handful of repeated values.
+
+Selecting the backend is a matter of one slash command, which takes effect at the
+next \code{/new}:
+
+\begin{lstlisting}[numbers=none]
+/cf
+Backend set to cf. Press /new to start.
+\end{lstlisting}
+
+Running the same answers as in the worked consultation above under the two
+backends illustrates the difference. Under \code{/cf} the top of the ranking
+tends to be a block of styles sharing the certainty contributed by the dominant
+rule, for example:
+
+\begin{lstlisting}[numbers=none]
+✅ Done. I have selected these beer styles for you...
+
+🍺 German-Style Schwarzbier  with certainty 50%
+🍺 German-Style Dunkel        with certainty 50%
+🍺 American Stout             with certainty 50%
+\end{lstlisting}
+
+Under \code{/fuzzy} the same three styles are separated, because the membership
+scores grade how closely each one matches the requested dark colour, noticeable
+alcohol and roasty flavour, and the serving hint and per-beer rationale are added:
+
+\begin{lstlisting}[numbers=none]
+✅ Done. I have selected these beer styles for you...
+
+🍺 German-Style Schwarzbier — 🌡 45-50°F · 🥃 Flute    with certainty 71%
+🍺 German-Style Dunkel — 🌡 45-50°F · 🥃 Vase          with certainty 66%
+🍺 American Stout — 🌡 50-55°F · 🥃 Tulip              with certainty 63%
+\end{lstlisting}
+
+The Certainty-Factors ranking is therefore useful as a quick, transparent view of
+which rules fired, while the fuzzy ranking is preferable whenever a finer, fully
+ordered recommendation is wanted. Because both backends feed the same final
+formatting stage, the explanation and the result layout are identical in
+structure; only the certainties, the ordering and the presence of the fuzzy
+rationale differ.
+
+
+\subsection{Help and Why}
+
+Every question may carry two optional pieces of supporting text: a \emph{help}
+text, which explains the meaning of the options, and a \emph{why} text, which
+justifies the question. When present, they are offered as the \emph{Help} and
+\emph{Why} buttons (or the \code{help} and \code{why} control words on the
+command line) and do not advance the dialogue: after the text is shown, the same
+question is asked again.
+
+The \emph{Why} facility is illustrated on the age question. Requesting \code{why}
+prints the rationale and re-poses the question:
+
+\begin{lstlisting}[numbers=none]
+How old are you?
+1.18-23 2.24-29 3.>=30 4.why 5.cancel
+Answer: why
+
+Younger people tend to prefer less intense beers.
+
+How old are you?
+1.18-23 2.24-29 3.>=30 4.why 5.cancel
+Answer: 1
+\end{lstlisting}
+
+The \emph{Help} facility is illustrated on the cheese-style question, one of the
+few questions rich enough to carry a help text describing each option in detail.
+Requesting \code{help} prints the extended description of the cheese families
+before the question is asked again:
+
+\begin{lstlisting}[numbers=none]
+Is the cheese style fresh, semi-soft, firm/hard, blue, natural rind
+or washed rind?
+1.fresh 2.semi-soft 3.firm/hard 4.blue 5.natural rind 6.washed rind
+7.don't know 8.help 9.why 10.cancel 11.prev
+Answer: help
+
+🧀 Fresh cheeses have not been aged, or are very slightly cured. These
+cheeses have a high moisture content and are usually mild and have a very
+creamy taste and soft texture.
+🧀 Semi-soft cheeses have a smooth, generally, creamy interior with little
+or no rind. [ ... ]
+\end{lstlisting}
+
+In the Telegram interface the help text is rendered with Markdown; where it
+embeds an image link, the bot turns the link into an inline button that sends the
+corresponding picture when pressed.
+
+
+\subsection{Going back and cancelling}
+
+The \emph{Previous} control lets the user revise an answer. Going back retracts
+the answer given to the current question and, with it, any conclusion derived
+from that answer: the dialogue state machine removes the fact asserted for the
+question and re-fires the affected rules, so that working memory remains
+consistent with the answers actually in force. The transcript below shows a
+drinker who answered \emph{pale} to the colour question, went back, and changed
+the answer to \emph{dark}:
+
+\begin{lstlisting}[numbers=none]
+Do you generally prefer pale, amber, brown or dark beer?
+1.pale 2.amber 3.brown 4.dark 5.don't mind 6.cancel 7.prev
+Answer: pale
+
+Do you generally prefer to drink low, mild, high or very high alcoholic drinks?
+1.low 2.mild 3.high 4.very high 5.don't mind 6.cancel 7.prev
+Answer: prev
+
+Do you generally prefer pale, amber, brown or dark beer?
+1.pale 2.amber 3.brown 4.dark 5.don't mind 6.cancel 7.prev
+Answer: dark
+\end{lstlisting}
+
+Because the colour evidence asserted for \emph{pale} is retracted when the user
+goes back, the subsequent recommendation reflects only the corrected \emph{dark}
+preference, with no residual trace of the abandoned answer. The same mechanism
+applies even on the final recommendation screen: going back from there retracts
+the last meal answer and re-poses it, so the user can explore alternative meal
+choices without restarting.
+
+Finally, the \emph{Cancel} control closes the consultation. On the command line
+it terminates the interpreter; in the bot it clears the chat's working memory,
+removes the keyboard and bids the user farewell:
+
+\begin{lstlisting}[numbers=none]
+Answer: cancel
+Bye! I hope we can talk again some day.
+\end{lstlisting}
+
+After cancelling, a fresh consultation can always be started again with
+\code{/new} (or by relaunching the command-line interpreter).
