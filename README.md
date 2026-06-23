@@ -1,5 +1,10 @@
 # BeerEX :beer:
 
+[![CI](https://github.com/dmeoli/BeerEX/actions/workflows/ci.yml/badge.svg)](https://github.com/dmeoli/BeerEX/actions/workflows/ci.yml)
+[![Telegram](https://img.shields.io/badge/Telegram-%40BeerEXpertBot-26A5E4?logo=telegram&logoColor=white)](https://t.me/BeerEXpertBot)
+[![Technical report](https://img.shields.io/badge/report-PDF-b31b1b?logo=adobeacrobatreader&logoColor=white)](doc/BeerEX.pdf)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 *"Beer is proof that God loves us and wants us to be happy."* (Benjamin Franklin)
 
 **BeerEX** is a rule-based expert system, available as a [Telegram bot](https://t.me/BeerEXpertBot),
