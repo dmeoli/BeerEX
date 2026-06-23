@@ -16,6 +16,8 @@ services:
     environment:
       - TOKEN=${TOKEN}
       - BEEREX_BACKEND=fuzzy
+    labels:
+      - com.centurylinklabs.watchtower.scope=beerex   # watched by this stack's watchtower
 
   watchtower:
     image: ghcr.io/nicholas-fedor/watchtower:latest   # maintained fork (containrrr is unmaintained, breaks on Docker 29+)
@@ -28,4 +30,7 @@ services:
     environment:
       - WATCHTOWER_CLEANUP=true          # delete the old image after each update
       - WATCHTOWER_POLL_INTERVAL=120     # check GHCR every 2 minutes
+      - WATCHTOWER_SCOPE=beerex          # only act within this scope; leave other stacks' watchtowers alone
+    labels:
+      - com.centurylinklabs.watchtower.scope=beerex
     command: beerex-bot                  # watch only this bot
