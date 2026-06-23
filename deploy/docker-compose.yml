@@ -18,7 +18,7 @@ services:
       - BEEREX_BACKEND=fuzzy
 
   watchtower:
-    image: containrrr/watchtower:latest
+    image: ghcr.io/nicholas-fedor/watchtower:latest   # maintained fork (containrrr is unmaintained, breaks on Docker 29+)
     container_name: beerex-watchtower    # unique name: lets other stacks coexist
     restart: unless-stopped
     volumes:
