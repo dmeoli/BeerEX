@@ -133,6 +133,6 @@ GitHub can't host a long-running bot, but CI publishes the image to **GHCR**
 (`ghcr.io/dmeoli/beerex`); run it on any small host (VPS, Fly.io, Railway, a
 Raspberry Pi) with `docker run` or `docker compose up`.
 
-## License [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+## License
 
 Released under the MIT License. See the [LICENSE](LICENSE) file for details.
