@@ -33,6 +33,9 @@ the **2017 Beer Styles Study Guide** and the **Beer & Food Course**.
   per-style numeric ranges (ABV/IBU/SRM/OG/FG/CO₂), qualitative profile (palate,
   hop, malt, serving temperature, glassware) and authoritative **food pairings**
   (cheese / entrée / dessert).
+- **Questions in everyday words**, in English and Italian: each answer has a
+  plain label (no ">=30" age ranges or cocoa percentages), while the codes the
+  rules reason on are unchanged.
 - **Transparent, per-beer explanations** ("pale color, high bitterness (partly),
   matches its CraftBeer pairing").
 - **Reusable fuzzy library** — [`dmeoli/FuzzyCLIPS`](https://github.com/dmeoli/FuzzyCLIPS),
@@ -80,7 +83,7 @@ the **2017 Beer Styles Study Guide** and the **Beer & Food Course**.
 ### Telegram bot — Docker (recommended)
 
 ```bash
-git clone --recurse-submodules https://github.com/DonatoMeoli/BeerEX.git
+git clone --recurse-submodules https://github.com/dmeoli/BeerEX.git
 cd BeerEX
 cp .env.example .env          # put your @BotFather TOKEN in .env
 docker compose up --build
@@ -107,9 +110,10 @@ python BeerEX.bot.py
 | `/cf` · `/fuzzy` | Switch the reasoning backend (CF / fuzzy) |
 | `/en` · `/it` | Switch the output language (English base / Italian overlay) |
 
-> Every answer is a button under the question, with ❓ Why and ◀️ Back next to
-> it. The language follows the Telegram app at the first contact; `/cf`, `/fuzzy`,
-> `/en` and `/it` take effect on the next consultation.
+> Every answer is a button under the question, with ❓ Why, ℹ️ What do these
+> mean? (where a question has one) and ◀️ Back next to it. The language
+> follows the Telegram app at the first contact; `/cf`, `/fuzzy`, `/en` and
+> `/it` take effect on the next consultation.
 
 ### Command-line REPL
 
@@ -155,7 +159,8 @@ original FuzzyCLIPS engine (`third_party/FuzzyCLIPS/tests/diff_test.sh`).
 
 GitHub can't host a long-running bot, but CI publishes the image to **GHCR**
 (`ghcr.io/dmeoli/beerex`); run it on any small host (VPS, Fly.io, Railway, a
-Raspberry Pi) with `docker run` or `docker compose up`.
+Raspberry Pi) with `docker run` or `docker compose up`;
+[`deploy/`](deploy/README.md) has a stack that updates itself on every push.
 
 ## License
 
