@@ -1,0 +1,7 @@
+# Cloud Build: build the web API image (Dockerfile.api) into Artifact Registry.
+# Used by `make deploy-api`, which then deploys it to Cloud Run.
+steps:
+  - name: gcr.io/cloud-builders/docker
+    args: ["build", "-f", "Dockerfile.api", "-t", "europe-west1-docker.pkg.dev/$PROJECT_ID/beerex/api:latest", "."]
+images:
+  - europe-west1-docker.pkg.dev/$PROJECT_ID/beerex/api:latest

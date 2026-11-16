@@ -46,7 +46,7 @@ the **2017 Beer Styles Study Guide** and the **Beer & Food Course**.
 ## Architecture
 
 ```
-            Telegram bot (async)  /  CLIPS CLI
+     Telegram bot (async)  /  web API  /  CLIPS CLI
                        │  one CLIPS env per user
                        ▼
    dialogue ── questions ──► best-* evidence ──► selection backend
@@ -70,7 +70,9 @@ the **2017 Beer Styles Study Guide** and the **Beer & Food Course**.
 | `clips/beerex-fuzzy.clp` | Wires the fuzzy backend into the selection stage |
 | `third_party/FuzzyCLIPS/` | The reusable pure-CLIPS fuzzy library (submodule) |
 | `scripts/extract_*.py` | Reproducible KB extraction from the CraftBeer sources |
+| `beerex_engine.py` | Dialogue engine shared by the bot and the web API |
 | `BeerEX.bot.py` | Telegram bot (PTB v21, one CLIPS session per chat) |
+| `beerex_api.py` | Web API (FastAPI, stateless by replay) |
 | `BeerEX.clp` | CLI entry point |
 
 ## Quickstart
@@ -117,10 +119,31 @@ bash scripts/build-clips.sh    # builds CLIPS 6.4.2 into ~/.local/bin
 clips -f BeerEX.clp
 ```
 
+### Web API
+
+`beerex_api.py` serves the same engine over HTTP. It is stateless: each
+`POST /step` sends all the answers given so far, the server replays them on a
+fresh CLIPS environment and returns the current screen (going back is sending a
+shorter list).
+
+```bash
+pip install -r requirements-api.txt
+uvicorn beerex_api:app --port 8781
+curl -X POST localhost:8781/step -H 'content-type: application/json' \
+     -d '{"lang": "it", "backend": "fuzzy", "answers": ["pale"], "seed": 0}'
+```
+
+The reply is either a question (`kind`, `id`, `text`, `help`, `why`,
+`options` as `{value, label}`, `step`) or the result (`kind`, `title`,
+`items` as `{name, url, detail, score}`, `text`); an answer that is not an
+option of its question gets a 400. The `seed` fixes the order of the randomly
+ordered questions, so a dialogue keeps the same `lang`, `backend` and `seed`.
+`Dockerfile.api` builds the image, and `make deploy-api` deploys it to Cloud Run.
+
 ## Testing
 
 ```bash
-make test                      # engine smoke test over clipspy (no token needed)
+make test                      # engine and web API tests over clipspy (no token needed)
 make test-clips                # the CLIPS test suite (needs the clips 6.4.x CLI)
 ```
 

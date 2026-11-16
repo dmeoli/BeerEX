@@ -1,0 +1,16 @@
+# BeerEX web API image (beerex_api.py over the shared engine), e.g. for Cloud Run.
+# Same two stages as the bot image: gcc only where clipspy compiles CLIPS.
+FROM python:3.12-slim AS build
+RUN apt-get update && apt-get install -y --no-install-recommends gcc \
+    && rm -rf /var/lib/apt/lists/*
+COPY requirements-api.txt .
+RUN pip install --no-cache-dir --prefix=/install -r requirements-api.txt
+
+FROM python:3.12-slim
+COPY --from=build /install /usr/local
+WORKDIR /app
+COPY beerex_engine.py beerex_api.py ./
+COPY clips/ ./clips/
+COPY third_party/FuzzyCLIPS/fuzzy.clp ./third_party/FuzzyCLIPS/fuzzy.clp
+ENV PORT=8080
+CMD exec uvicorn beerex_api:app --host 0.0.0.0 --port $PORT
