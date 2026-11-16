@@ -24,6 +24,8 @@ jobs:
         run: python tests/test_engine.py
       - name: Web API test
         run: python tests/test_api.py
+      - name: Scripted consultation test
+        run: python tests/test_consultation.py
 
   docker:
     needs: test

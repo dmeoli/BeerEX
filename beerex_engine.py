@@ -114,8 +114,18 @@ class Session:
             "help": _clean(ui["help"]),
             "why": _clean(ui["why"]),
             "valid_answers": [str(a) for a in ui["valid-answers"]],
+            "labels": self._labels(ui),
             "can_prev": len(self._state_list()["sequence"]) > 2,
         }
+
+    def _labels(self, ui):
+        """What the user sees for each answer: the question's own labels (already
+        localized by translate-ui), else the localized answer code."""
+        values = [str(a) for a in ui["valid-answers"]]
+        labels = [str(a) for a in ui["labels"]]
+        if len(labels) != len(values):
+            labels = [self.tr(a) for a in values]
+        return labels
 
     # -- transitions --------------------------------------------------------
     def new(self):
@@ -149,15 +159,15 @@ class Session:
                     "text": screen["display"],
                     "help": screen["help"],
                     "why": screen["why"],
-                    "options": [{"value": a, "label": self.tr(a)} for a in screen["valid_answers"]],
+                    "options": [{"value": a, "label": la} for a, la in zip(screen["valid_answers"], screen["labels"])],
                     "multi": False,
                     "step": step}
         return dict(self._parse_result(screen["display"]), kind="result", step=step)
 
     def _parse_result(self, display):
-        # One line per beer: 🍺 [Family - Style](url) — 🌡 temp · 🥃 glass <with certainty> NN%
+        # One line per beer: 🍺 [Family - Style](url) — 🌡 temp · 🥃 glass <match> NN%
         item = re.compile(r"🍺 \[(?P<name>[^\]]+)\]\((?P<url>[^)]+)\)(?: — (?P<detail>.*?))?\s+%s\s+(?P<score>\d+%%)"
-                          % re.escape(self.tr("with certainty")))
+                          % re.escape(self.tr("match")))
         lines = display.strip().split("\n")
         title = lines[0].strip(" *")
         items, rest = [], []

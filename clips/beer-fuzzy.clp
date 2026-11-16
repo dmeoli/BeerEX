@@ -204,6 +204,36 @@
    (progn$ (?name (beer-rank ?n))
       (printout t (format nil "%6.3f" (beer-score ?name)) "  " ?name crlf)))
 
+;; How a matched (axis, term) reads in the explanation, in everyday words.
+(deftemplate rationale-phrase (slot axis) (slot term) (slot text))
+
+(deffacts beer-rationale-phrases
+   (rationale-phrase (axis color)       (term pale)            (text "pale color"))
+   (rationale-phrase (axis color)       (term amber)           (text "amber color"))
+   (rationale-phrase (axis color)       (term brown)           (text "brown color"))
+   (rationale-phrase (axis color)       (term dark)            (text "dark color"))
+   (rationale-phrase (axis alcohol)     (term not-detectable)  (text "light in alcohol"))
+   (rationale-phrase (axis alcohol)     (term mild)            (text "moderate alcohol"))
+   (rationale-phrase (axis alcohol)     (term noticeable)      (text "fairly strong"))
+   (rationale-phrase (axis alcohol)     (term harsh)           (text "very strong"))
+   (rationale-phrase (axis bitterness)  (term low)             (text "low bitterness"))
+   (rationale-phrase (axis bitterness)  (term medium)          (text "medium bitterness"))
+   (rationale-phrase (axis bitterness)  (term high)            (text "quite bitter"))
+   (rationale-phrase (axis flavor)      (term crisp-clean)     (text "fresh and clean taste"))
+   (rationale-phrase (axis flavor)      (term malty-sweet)     (text "malty and sweet taste"))
+   (rationale-phrase (axis flavor)      (term dark-roasty)     (text "toasty taste"))
+   (rationale-phrase (axis flavor)      (term hoppy-bitter)    (text "hoppy and bitter taste"))
+   (rationale-phrase (axis flavor)      (term fruity-spicy)    (text "fruity and spiced taste"))
+   (rationale-phrase (axis flavor)      (term sour-tart-funky) (text "sour taste"))
+   (rationale-phrase (axis carbonation) (term low)             (text "lightly fizzy"))
+   (rationale-phrase (axis carbonation) (term medium)          (text "moderately fizzy"))
+   (rationale-phrase (axis carbonation) (term high)            (text "very fizzy")))
+
+(deffunction plain-phrase (?axis ?term)
+   (do-for-fact ((?p rationale-phrase)) (and (eq ?p:axis ?axis) (eq ?p:term ?term))
+      (return (T ?p:text)))
+   (T (str-cat ?term " " ?axis)))
+
 ;; Short, data-grounded rationale for why beer ?name scored well, from the
 ;; desires currently in working memory (call before they are retracted).
 (deffunction beer-rationale (?name)
@@ -214,9 +244,10 @@
          (bind ?mu (beer-membership ?d:axis ?d:term ?x))
          (if (> (* ?d:weight ?mu) 0.05) then
             (bind ?txt (str-cat ?txt (if (> (str-length ?txt) 0) then ", " else "")
-                                (format nil "%s %s (μ%.2f)" (T (str-cat "" ?d:term)) (T (str-cat "" ?d:axis)) ?mu))))))
+                                (plain-phrase ?d:axis ?d:term)
+                                (if (< ?mu 0.75) then (T " (partly)") else ""))))))
    (do-for-all-facts ((?c desire-cat)) (and (> ?c:weight 0) (beer-has-cat ?name ?c:slot ?c:value))
-      (bind ?txt (str-cat ?txt (if (> (str-length ?txt) 0) then ", " else "") (T (str-cat "" ?c:value)))))
+      (bind ?txt (str-cat ?txt (if (> (str-length ?txt) 0) then ", " else "") (plain-phrase ?c:slot ?c:value))))
    (if (any-factp ((?s suggest-name)) (eq ?s:name ?name)) then
       (bind ?txt (str-cat ?txt (if (> (str-length ?txt) 0) then ", " else "") (T "paired with your meal"))))
    (if (any-factp ((?s suggest-style)) (eq ?s:style (beer-style-of ?name))) then

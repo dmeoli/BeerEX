@@ -42,7 +42,7 @@ def _drive(backend):
 def test_fuzzy_recommends():
     out = _drive("fuzzy")
     assert "🍺" in out, "fuzzy backend recommended no beer"
-    assert "μ" in out or "Why these beers" in out, "missing data-grounded explanation"
+    assert "Why these beers" in out, "missing data-grounded explanation"
 
 
 def test_cf_reaches_conclusion():

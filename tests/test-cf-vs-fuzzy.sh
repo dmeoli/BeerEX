@@ -38,7 +38,7 @@ run_backend() { # backend
    (printout t ?u:display crlf))
 (exit)
 EOF
-  "$CLIPS" -f /tmp/_cmp.clp 2>/dev/null | grep -E '🍺|μ|•|Done|Sorry' | sed 's/(www[^)]*)//g; s/(http[^)]*)//g'
+  "$CLIPS" -f /tmp/_cmp.clp 2>/dev/null | grep -E '🍺|•|Why these|Done|Sorry' | sed 's/(www[^)]*)//g; s/(http[^)]*)//g'
 }
 
 pass=0; fail=0
@@ -53,7 +53,7 @@ chk "CF produced recommendations"     'echo "$cf" | grep -q "🍺"'
 chk "FUZZY produced recommendations"  'echo "$fz" | grep -q "🍺"'
 chk "CF list includes American IPA (suggested)"    'echo "$cf" | grep -q "American IPA"'
 chk "FUZZY list includes American IPA (suggested)" 'echo "$fz" | grep -q "American IPA"'
-chk "FUZZY shows data-grounded explanation (μ)"    'echo "$fz" | grep -q "μ"'
+chk "FUZZY shows data-grounded explanation"        'echo "$fz" | grep -q "Why these beers"'
 chk "FUZZY explanation has per-beer rationale"     'echo "$fz" | grep -q "•"'
 echo
 echo "PASS=$pass FAIL=$fail"

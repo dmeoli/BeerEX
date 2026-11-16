@@ -61,7 +61,7 @@ def test_italian_labels():
         screen = _step(answers, "it")
     assert "Ho selezionato" in screen["title"] or "Spiacente" in screen["title"], screen["title"]
     assert any(v != la for v, la in labels.items()), "option labels not localized"
-    assert labels.get("yes", "sì") == "sì"
+    assert labels.get("winter", "❄️ Inverno") == "❄️ Inverno"
 
 
 def test_undo_and_replay_are_deterministic():

@@ -25,6 +25,7 @@
    (slot relation-asserted
       (default none))
    (multislot valid-answers)
+   (multislot labels)        ; what the user sees for each valid answer (same order)
    (slot response
       (default none))
    (slot state
@@ -119,6 +120,12 @@
    (do-for-fact ((?t translation)) (eq ?t:en ?s) (return ?t:it))
    ?s)
 
+;; Localize every string of a multifield (the answer labels).
+(deffunction T$ ($?l)
+   (bind ?out (create$))
+   (progn$ (?s ?l) (bind ?out (create$ ?out (T ?s))))
+   ?out)
+
 (deffunction get-explanation ()
    (bind ?explanation (format nil "%s %n%n" (T "*... for the following reasons:*")))
    (do-for-all-facts ((?a attribute))
@@ -145,10 +152,9 @@
 (defrule start
    =>
    (set-strategy random)
-   (assert (UI-state (display (format nil "%n%s %n%n%s %n%n%s" (T "Welcome to the Beer EXpert system 🍻️")
-                                          (T (str-cat "⁉️ All I need is that you answer simple questions by choosing "
-                                                      "one of the responses that are offered to you."))
-                                          (T "To start, please press the /new button 😄")))
+   (assert (UI-state (display (format nil "%s %n%n%s" (T "Hi! I'm BeerEX 🍻 I suggest a beer style for your taste and your meal.")
+                                          (T (str-cat "I'll ask you a few quick questions: just tap an answer. "
+                                                      "Tap ❓ Why to see why I ask, and ◀️ Back to change an answer."))))
                      (relation-asserted start)
                      (state initial))))
 
@@ -212,7 +218,7 @@
    (progn$ (?a ?attributes)
            (if (< (member$ ?a ?attributes) 5)
             then (bind ?beers (str-cat ?beers (format nil "%s %s %2d%% %n" (fact-slot-value ?a value)
-                                                          (T "with certainty") (* (fact-slot-value ?a certainty) 100)))))
+                                                          (T "match") (* (fact-slot-value ?a certainty) 100)))))
            (retract ?a))
    (if (neq ?beers "")
     then (bind ?results (str-cat (format nil "%s %n%n%s %n%s" (T "*✅ Done. I have selected these beer styles for you...*")

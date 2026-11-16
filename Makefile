@@ -6,9 +6,10 @@ install:        ## install Python deps
 lint:           ## lint the Python code
 	ruff check BeerEX.bot.py beerex_engine.py beerex_api.py tests/*.py
 
-test:           ## engine and web API tests (clipspy, no token needed)
+test:           ## engine, web API and scripted consultation tests (clipspy, no token needed)
 	python tests/test_engine.py
 	python tests/test_api.py
+	python tests/test_consultation.py
 
 test-clips:     ## CLIPS test suite (needs the clips 6.4.x CLI; see build-clips)
 	clips -f tests/test-scoring.clp | grep SCORING

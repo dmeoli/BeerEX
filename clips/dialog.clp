@@ -16,10 +16,10 @@
 ;; English is the source/key; untranslated strings fall back to English.
 (defrule translate-ui
    (declare (salience ?*high-priority*))
-   ?u <- (UI-state (display ?d) (help ?h) (why ?w) (translated FALSE))
+   ?u <- (UI-state (display ?d) (help ?h) (why ?w) (labels $?l) (translated FALSE))
    (test (neq ?*lang* en))
    =>
-   (modify ?u (display (T ?d)) (help (T ?h)) (why (T ?w)) (translated TRUE)))
+   (modify ?u (display (T ?d)) (help (T ?h)) (why (T ?w)) (labels (T$ ?l)) (translated TRUE)))
 
 (defrule ask-question
    (declare (salience ?*medium-high-priority*))

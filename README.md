@@ -33,7 +33,7 @@ the **2017 Beer Styles Study Guide** and the **Beer & Food Course**.
   per-style numeric ranges (ABV/IBU/SRM/OG/FG/CO₂), qualitative profile (palate,
   hop, malt, serving temperature, glassware) and authoritative **food pairings**
   (cheese / entrée / dessert).
-- **Transparent, per-beer explanations** ("pale colour μ1.00, high bitterness μ0.50,
+- **Transparent, per-beer explanations** ("pale color, high bitterness (partly),
   matches its CraftBeer pairing").
 - **Reusable fuzzy library** — [`dmeoli/FuzzyCLIPS`](https://github.com/dmeoli/FuzzyCLIPS),
   fuzzy logic written in pure CLIPS, validated against the original FuzzyCLIPS engine,
@@ -107,8 +107,9 @@ python BeerEX.bot.py
 | `/cf` · `/fuzzy` | Switch the reasoning backend (CF / fuzzy) |
 | `/en` · `/it` | Switch the output language (English base / Italian overlay) |
 
-> `/cf`, `/fuzzy`, `/en` and `/it` take effect on the next `/new`. English is
-> always the base; Italian is an overlay that falls back to English where untranslated.
+> Every answer is a button under the question, with ❓ Why and ◀️ Back next to
+> it. The language follows the Telegram app at the first contact; `/cf`, `/fuzzy`,
+> `/en` and `/it` take effect on the next consultation.
 
 ### Command-line REPL
 
@@ -143,7 +144,7 @@ ordered questions, so a dialogue keeps the same `lang`, `backend` and `seed`.
 ## Testing
 
 ```bash
-make test                      # engine and web API tests over clipspy (no token needed)
+make test                      # engine, web API and scripted consultation tests (no token needed)
 make test-clips                # the CLIPS test suite (needs the clips 6.4.x CLI)
 ```
 
