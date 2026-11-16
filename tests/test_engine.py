@@ -14,6 +14,7 @@ import os
 import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, ROOT)   # the bot imports beerex_engine
 
 
 def _load_bot():
@@ -57,13 +58,25 @@ def test_sessions_are_isolated():
 
 
 def test_italian_overlay():
-    q = '(T "Are you male or female? \U0001F468\U0001F3FB\U0001F469\U0001F3FB")'
-    assert "male or female" in str(BOT.Session(lang="en").env.eval(q)), "English is the base"
-    assert "Sei uomo o donna" in str(BOT.Session(lang="it").env.eval(q)), "Italian overlay missing"
+    q = '(T "How old are you? \U0001F51E")'
+    assert "How old are you" in str(BOT.Session(lang="en").env.eval(q)), "English is the base"
+    assert "Quanti anni hai" in str(BOT.Session(lang="it").env.eval(q)), "Italian overlay missing"
+
+
+def test_replay_matches_a_live_session():
+    import beerex_engine as engine
+    session = engine.Session(seed=3)
+    screen, answers = session.new(), []
+    while screen["state"] != "final":
+        answers.append(screen["valid_answers"][-1])
+        screen = session.answer(answers[-1])
+    assert engine.replay(answers, seed=3) == session.view(screen, len(answers))
 
 
 if __name__ == "__main__":
     test_fuzzy_recommends()
     test_cf_reaches_conclusion()
     test_sessions_are_isolated()
+    test_italian_overlay()
+    test_replay_matches_a_live_session()
     print("ENGINE TESTS PASS")

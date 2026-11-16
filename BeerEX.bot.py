@@ -7,8 +7,8 @@ BeerEX: the Beer EXpert system bot.
 A rule-based expert system (CLIPS) that suggests a beer to drink according to
 taste and meal, exposed as a Telegram bot.
 
-Each chat gets its OWN CLIPS environment (see Session) so concurrent users never
-share working memory. Built on python-telegram-bot v21 (async).
+Each chat gets its OWN CLIPS environment (a beerex_engine.Session) so concurrent
+users never share working memory. Built on python-telegram-bot v21 (async).
 
 Author: Donato Meoli
 """
@@ -36,30 +36,11 @@ from telegram.ext import (
     filters,
 )
 
-import clips
+from beerex_engine import Session
 
 logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
                     level=logging.INFO)
 logger = logging.getLogger(__name__)
-
-BASE = os.path.dirname(os.path.abspath(__file__))
-
-
-def _p(rel):
-    return os.path.join(BASE, rel)
-
-
-# Loaded in this order (mirrors BeerEX.clp): core + fuzzy backend + dialogue,
-# then the question/knowledge rule files (the runtime loader rules are removed
-# first so they don't reload at reset).
-CORE_FILES = ["clips/beerex.clp",
-              "clips/labels-it.clp",
-              "third_party/FuzzyCLIPS/fuzzy.clp",
-              "clips/beer-ranges.clp",
-              "clips/beer-data.clp",
-              "clips/beer-fuzzy.clp",
-              "clips/beerex-fuzzy.clp",
-              "clips/dialog.clp"]
 
 # Emoji control buttons (aliases resolved once).
 BTN_PREV = emoji.emojize(":back: Previous", language="alias")
@@ -67,96 +48,6 @@ BTN_RESTART = emoji.emojize(":repeat: Restart", language="alias")
 BTN_CANCEL = emoji.emojize(":x: Cancel", language="alias")
 BTN_HELP = emoji.emojize(":sos: Help", language="alias")
 BTN_WHY = emoji.emojize(":question: Why", language="alias")
-
-DEFAULT_BACKEND = os.environ.get("BEEREX_BACKEND", "fuzzy")  # cf | fuzzy
-DEFAULT_LANG = os.environ.get("BEEREX_LANG", "en")          # en (base) | it
-
-
-def _clean(value):
-    """CLIPS unset slots come back as nil/empty; normalise to None."""
-    if value is None:
-        return None
-    s = str(value)
-    return None if s in ("", "nil") else s
-
-
-class Session:
-    """An isolated CLIPS environment driving one user's dialogue."""
-
-    def __init__(self, backend=DEFAULT_BACKEND, lang=DEFAULT_LANG):
-        self.backend = backend
-        self.lang = lang
-        self.env = clips.Environment()
-        for f in CORE_FILES:
-            self.env.load(_p(f))
-        self.env.eval("(undefrule load-beer-question-rules)")
-        self.env.load(_p("clips/beer-questions.clp"))
-        self.env.eval("(undefrule load-beer-knowledge-rules)")
-        self.env.load(_p("clips/beer-knowledge.clp"))
-        self.reset()
-
-    def reset(self):
-        self.env.reset()
-        # (reset) restores defglobals to their default; re-apply backend and language
-        self.env.eval("(bind ?*backend* %s)" % self.backend)
-        self.env.eval("(bind ?*lang* %s)" % self.lang)
-        self.env.run()
-
-    def tr(self, s):
-        # Localize a bot message through the shared CLIPS catalog (English base,
-        # Italian overlay); falls back to English when lang=en or uncatalogued.
-        return self.env.eval('(T "%s")' % s.replace("\\", "\\\\").replace('"', '\\"'))
-
-    # -- working-memory helpers ---------------------------------------------
-    def _state_list(self):
-        return self.env.eval("(find-fact ((?s state-list)) TRUE)")[0]
-
-    def _current_ui(self):
-        cid = self._state_list()["current"]
-        ui = self.env.eval("(find-fact ((?u UI-state)) (eq ?u:id %s))" % cid)[0]
-        return cid, ui
-
-    def initial_display(self):
-        return self.env.eval("(find-fact ((?u UI-state)) (eq ?u:state initial))")[0]["display"]
-
-    def screen(self):
-        """Advance past 'initial' states and return the current screen."""
-        cid, ui = self._current_ui()
-        while str(ui["state"]) == "initial":
-            self.env.assert_string("(next %s)" % cid)
-            self.env.run()
-            cid, ui = self._current_ui()
-        return {
-            "state": str(ui["state"]),
-            "display": ui["display"],
-            "help": _clean(ui["help"]),
-            "why": _clean(ui["why"]),
-            "valid_answers": [str(a) for a in ui["valid-answers"]],
-            "can_prev": len(self._state_list()["sequence"]) > 2,
-        }
-
-    # -- transitions --------------------------------------------------------
-    def new(self):
-        self.reset()
-        return self.screen()
-
-    def answer(self, response):
-        cid, _ = self._current_ui()
-        if " " in response:
-            self.env.assert_string('(next %s "%s")' % (cid, response))
-        else:
-            self.env.assert_string("(next %s %s)" % (cid, response))
-        self.env.run()
-        return self.screen()
-
-    def back(self):
-        cid, _ = self._current_ui()
-        self.env.assert_string("(prev %s)" % cid)
-        self.env.run()
-        return self.screen()
-
-    def cancel(self):
-        self.env.reset()
 
 
 # chat_id -> Session  (each user keeps their own working memory)

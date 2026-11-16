@@ -1,4 +1,4 @@
-# Keep the build context small: the image only needs BeerEX.bot.py, clips/
+# Keep the build context small: the images only need the Python modules, clips/
 # and the single fuzzy library file (see Dockerfile).
 .git
 .github

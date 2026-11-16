@@ -10,7 +10,7 @@ RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
 FROM python:3.12-slim
 COPY --from=build /install /usr/local
 WORKDIR /app
-COPY BeerEX.bot.py .
+COPY beerex_engine.py BeerEX.bot.py ./
 COPY clips/ ./clips/
 # Only the reusable fuzzy library file is needed at runtime (not the dev oracle).
 COPY third_party/FuzzyCLIPS/fuzzy.clp ./third_party/FuzzyCLIPS/fuzzy.clp
